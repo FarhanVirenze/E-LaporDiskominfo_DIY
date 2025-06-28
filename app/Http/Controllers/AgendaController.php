@@ -49,15 +49,6 @@ class AgendaController extends Controller
         'status' => 'diajukan',
     ]);
 
-    // Buat data isi_rapat secara otomatis
-    IsiRapat::create([
-        'id_user' => Auth::user()->id_user,
-        'id_agenda' => $agenda->id_agenda,
-        'pembahasan' => '',
-        'pic' => $request->id_pic ? User::find($request->id_pic)->name : '-',
-        'status' => 'open',
-    ]);
-
     return redirect()->route('agendas.index')->with('success', 'Agenda dan Isi Rapat berhasil dibuat.');
 }
 
@@ -73,7 +64,6 @@ class AgendaController extends Controller
         if (Auth::user()->role !== 'admin') abort(403);
 
         $request->validate([
-            'id_user' => 'required|exists:users,id_user',
             'id_ruangan' => 'required|exists:ruangans,id_ruangan',
             'nm_agenda' => 'required|string|max:255',
             'tanggal' => 'required|date',
@@ -83,7 +73,6 @@ class AgendaController extends Controller
         ]);
 
         $agenda->update([
-            'id_user' => $request->id_user,
             'id_ruangan' => $request->id_ruangan,
             'nm_agenda' => $request->nm_agenda,
             'tanggal' => $request->tanggal,
@@ -95,6 +84,12 @@ class AgendaController extends Controller
         return redirect()->route('agendas.index')->with('success', 'Agenda berhasil diperbarui.');
     }
 
+    public function show(Agenda $agenda) {
+    // Load relasi agar data PIC, user pembuat, dan ruangan ikut terbawa
+    $agenda->load(['user', 'ruangan', 'pic', 'approvedBy']);
+
+    return view('agendas.show', compact('agenda'));
+}
     public function destroy(Agenda $agenda) {
         if (Auth::user()->role !== 'admin') abort(403);
 

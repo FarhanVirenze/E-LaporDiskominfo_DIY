@@ -8,14 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class RoleMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  mixed ...$roles
-     * @return mixed
-     */
     public function handle(Request $request, Closure $next, ...$roles)
     {
         if (!Auth::check()) {
@@ -24,9 +16,8 @@ class RoleMiddleware
 
         $user = Auth::user();
 
-        // Cek apakah role user sesuai
         if (!in_array($user->role, $roles)) {
-            abort(403, 'Akses ditolak. Anda tidak memiliki izin.');
+            return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki akses ke halaman tersebut.');
         }
 
         return $next($request);

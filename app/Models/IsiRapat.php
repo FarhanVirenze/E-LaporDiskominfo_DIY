@@ -9,12 +9,11 @@ class IsiRapat extends Model
 {
     use HasFactory;
 
-    // Menyesuaikan primary key tabel jika bukan 'id'
+    protected $table = 'isi_rapats'; // pastikan nama tabel sesuai
     protected $primaryKey = 'id_rapat';
     public $incrementing = true;
     protected $keyType = 'int';
 
-    // Kolom-kolom yang dapat diisi
     protected $fillable = [
         'id_user',
         'id_agenda',
@@ -22,14 +21,13 @@ class IsiRapat extends Model
         'status',
     ];
 
-    // Relasi ke tabel users
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user', 'id_user');
+        return $this->belongsTo(User::class, 'id_user');
     }
 
     public function agenda()
     {
-        return $this->belongsTo(Agenda::class, 'id_agenda', 'id_agenda');
+        return $this->belongsTo(Agenda::class, 'id_agenda');
     }
 }

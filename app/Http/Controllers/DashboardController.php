@@ -13,28 +13,35 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Jumlah total data dari setiap tabel
-        $jumlah_user        = User::count();
-        $jumlah_agenda      = Agenda::count();
-        $jumlah_ruangan     = Ruangan::count();
-        $jumlah_isi_rapat   = IsiRapat::count();
-        $jumlah_notif       = Notif::count();
+        $authRole = auth()->user()->role;
 
-        // Data notifikasi aktif (misal status = 'belum terbaca')
+        // Hitung jumlah user hanya untuk role non-user
+        $jumlah_user = in_array($authRole, ['admin', 'pimpinan'])
+            ? User::count()
+            : null;
+
+        $jumlah_agenda = Agenda::count();
+        $jumlah_ruangan = Ruangan::count();
+        $jumlah_isi_rapat = IsiRapat::count();
+        $jumlah_notif = Notif::count();
+
         $notifs = Notif::with('user')
-                    ->where('status', 'belum terbaca')
-                    ->latest()
-                    ->limit(5)
-                    ->get();
+            ->where('status', 'belum terbaca')
+            ->latest()
+            ->limit(5)
+            ->get();
 
-        // Semua agenda terbaru
-        $semua_agenda = Agenda::with('ruangan')->latest()->limit(5)->get();
+        $semua_agenda = Agenda::with('ruangan')
+            ->latest()
+            ->limit(5)
+            ->get();
 
-        // Top 5 user berdasarkan kontribusi isi rapat terbanyak
-        $top_users = User::withCount('isiRapats')
-                    ->orderByDesc('isi_rapats_count')
-                    ->limit(5)
-                    ->get();
+        // Ambil top 5 user role 'user' berdasarkan jumlah isi rapat
+        $top_users = User::where('role', 'user')
+            ->withCount('isiRapats')
+            ->orderByDesc('isi_rapats_count')
+            ->limit(5)
+            ->get();
 
         return view('dashboard', compact(
             'jumlah_user',

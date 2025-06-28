@@ -24,27 +24,23 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    // Relasi ke agenda yang dibuat user
     public function agendas(): HasMany
     {
-        return $this->hasMany(Agenda::class, 'id_user');
+        return $this->hasMany(Agenda::class, 'id_user', 'id_user');
     }
 
-    // Relasi ke isi rapat yang ditulis user
     public function isiRapats(): HasMany
     {
-        return $this->hasMany(IsiRapat::class, 'id_user');
+        return $this->hasMany(IsiRapat::class, 'id_user', 'id_user');
     }
 
-    // Relasi ke notifikasi untuk user
     public function notifs(): HasMany
     {
-        return $this->hasMany(Notif::class, 'id_user');
+        return $this->hasMany(Notif::class, 'id_user', 'id_user');
     }
 
-    // Relasi ke agenda yang disetujui oleh user ini (jika dia pimpinan atau admin)
     public function approvedAgendas(): HasMany
     {
-        return $this->hasMany(Agenda::class, 'approved_by');
+        return $this->hasMany(Agenda::class, 'approved_by', 'id_user');
     }
 }

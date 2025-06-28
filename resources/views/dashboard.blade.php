@@ -9,10 +9,13 @@
 
         {{-- Ringkasan Statistik --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-6">
-            <div class="bg-indigo-600 text-white p-5 rounded-lg shadow">
-                <p class="text-sm">Users</p>
-                <p class="text-3xl font-bold">{{ $jumlah_user }}</p>
-            </div>
+            @if(in_array(auth()->user()->role, ['admin']))
+                <div class="bg-indigo-600 text-white p-5 rounded-lg shadow">
+                    <p class="text-sm">Users</p>
+                    <p class="text-3xl font-bold">{{ $jumlah_user }}</p>
+                </div>
+            @endif
+
             <div class="bg-blue-600 text-white p-5 rounded-lg shadow">
                 <p class="text-sm">Agenda</p>
                 <p class="text-3xl font-bold">{{ $jumlah_agenda }}</p>
@@ -32,43 +35,44 @@
         </div>
 
         {{-- Jadwal Rapat --}}
-<div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-    <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Jadwal Rapat</h3>
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Jadwal Rapat</h3>
 
-    @php
-        // Filter hanya agenda yang disetujui
-        $agendaDisetujui = $semua_agenda->where('status', 'disetujui');
-    @endphp
+            @php
+                // Filter hanya agenda yang disetujui
+                $agendaDisetujui = $semua_agenda->where('status', 'disetujui');
+            @endphp
 
-    @if($agendaDisetujui->isEmpty())
-        <p class="text-gray-500 dark:text-gray-400">Belum ada agenda yang disetujui.</p>
-    @else
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm border border-gray-200 dark:border-gray-700">
-                <thead class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
-                    <tr>
-                        <th class="px-4 py-2 border">Nama Agenda</th>
-                        <th class="px-4 py-2 border">Ruangan</th>
-                        <th class="px-4 py-2 border">Tanggal</th>
-                        <th class="px-4 py-2 border">Waktu</th>
-                        <th class="px-4 py-2 border">Deskripsi</th>
-                    </tr>
-                </thead>
-                <tbody class="text-gray-700 dark:text-gray-300">
-                    @foreach($agendaDisetujui as $agenda)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="px-4 py-2 border">{{ $agenda->nm_agenda }}</td>
-                            <td class="px-4 py-2 border">{{ $agenda->ruangan->nm_ruangan ?? '-' }}</td>
-                            <td class="px-4 py-2 border">{{ \Carbon\Carbon::parse($agenda->tanggal)->format('d-m-Y') }}</td>
-                            <td class="px-4 py-2 border">{{ \Carbon\Carbon::parse($agenda->waktu)->format('H:i') }}</td>
-                            <td class="px-4 py-2 border">{{ $agenda->deskripsi ?? '-' }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            @if($agendaDisetujui->isEmpty())
+                <p class="text-gray-500 dark:text-gray-400">Belum ada agenda yang disetujui.</p>
+            @else
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm border border-gray-200 dark:border-gray-700">
+                        <thead class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                            <tr>
+                                <th class="px-4 py-2 border">Nama Agenda</th>
+                                <th class="px-4 py-2 border">Ruangan</th>
+                                <th class="px-4 py-2 border">Tanggal</th>
+                                <th class="px-4 py-2 border">Waktu</th>
+                                <th class="px-4 py-2 border">Deskripsi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700 dark:text-gray-300">
+                            @foreach($agendaDisetujui as $agenda)
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                    <td class="px-4 py-2 border">{{ $agenda->nm_agenda }}</td>
+                                    <td class="px-4 py-2 border">{{ $agenda->ruangan->nm_ruangan ?? '-' }}</td>
+                                    <td class="px-4 py-2 border">{{ \Carbon\Carbon::parse($agenda->tanggal)->format('d-m-Y') }}
+                                    </td>
+                                    <td class="px-4 py-2 border">{{ \Carbon\Carbon::parse($agenda->waktu)->format('H:i') }}</td>
+                                    <td class="px-4 py-2 border">{{ $agenda->deskripsi ?? '-' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
         </div>
-    @endif
-</div>
 
         {{-- Notifikasi Aktif --}}
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">

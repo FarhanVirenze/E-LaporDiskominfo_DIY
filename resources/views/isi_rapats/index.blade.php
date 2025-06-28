@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-2xl font-bold text-gray-800 dark:text-white leading-tight">
-            Daftar Isi Rapat
+            Daftar Notula Rapat
         </h2>
     </x-slot>
 
@@ -26,9 +26,7 @@
                         <th class="py-3 px-6 text-left">Pembahasan</th>
                         <th class="py-3 px-6 text-left">PIC</th>
                         <th class="py-3 px-6 text-left">Status</th>
-                         @if(auth()->user()->role === 'admin')
-            <th class="py-3 px-6 text-center">Aksi</th>
-        @endif
+                        <th class="py-3 px-6 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-700 dark:text-gray-300 text-sm font-light">
@@ -49,9 +47,11 @@
                                     {{ ucfirst($isi->status) }}
                                 </span>
                             </td>
-                            @if(auth()->user()->role === 'admin')
+
+                            {{-- Aksi --}}
                             <td class="py-3 px-6 text-center space-y-1">
-                                    {{-- Tombol Hapus --}}
+                                {{-- Admin actions --}}
+                                @if(auth()->user()->role === 'admin')
                                     <form action="{{ route('isi_rapats.destroy', $isi->id_rapat) }}" method="POST" class="inline-block"
                                           onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
                                         @csrf
@@ -62,7 +62,6 @@
                                         </button>
                                     </form>
 
-                                    {{-- Tombol Buka / Tutup --}}
                                     @if($isi->status === 'close')
                                         <form action="{{ route('isi_rapats.reopen', $isi->id_rapat) }}" method="POST" class="inline-block">
                                             @csrf
@@ -80,6 +79,13 @@
                                             </button>
                                         </form>
                                     @endif
+
+                                {{-- User can edit if status open and is owner --}}
+                               @elseif(auth()->user()->role === 'user' && $isi->status === 'open' && $isi->id_user === auth()->user()->id_user)
+                                    <a href="{{ route('isi_rapats.edit', $isi->id_rapat) }}"
+                                       class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm shadow">
+                                        Edit
+                                    </a>
                                 @endif
                             </td>
                         </tr>

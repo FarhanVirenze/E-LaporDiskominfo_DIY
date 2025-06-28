@@ -10,16 +10,17 @@ return new class extends Migration {
         Schema::create('isi_rapats', function (Blueprint $table) {
             $table->id('id_rapat');
 
-            // Foreign key ke users
-            $table->foreignId('id_user')->constrained('users', 'id_user')->onDelete('cascade');
+            $table->unsignedBigInteger('id_user')->nullable();
+            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
 
-            // Foreign key ke agendas
-            $table->foreignId('id_agenda')->constrained('agendas', 'id_agenda')->onDelete('cascade');
+            $table->unsignedBigInteger('id_agenda')->nullable();
+            $table->foreign('id_agenda')->references('id_agenda')->on('agendas')->onDelete('cascade');
 
             $table->text('pembahasan');
-    
-            // Status: open, progress, selesai
-           $table->enum('status', ['open', 'close'])->default('open');
+            $table->enum('status', ['open', 'close'])->default('open');
+
+            // Jika kamu memang ingin menyimpan nama PIC
+            $table->string('pic')->nullable();
 
             $table->timestamps();
         });
