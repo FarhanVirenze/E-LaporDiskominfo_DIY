@@ -30,15 +30,5 @@ class DatabaseSeeder extends Seeder
             'remember_token' => Str::random(10),
             'role' => 'pimpinan',
         ]);
-
-        // User Biasa
-        User::create([
-            'name' => 'User',
-            'email' => 'user@admin.com',
-            'email_verified_at' => now(),
-            'password' => Hash::make('password'),
-            'remember_token' => Str::random(10),
-            'role' => 'user',
-        ]);
     }
 }

@@ -41,15 +41,4 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-    Route::middleware('auth', 'admin')->group(function () {
-    Route::resource('user', UserController::class)->except(['show']);
-    Route::get('/user', [UserController::class, 'index'])->name('user.index');
-    Route::post('/users', [UserController::class, 'store'])->name('users.store');
-    Route::patch('/user/{user}/makeadmin', [UserController::class, 'makeadmin'])->name('user.makeadmin');
-    Route::patch('/user/{user}/removeadmin', [UserController::class, 'removeadmin'])->name('user.removeadmin');
-    Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
-    Route::get('/user/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
-    Route::patch('/user/{user}', [UserController::class, 'update'])->name('user.update');
-});
-
 require __DIR__.'/auth.php';
