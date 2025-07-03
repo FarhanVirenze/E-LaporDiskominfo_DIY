@@ -22,6 +22,12 @@ Selamat datang di repository Tugas Akhir untuk mata kuliah **Pemrograman Web Fra
 
 ---
 
+## 🔗 Referensi Final Laporan Tugas Akhir Kelompok 5
+
+📙 [Implementasi Framework Laravel Dalam Pembuatan Sistem Pencatatan Notula Berbasis Website](https://ejournal.undip.ac.id/index.php/jsinbis/article/view/45297)
+
+---
+
 ## 🔗 Referensi Paper Framework Laravel Google Scholar
 
 1. 📘 [Analisis dan Perancangan Aplikasi Fathforce Starter Kit Pro di PT. Inovasi Media Menggunakan Framework Laravel](https://openjournal.unpam.ac.id/index.php/JTSI/article/view/35656)
