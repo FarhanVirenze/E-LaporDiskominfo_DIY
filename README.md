@@ -26,6 +26,10 @@ Selamat datang di repository Tugas Akhir untuk mata kuliah **Pemrograman Web Fra
 
 📙 [Implementasi Framework Laravel Dalam Pembuatan Sistem Pencatatan Notula Berbasis Website](https://ejournal.undip.ac.id/index.php/jsinbis/article/view/45297)
 
+Resume 
+
+https://drive.google.com/file/d/1nLPCtQlU_DmT1aMo6I4VbN55vPYuzx_g/view?usp=sharing
+
 ---
 
 ## 🔗 Referensi Paper Framework Laravel Google Scholar
