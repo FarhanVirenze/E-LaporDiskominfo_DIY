@@ -25,7 +25,7 @@
 
 ## 📄 Laporan Akhir
 
-- 📝 [Laporan Tugas Akhir Kelompok 5 (PDF)](https://drive.google.com/file/d/1FmDBTItooNFUL2yKCo1g7CWGIdL-mPIL/view?usp=drive_link)
+- 📝 [Laporan Tugas Akhir Kelompok 5](https://drive.google.com/file/d/1FmDBTItooNFUL2yKCo1g7CWGIdL-mPIL/view?usp=drive_link)
 
 ---
 
@@ -43,7 +43,7 @@
 
 ## 🗂️ Resume UCP Akhir
 
-- 📁 [ResumeUcpAkhir_Kelompok5 (Folder Google Drive)](https://drive.google.com/drive/folders/1PTxoQA7fMcHRpkjKvIKkgjohTjtZmBkU?usp=sharing)
+- 📁 [ResumeUcpAkhir_Kelompok5](https://drive.google.com/drive/folders/1PTxoQA7fMcHRpkjKvIKkgjohTjtZmBkU?usp=sharing)
 
 ---
 
