@@ -1,3 +1,71 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.text-black {
+    color: #000 !important;
+}
+
+/* Menambahkan outline merah untuk elemen dengan border putih */
+.outline-red-500 {
+    outline: 2px solid #C0392B !important;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+/* Style for Main Content when Sidebar is open */
+.main-content {
+    transition: margin-left 0.3s ease-in-out;
+}
+
+@keyframes smoothFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes smoothFadeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+.modal-animate-in {
+  animation: smoothFadeIn 0.35s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+.modal-animate-out {
+  animation: smoothFadeOut 0.25s ease-in forwards;
+}
+
+#map {
+    width: 100%;
+    height: 400px; /* Sesuaikan tinggi peta */
+}
+
+@media (max-width: 768px) {
+    #map {
+        height: 300px; /* Ukuran lebih kecil di layar mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    #map {
+        height: 250px; /* Ukuran lebih kecil di layar lebih kecil */
+    }
+}

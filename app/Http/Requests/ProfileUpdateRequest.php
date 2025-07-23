@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class ProfileUpdateRequest extends FormRequest
 {
@@ -13,11 +12,18 @@ class ProfileUpdateRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
-                'string',
                 'email',
                 'max:255',
-                Rule::unique('users')->ignore($this->user()->id_user, 'id_user'),
+                'unique:users,email,' . $this->user()->id_user . ',id_user',
             ],
+            'nik' => [
+                'nullable',
+                'string',
+                'max:20',
+                // Corrected unique rule: Ignore current user's NIK based on 'id_user'
+                'unique:users,nik,' . $this->user()->id_user . ',id_user',
+            ],
+            'nomor_telepon' => ['nullable', 'string', 'max:20'],
         ];
     }
 }

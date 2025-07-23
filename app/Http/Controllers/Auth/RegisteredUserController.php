@@ -19,7 +19,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        return view('auth.register'); // pastikan view ini ada
     }
 
     /**
@@ -29,18 +29,18 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'nidn' => ['nullable', 'string', 'max:50'],
-            'jabatan' => ['nullable', 'string', 'max:100'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'nik' => ['nullable', 'string', 'max:50', 'unique:users,nik'],
+            'nomor_telepon' => ['nullable', 'string', 'max:20'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
             'name' => $request->name,
-            'nidn' => $request->nidn,
-            'jabatan' => $request->jabatan,
+            'nik' => $request->nik,
+            'nomor_telepon' => $request->nomor_telepon,
             'email' => $request->email,
-            'role' => 'user', // default role saat registrasi
+            'role' => 'user', // default role
             'password' => Hash::make($request->password),
         ]);
 
@@ -48,6 +48,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('dashboard');
+        return redirect()->route('beranda');
     }
 }

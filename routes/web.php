@@ -1,44 +1,87 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\AgendaController;
-use App\Http\Controllers\IsiRapatController;
-use App\Http\Controllers\RuanganController;
-use App\Http\Controllers\NotifController;
+use App\Http\Controllers\User\ReportController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\User\WbsController;
+use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Superadmin\SuperAdminReportController;
+use App\Http\Controllers\Superadmin\SuperAdminWbsController;
+use App\Http\Controllers\Superadmin\UserManagementController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('portal.welcome', [
+        'page_title' => 'Beranda | E-Lapor DIY'
+    ]);
+})->name('beranda');
+
+Route::get('/daftar-aduan', function () {
+    return view('portal.daftar-aduan.index', [
+        'page_title' => 'Daftar Aduan | E-Lapor DIY'
+    ]);
+})->name('daftar-aduan');
+
+Route::get('/wbs', function () {
+    return view('portal.wbs');
+})->name('wbs.index');
+
+Route::get('/tentang', function () {
+    return view('portal.tentang.index');
+})->name('tentang');
+
+Route::get('/daftar-aduan/{id}/detail', [ReportController::class, 'show'])->name('reports.show');
+Route::post('/daftar-aduan/{id}/follow-up', [ReportController::class, 'storeFollowUp'])->name('reports.followup');
+Route::post('/daftar-aduan/{id}/comment', [ReportController::class, 'storeComment'])->name('reports.comment');
+Route::get('/reports/{id}/badges', [ReportController::class, 'getBadgeCounts'])->name('reports.badges');
+Route::delete('/daftar-aduan/komentar/{id}', [ReportController::class, 'deleteComment'])->name('reports.comment.delete');
+Route::delete('reports/{reportId}/followup/{id}', [ReportController::class, 'deleteFollowUp'])->name('reports.followup.delete');
+
+// User Routes
+Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:user'])->prefix('user')->name('user.')->group(function () {
+    Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::put('password', [ProfileController::class, 'updatePassword'])->name('password.update');
+
+    // Report and WBS Routes without repeating the 'user/' prefix
+    Route::resource('aduan', ReportController::class);
+    Route::resource('wbs', WbsController::class);
 });
 
-use App\Http\Controllers\DashboardController;
+Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:admin'])->prefix('admin')->name('admin.')->group(function () {
 
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::middleware('auth', 'verified')->group(function () {
+    // Kelola User
+    Route::get('kelola-user', [UserController::class, 'index'])->name('user.index');
 
-    Route::post('/agendas/{agenda}/approve', [AgendaController::class, 'approve'])->name('agendas.approve');
-    Route::post('/agendas/{agenda}/reject', [AgendaController::class, 'reject'])->name('agendas.reject');
+    // Kelola Aduan
+    Route::resource('kelola-aduan', \App\Http\Controllers\Admin\AduanController::class);
 
-    Route::resource('agendas', AgendaController::class);
-    Route::get('/agendas/{agenda}', [AgendaController::class, 'show'])->name('agendas.show');
+    // Kelola Kategori
+    Route::resource('kelola-kategori', \App\Http\Controllers\Admin\KategoriUmumController::class);
 
-    Route::resource('isi_rapats', IsiRapatController::class);
-    Route::get('/isi_rapats/{isi_rapat}/edit', [IsiRapatController::class, 'edit'])->name('isi_rapats.edit');
-    Route::post('/isi_rapats/{isi_rapat}/close', [IsiRapatController::class, 'close'])->name('isi_rapats.close');
-    Route::post('/isi_rapats/{isi_rapat}/reopen', [IsiRapatController::class, 'reopen'])->name('isi_rapats.reopen');
+    // Kelola Wilayah
+    Route::resource('kelola-wilayah', \App\Http\Controllers\Admin\WilayahUmumController::class);
 
-    Route::resource('ruangans', RuanganController::class);
-
-    Route::resource('notifs', NotifController::class);
-    Route::get('/notifs/{notif}', [NotifController::class, 'show'])->name('notifs.show');
-
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+// Manajemen User (oleh admin, jika diizinkan)
+Route::controller(UserController::class)->group(function () {
+    Route::get('users', 'index')->name('users.index');          // Lihat daftar user
+    Route::get('users/{id}/edit', 'edit')->name('users.edit');  // Edit user
+    Route::put('users/{id}', 'update')->name('users.update');   // Update user
+    Route::delete('users/{id}', 'destroy')->name('users.destroy'); // Hapus user
+});
+
+/// Superadmin Routes
+Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
+    Route::resource('laporan-umum', SuperAdminReportController::class);
+    Route::resource('laporan-wbs', SuperAdminWbsController::class);
+    Route::resource('users', UserManagementController::class);
+    Route::resource('kategori', \App\Http\Controllers\Superadmin\KategoriController::class)->except(['show']);
+    Route::resource('wilayah', \App\Http\Controllers\Superadmin\WilayahController::class)->except(['show']);
+});
+
+require __DIR__ . '/auth.php';

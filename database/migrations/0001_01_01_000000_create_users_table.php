@@ -10,15 +10,12 @@ return new class extends Migration {
         Schema::create('users', function (Blueprint $table) {
             $table->id('id_user');
             $table->string('name');
-            $table->string('nidn')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-
-            // Role bisa admin, pimpinan, atau user
-            $table->enum('role', ['admin', 'pimpinan', 'user'])->default('user');
-
-            $table->string('jabatan')->nullable(); // contoh: Kaprodi, Sekretaris
+            $table->string('nik')->unique()->nullable()->index();
+            $table->string('nomor_telepon')->nullable()->index();
+            $table->enum('role', ['user', 'admin', 'superadmin'])->default('user');
             $table->rememberToken();
             $table->timestamps();
         });

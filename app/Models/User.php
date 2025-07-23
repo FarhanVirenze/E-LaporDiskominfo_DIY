@@ -15,7 +15,8 @@ class User extends Authenticatable
     public $incrementing = true;
     protected $keyType = 'int';
 
-    protected $fillable = ['name', 'nidn', 'email', 'password', 'role', 'jabatan'];
+    // ✅ Tambahkan nik dan nomor_telepon ke fillable
+    protected $fillable = ['name', 'email', 'password', 'role', 'nik', 'nomor_telepon'];
 
     protected $hidden = ['password', 'remember_token'];
 
@@ -23,24 +24,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    public function agendas(): HasMany
+    
+    public function reports(): HasMany
     {
-        return $this->hasMany(Agenda::class, 'id_user', 'id_user');
+        return $this->hasMany(Report::class, 'user_id');
     }
 
-    public function isiRapats(): HasMany
+    public function wbsReports(): HasMany
     {
-        return $this->hasMany(IsiRapat::class, 'id_user', 'id_user');
-    }
-
-    public function notifs(): HasMany
-    {
-        return $this->hasMany(Notif::class, 'id_user', 'id_user');
-    }
-
-    public function approvedAgendas(): HasMany
-    {
-        return $this->hasMany(Agenda::class, 'approved_by', 'id_user');
+        return $this->hasMany(WbsReport::class, 'user_id');
     }
 }

@@ -16,10 +16,15 @@ class InvalidToken extends ExceptionHandler
     {
         // Jika ada AuthenticationException, pastikan selalu JSON
         if ($exception instanceof AuthenticationException) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthenticated or invalid token',
-            ], Response::HTTP_UNAUTHORIZED);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthenticated or invalid token',
+                ], Response::HTTP_UNAUTHORIZED);
+            }
+
+            // Kalau bukan JSON, redirect ke login
+            return redirect()->guest(route('login'));
         }
 
         if ($exception instanceof TokenExpiredException) {
