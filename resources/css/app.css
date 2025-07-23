@@ -69,3 +69,17 @@ a:hover {
         height: 250px; /* Ukuran lebih kecil di layar lebih kecil */
     }
 }
+
+/* Modal container */
+#locationModal .modal-content {
+    max-width: 90%; /* Adjusts for smaller screens */
+    width: 100%;
+    padding: 20px;
+}
+
+/* Map container inside the modal */
+#locationModal #map {
+    height: 30vh;
+    max-height: 350px;
+    min-height: 250px;
+}
