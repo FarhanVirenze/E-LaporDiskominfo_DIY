@@ -8,32 +8,39 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index() {
-        $users = User::where('role', 'user')->get(); // hanya user biasa
-        return view('admin.users.index', compact('users'));
+    public function index(Request $request)
+    {
+        $role = $request->input('role');
+
+        $users = User::when($role, function ($query) use ($role) {
+            return $query->where('role', $role);
+        })->whereIn('role', ['user', 'admin'])->get();
+
+        return view('admin.kelola-user.index', compact('users', 'role'));
     }
 
-    public function edit($id) {
+    public function update(Request $request, $id)
+    {
         $user = User::findOrFail($id);
-        return view('admin.users.edit', compact('user'));
-    }
 
-    public function update(Request $request, $id) {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required',
             'email' => 'required|email',
+            'nik' => 'required',
+            'nomor_telepon' => 'required',
+            'role' => 'required|in:user,admin,pimpinan,superadmin',
         ]);
 
-        $user = User::findOrFail($id);
-        $user->update($request->only('name', 'email'));
+        $user->update($request->only(['name', 'email', 'nik', 'nomor_telepon', 'role']));
 
-        return redirect()->route('admin.users.index')->with('success', 'Data user diperbarui.');
+        return redirect()->route('admin.kelola-user.index')->with('success', 'User berhasil diperbarui.');
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $user = User::findOrFail($id);
         $user->delete();
 
-        return redirect()->back()->with('success', 'User berhasil dihapus.');
+        return redirect()->route('admin.kelola-user.index')->with('success', 'User berhasil dihapus.');
     }
 }

@@ -31,12 +31,12 @@
                             <td>
                                 <!-- Menampilkan Status dengan warna berbeda -->
                                 <span class="status-text
-                                                            @if($report->status == 'Diajukan') bg-blue-200 text-blue-800
-                                                            @elseif($report->status == 'Dibaca') bg-teal-200 text-teal-800
-                                                            @elseif($report->status == 'Direspon') bg-yellow-200 text-yellow-800
-                                                            @elseif($report->status == 'Selesai') bg-green-200 text-green-800
-                                                            @endif
-                                                            rounded-full px-2 py-1 text-xs font-semibold">
+                                                                        @if($report->status == 'Diajukan') bg-blue-200 text-blue-800
+                                                                        @elseif($report->status == 'Dibaca') bg-teal-200 text-teal-800
+                                                                        @elseif($report->status == 'Direspon') bg-yellow-200 text-yellow-800
+                                                                        @elseif($report->status == 'Selesai') bg-green-200 text-green-800
+                                                                        @endif
+                                                                        rounded-full px-2 py-1 text-xs font-semibold">
                                     {{ $report->status }}
                                 </span>
                             </td>
@@ -58,7 +58,7 @@
 
                                     <!-- Detail button, redirects to the detail page -->
                                     <a href="{{ route('reports.show', ['id' => $report->id]) }}"
-                                        class="btn btn-info btn-sm">Detail</a>
+                                        class="btn btn-info btn-sm">Lihat</a>
                                 </div>
                             </td>
                         </tr>

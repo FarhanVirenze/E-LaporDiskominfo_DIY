@@ -73,11 +73,49 @@
             @endif
         </div>
 
-         <!-- Login Button -->
+        <!-- Login Button -->
         <div class="mt-6">
-            <x-primary-button class="w-full justify-center bg-red-700 hover:bg-red-800 text-white font-semibold py-2 rounded-md transition duration-200">
+            <x-primary-button
+                class="w-full justify-center bg-red-700 hover:bg-red-800 text-white font-semibold py-2 rounded-md transition duration-200">
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
     </form>
+
+    @push('scripts')
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                // Transisi Spinner ke Centang
+                const spinner = document.getElementById('success-spinner');
+                const check = document.getElementById('success-check');
+
+                setTimeout(() => {
+                    if (spinner && check) {
+                        spinner.classList.add('hidden');
+                        check.classList.remove('hidden');
+                        check.classList.add('scale-100');
+                    }
+                }, 1000); // ganti spinner ke check setelah 1 detik
+
+                // Fade-out seluruh alert setelah 3 detik
+                const fadeOutAndRemove = (el) => {
+                    if (!el) return;
+                    el.classList.remove('opacity-100');
+                    el.classList.add('opacity-0');
+                    setTimeout(() => {
+                        el.style.display = 'none';
+                    }, 500); // durasi sama dengan transition
+                };
+
+                setTimeout(() => {
+                    fadeOutAndRemove(document.getElementById('alert-success'));
+                    fadeOutAndRemove(document.getElementById('alert-error'));
+                }, 3000);
+            });
+
+            check.classList.remove('hidden');
+            check.classList.add('scale-100'); // Smooth zoom-in
+        </script>
+    @endpush
+
 </x-guest-layout>

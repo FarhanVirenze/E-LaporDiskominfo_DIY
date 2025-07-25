@@ -3,6 +3,7 @@
 @section('include-css')
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -23,10 +24,10 @@
                 <p><strong>Status Aduan</strong>
                     <span
                         class="px-2 py-1 text-sm rounded font-semibold
-                                                                                        @if($report->status == 'Diajukan') bg-blue-100 text-blue-700
-                                                                                        @elseif($report->status == 'Dibaca') bg-teal-100 text-teal-700
-                                                                                        @elseif($report->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                                        @elseif($report->status == 'Selesai') bg-green-100 text-green-700 @endif">
+                                                                                                                                                                        @if($report->status == 'Diajukan') bg-blue-100 text-blue-700
+                                                                                                                                                                        @elseif($report->status == 'Dibaca') bg-teal-100 text-teal-700
+                                                                                                                                                                        @elseif($report->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                                                                                                                                        @elseif($report->status == 'Selesai') bg-green-100 text-green-700 @endif">
                         {{ $report->status }}
                     </span>
                 </p>
@@ -76,38 +77,96 @@
             @endforeach
         </div>
 
+        {{-- Modal Hapus Konfirmasi --}}
+        <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+                <h3 class="text-xl font-semibold mb-4">Konfirmasi Penghapusan</h3>
+                <p class="text-gray-600 mb-6">Apakah Anda yakin ingin menghapus ini?</p>
+                <form id="deleteForm" method="POST" class="space-x-4">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Hapus</button>
+                    <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                        onclick="closeDeleteModal()">Batal</button>
+                </form>
+            </div>
+        </div>
+
         {{-- Tab Konten --}}
         <div class="p-6">
             {{-- Tindak Lanjut --}}
             <div class="tab-pane opacity-100 translate-y-0 transition-all duration-300" data-tab="tindak">
-                @forelse ($followUps as $item)
-                    <div class="mb-6 relative group bg-gray-50 rounded-md p-3 border shadow-sm">
-                        <!-- Menambahkan kelas yang sama seperti komentar -->
-                        <p class="text-sm text-gray-600">
-                            <strong>{{ $item->user->name }}</strong>
-                            <span class="text-gray-500"> ({{ $item->created_at->diffForHumans() }})</span>
-                        </p>
-                        <p class="text-gray-800 mb-2">{{ $item->pesan }}</p>
-                        @if ($item->file)
-                            <img src="{{ asset('storage/' . $item->file) }}" class="max-w-xs rounded shadow">
-                        @endif
+                <div class="max-h-96 overflow-y-auto pr-2">
+                    @forelse ($followUps as $item)
+                        <div class="mb-6 relative group bg-gray-50 rounded-md p-3 border shadow-sm">
+                            <p class="text-sm text-gray-600">
+                                <strong>{{ $item->user->name }}</strong>
+                                <span class="text-gray-500"> ({{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }})</span>
+                            </p>
+                            <p class="text-gray-800 mb-2">{{ $item->pesan }}</p>
 
-                        {{-- Tombol hapus tindak lanjut --}}
-                        @if (auth()->check() && auth()->user()->role === 'admin')
-                            <form method="POST" action="{{ route('reports.followup.delete', [$report->id, $item->id]) }}"
-                                class="absolute top-2 right-2 hidden group-hover:block"
-                                onsubmit="return confirm('Yakin ingin menghapus tindak lanjut ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-600 text-xs hover:text-red-800">
+                            @if ($item->file)
+                                @php
+                                    $filePath = asset('storage/' . $item->file);
+                                    $fileExtension = pathinfo($item->file, PATHINFO_EXTENSION);
+                                @endphp
+
+                                @if (in_array(strtolower($fileExtension), ['jpg', 'jpeg', 'png', 'gif']))
+                                    <!-- Tampilkan Gambar -->
+                                    <img src="{{ $filePath }}"
+                                        class="w-32 h-auto rounded shadow cursor-pointer hover:opacity-80 transition-opacity"
+                                        onclick="openModal('{{ $filePath }}')" alt="Lampiran Tindak Lanjut">
+                                @elseif ($fileExtension === 'pdf')
+                                    <!-- Tampilkan PDF -->
+                                    <a href="{{ $filePath }}"
+                                        class="text-red-600 hover:bg-red-100 hover:text-red-700 p-2 rounded transition-all flex items-center"
+                                        target="_blank">
+                                        <i class="fas fa-file-pdf mr-2"></i> PDF File
+                                    </a>
+                                @elseif (in_array(strtolower($fileExtension), ['doc', 'docx']))
+                                    <!-- Tampilkan Word File -->
+                                    <a href="{{ $filePath }}"
+                                        class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
+                                        target="_blank">
+                                        <i class="fas fa-file-word mr-2"></i> Word Document
+                                    </a>
+                                @elseif ($fileExtension === 'zip')
+                                    <!-- Tampilkan ZIP File -->
+                                    <a href="{{ $filePath }}"
+                                        class="text-yellow-600 hover:bg-yellow-100 hover:text-yellow-700 p-2 rounded transition-all flex items-center"
+                                        target="_blank">
+                                        <i class="fas fa-file-archive mr-2"></i> ZIP Archive
+                                    </a>
+                                @elseif (in_array(strtolower($fileExtension), ['xls', 'xlsx']))
+                                    <!-- Tampilkan Excel File -->
+                                    <a href="{{ $filePath }}"
+                                        class="text-green-600 hover:bg-green-100 hover:text-green-700 p-2 rounded transition-all flex items-center"
+                                        target="_blank">
+                                        <i class="fas fa-file-excel mr-2"></i> Excel File
+                                    </a>
+                                @else
+                                    <!-- File Lain yang Tidak Didukung -->
+                                    <a href="{{ $filePath }}"
+                                        class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
+                                        target="_blank">
+                                        <i class="fas fa-file mr-2"></i> Lihat File
+                                    </a>
+                                @endif
+                            @endif
+
+                            {{-- Tombol hapus tindak lanjut --}}
+                            @if (auth()->check() && auth()->user()->role === 'admin')
+                                <button
+                                    onclick="openDeleteModal('{{ route('reports.followup.delete', [$report->id, $item->id]) }}')"
+                                    class="absolute top-2 right-2 text-red-600 text-xs hover:text-red-800 border border-red-600 rounded-full p-1 z-10">
                                     <i class="fas fa-trash-alt"></i> Hapus
                                 </button>
-                            </form>
-                        @endif
-                    </div>
-                @empty
-                    <p class="text-gray-500">Belum ada tindak lanjut.</p>
-                @endforelse
+                            @endif
+                        </div>
+                    @empty
+                        <p class="text-gray-500">Belum ada tindak lanjut.</p>
+                    @endforelse
+                </div>
 
                 @if (auth()->check() && in_array(auth()->user()->role, ['admin']))
                     <form action="{{ route('reports.followup', ['id' => $report->id]) }}" method="POST"
@@ -129,26 +188,65 @@
                         <div class="relative group mb-6 bg-gray-50 rounded-md p-3 border shadow-sm">
                             <p class="text-sm text-gray-600">
                                 <strong>{{ $item->user->name }}</strong>
-                                <span class="text-gray-500">({{ $item->created_at->diffForHumans() }})</span>
+                                <span class="text-gray-500">({{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }})</span>
                             </p>
                             <p class="text-gray-800 mb-2">{{ $item->pesan }}</p>
 
                             @if ($item->file)
-                                <img src="{{ asset('storage/' . $item->file) }}" class="w-32 h-auto rounded shadow cursor-pointer"
-                                    onclick="openModal('{{ asset('storage/' . $item->file) }}')" alt="Lampiran Komentar">
+                                @php
+                                    $filePath = asset('storage/' . $item->file);
+                                    $fileExtension = pathinfo($item->file, PATHINFO_EXTENSION);
+                                @endphp
+
+                                @if (in_array(strtolower($fileExtension), ['jpg', 'jpeg', 'png', 'gif']))
+                                    <!-- Tampilkan Gambar -->
+                                    <img src="{{ $filePath }}"
+                                        class="w-32 h-auto rounded shadow cursor-pointer hover:opacity-80 transition-opacity"
+                                        onclick="openModal('{{ $filePath }}')" alt="Lampiran Komentar">
+                                @elseif ($fileExtension === 'pdf')
+                                    <!-- Tampilkan PDF -->
+                                    <a href="{{ $filePath }}"
+                                        class="text-red-600 hover:bg-red-100 hover:text-red-700 p-2 rounded transition-all flex items-center"
+                                        target="_blank">
+                                        <i class="fas fa-file-pdf mr-2"></i> PDF File
+                                    </a>
+                                @elseif (in_array(strtolower($fileExtension), ['doc', 'docx']))
+                                    <!-- Tampilkan Word File -->
+                                    <a href="{{ $filePath }}"
+                                        class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
+                                        target="_blank">
+                                        <i class="fas fa-file-word mr-2"></i> Word Document
+                                    </a>
+                                @elseif ($fileExtension === 'zip')
+                                    <!-- Tampilkan ZIP File -->
+                                    <a href="{{ $filePath }}"
+                                        class="text-yellow-600 hover:bg-yellow-100 hover:text-yellow-700 p-2 rounded transition-all flex items-center"
+                                        target="_blank">
+                                        <i class="fas fa-file-archive mr-2"></i> ZIP Archive
+                                    </a>
+                                @elseif (in_array(strtolower($fileExtension), ['xls', 'xlsx']))
+                                    <!-- Tampilkan Excel File -->
+                                    <a href="{{ $filePath }}"
+                                        class="text-green-600 hover:bg-green-100 hover:text-green-700 p-2 rounded transition-all flex items-center"
+                                        target="_blank">
+                                        <i class="fas fa-file-excel mr-2"></i> Excel File
+                                    </a>
+                                @else
+                                    <!-- File Lain yang Tidak Didukung -->
+                                    <a href="{{ $filePath }}"
+                                        class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
+                                        target="_blank">
+                                        <i class="fas fa-file mr-2"></i> Lihat File
+                                    </a>
+                                @endif
                             @endif
 
                             {{-- Tombol hapus komentar --}}
                             @if (auth()->check() && (auth()->id() === $item->user_id || auth()->user()->role === 'admin'))
-                                <form method="POST" action="{{ route('reports.comment.delete', $item->id) }}"
-                                    class="absolute top-2 right-2 hidden group-hover:block"
-                                    onsubmit="return confirm('Yakin ingin menghapus komentar ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 text-xs hover:text-red-800">
-                                        <i class="fas fa-trash-alt"></i> Hapus
-                                    </button>
-                                </form>
+                                <button onclick="openDeleteModal('{{ route('reports.comment.delete', $item->id) }}')"
+                                    class="absolute top-2 right-2 text-red-600 text-xs hover:text-red-800 border border-red-600 rounded-full p-1 z-10">
+                                    <i class="fas fa-trash-alt"></i> Hapus
+                                </button>
                             @endif
                         </div>
                     @empty
@@ -182,10 +280,64 @@
             {{-- Lampiran --}}
             <div class="tab-pane opacity-0 translate-y-4 transition-all duration-300 hidden" data-tab="lampiran">
                 @if ($report->file)
-                    <div class="mt-2">
-                        <img src="{{ asset('storage/' . $report->file) }}" class="w-32 h-auto rounded shadow cursor-pointer"
-                            onclick="openModal('{{ asset('storage/' . $report->file) }}')" alt="Lampiran">
-                    </div>
+                    @php
+                        $filePath = asset('storage/' . $report->file);
+                        $fileExtension = pathinfo($report->file, PATHINFO_EXTENSION);
+                    @endphp
+
+                    @if (in_array(strtolower($fileExtension), ['jpg', 'jpeg', 'png', 'gif']))
+                        <!-- Tampilkan Gambar -->
+                        <div class="mt-2">
+                            <img src="{{ $filePath }}"
+                                class="w-32 h-auto rounded shadow cursor-pointer hover:opacity-80 transition-opacity"
+                                onclick="openModal('{{ $filePath }}')" alt="Lampiran Gambar">
+                        </div>
+                    @elseif ($fileExtension === 'pdf')
+                        <!-- Tampilkan PDF -->
+                        <div class="mt-2">
+                            <a href="{{ $filePath }}"
+                                class="text-red-600 hover:bg-red-100 hover:text-red-700 p-2 rounded transition-all flex items-center"
+                                target="_blank">
+                                <i class="fas fa-file-pdf mr-2"></i> PDF File
+                            </a>
+                        </div>
+                    @elseif (in_array(strtolower($fileExtension), ['doc', 'docx']))
+                        <!-- Tampilkan Word File -->
+                        <div class="mt-2">
+                            <a href="{{ $filePath }}"
+                                class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
+                                target="_blank">
+                                <i class="fas fa-file-word mr-2"></i> Word Document
+                            </a>
+                        </div>
+                    @elseif ($fileExtension === 'zip')
+                        <!-- Tampilkan ZIP File -->
+                        <div class="mt-2">
+                            <a href="{{ $filePath }}"
+                                class="text-yellow-600 hover:bg-yellow-100 hover:text-yellow-700 p-2 rounded transition-all flex items-center"
+                                target="_blank">
+                                <i class="fas fa-file-archive mr-2"></i> ZIP Archive
+                            </a>
+                        </div>
+                    @elseif (in_array(strtolower($fileExtension), ['xls', 'xlsx']))
+                        <!-- Tampilkan Excel File -->
+                        <div class="mt-2">
+                            <a href="{{ $filePath }}"
+                                class="text-green-600 hover:bg-green-100 hover:text-green-700 p-2 rounded transition-all flex items-center"
+                                target="_blank">
+                                <i class="fas fa-file-excel mr-2"></i> Excel File
+                            </a>
+                        </div>
+                    @else
+                        <!-- File Lain yang Tidak Didukung -->
+                        <div class="mt-2">
+                            <a href="{{ $filePath }}"
+                                class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
+                                target="_blank">
+                                <i class="fas fa-file mr-2"></i> Lihat Lampiran
+                            </a>
+                        </div>
+                    @endif
                 @else
                     <p class="text-gray-500">Tidak ada lampiran.</p>
                 @endif
@@ -286,6 +438,17 @@
                 }, 2000);
             }
         });
+
+        // Menampilkan modal konfirmasi penghapusan
+        function openDeleteModal(deleteUrl) {
+            document.getElementById('deleteForm').action = deleteUrl;
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        // Menutup modal konfirmasi penghapusan
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
 
         function showTab(tab) {
             const buttons = document.querySelectorAll('.tab-button');

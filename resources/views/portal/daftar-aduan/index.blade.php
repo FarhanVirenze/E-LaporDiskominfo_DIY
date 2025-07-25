@@ -15,10 +15,14 @@
                 <div
                     class="bg-white border-2 border-gray-300 p-4 shadow-lg rounded-lg hover:shadow-xl transition duration-300 w-full mx-auto">
                     <h3 class="font-semibold text-lg text-gray-800 text-left truncate">
-                        {{ Str::limit($report->judul, 28) }}
+                        <a href="{{ route('reports.show', ['id' => $report->id]) }}" class="hover:text-blue-600 transition-all">
+                            {{ Str::limit($report->judul, 28) }}
+                        </a>
                     </h3>
                     <p class="text-sm text-gray-600 mt-2 text-left line-clamp-2">
-                        {{ $report->isi }}
+                        <a href="{{ route('reports.show', ['id' => $report->id]) }}" class="hover:text-blue-600 transition-all">
+                            {{ $report->isi }}
+                        </a>
                     </p>
 
                     <div class="mt-4">
@@ -47,12 +51,12 @@
                             <i class="fas fa-tasks text-yellow-500"></i>
                             <span class="font-semibold">Status: </span>
                             <span class="status-text 
-                                        @if($report->status == 'Diajukan') bg-blue-200 text-blue-800 
-                                        @elseif($report->status == 'Dibaca') bg-teal-200 text-teal-800 
-                                        @elseif($report->status == 'Direspon') bg-yellow-200 text-yellow-800 
-                                        @elseif($report->status == 'Selesai') bg-green-200 text-green-800 
-                                        @endif 
-                                        rounded-full px-2 py-1 text-xs font-semibold">
+                                                                @if($report->status == 'Diajukan') bg-blue-200 text-blue-800 
+                                                                @elseif($report->status == 'Dibaca') bg-teal-200 text-teal-800 
+                                                                @elseif($report->status == 'Direspon') bg-yellow-200 text-yellow-800 
+                                                                @elseif($report->status == 'Selesai') bg-green-200 text-green-800 
+                                                                @endif 
+                                                                rounded-full px-2 py-1 text-xs font-semibold">
                                 {{ $report->status }}
                             </span>
                         </div>

@@ -42,14 +42,14 @@ class ReportController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul' => 'required|string|min:35|max:255',
+            'judul' => 'required|string|min:30|max:255',
             'isi' => 'required|string|min:120',
             'kategori_id' => 'required|exists:kategori_umum,id',
             'wilayah_id' => 'required|exists:wilayah_umum,id',
-            'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,zip|max:10240',
-            'lokasi' => 'nullable|string|max:255',
-            'latitude' => 'nullable|numeric|between:-90,90',
-            'longitude' => 'nullable|numeric|between:-180,180',
+            'file' => 'required|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip|max:10240',
+            'lokasi' => 'required|string|max:255',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
             'is_anonim' => 'nullable|boolean',
         ]);
 
@@ -92,6 +92,7 @@ class ReportController extends Controller
      */
     public function show($id)
     {
+        // Cari laporan beserta relasi kategori, wilayah, user, followUps, dan comments
         $report = Report::with([
             'kategori',
             'wilayah',
@@ -100,13 +101,25 @@ class ReportController extends Controller
             'comments.user'
         ])->findOrFail($id);
 
+        // Pastikan hanya admin yang bisa mengubah status laporan menjadi 'Dibaca' dan statusnya masih 'Diajukan'
+        if (auth()->check() && auth()->user()->role === 'admin' && $report->status === Report::STATUS_DIAJUKAN) {
+            // Ubah status laporan menjadi 'Dibaca'
+            $report->status = Report::STATUS_DIBACA;
+            $report->save(); // Simpan perubahan status
+
+            // Set pesan sukses
+            session()->flash('success', 'Status laporan berhasil diperbarui menjadi Dibaca');
+        }
+
+        // Filter followUps untuk hanya menampilkan yang dibuat oleh user dengan role 'admin'
         $followUps = $report->followUps->filter(
-            fn($item) =>
-            $item->user && $item->user->role === 'admin'
+            fn($item) => $item->user && $item->user->role === 'admin'
         );
 
+        // Ambil semua komentar terkait laporan
         $comments = $report->comments;
 
+        // Tampilkan view dengan data yang telah diolah
         return view('portal.daftar-aduan.detail.index', compact('report', 'followUps', 'comments'));
     }
 
@@ -117,7 +130,7 @@ class ReportController extends Controller
     {
         $request->validate([
             'pesan' => 'required|string',
-            'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip|max:10240',
         ]);
 
         if (Auth::user()->role !== 'admin') {
@@ -136,7 +149,12 @@ class ReportController extends Controller
 
         $followUp->save();
 
-        return back()->with('success', 'Tindak lanjut berhasil dikirim.');
+        // Update status laporan menjadi 'Direspon' jika ada tindak lanjut
+        $report = Report::findOrFail($reportId);
+        $report->status = Report::STATUS_DIRESPON;
+        $report->save();
+
+        return back()->with('success', 'Tindak lanjut berhasil dikirim, Status Aduan menjadi Direspon');
     }
 
     /**
@@ -146,7 +164,7 @@ class ReportController extends Controller
     {
         $request->validate([
             'pesan' => 'required|string',
-            'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip|max:10240',
         ]);
 
         if (Auth::user()->role !== 'user' && Auth::user()->role !== 'admin') {
@@ -204,9 +222,9 @@ class ReportController extends Controller
     /**
      * Hapus tindak lanjut (hanya admin yang bisa).
      */
-    public function deleteFollowUp($id)
+    public function deleteFollowUp($reportId, $followUpId)
     {
-        $followUp = FollowUp::findOrFail($id);
+        $followUp = FollowUp::findOrFail($followUpId);
 
         // Cek apakah user adalah admin
         if (Auth::user()->role !== 'admin') {
@@ -221,6 +239,13 @@ class ReportController extends Controller
         // Hapus tindak lanjut
         $followUp->delete();
 
-        return back()->with('success', 'Tindak lanjut berhasil dihapus.');
+        // Jika tidak ada tindak lanjut lagi, ubah status laporan menjadi 'Dibaca'
+        $report = Report::findOrFail($reportId);
+        if ($report->followUps->isEmpty()) {
+            $report->status = Report::STATUS_DIBACA;
+            $report->save();
+        }
+
+        return back()->with('success', 'Tindak lanjut berhasil dihapus, Status Aduan menjadi Dibaca');
     }
 }

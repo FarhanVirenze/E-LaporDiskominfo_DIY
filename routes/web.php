@@ -54,7 +54,7 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:admin'])->prefix
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Kelola User
-    Route::get('kelola-user', [UserController::class, 'index'])->name('user.index');
+    Route::resource('kelola-user', \App\Http\Controllers\Admin\UserController::class)->except(['create', 'store', 'show']);
 
     // Kelola Aduan
     Route::resource('kelola-aduan', \App\Http\Controllers\Admin\AduanController::class);
@@ -65,14 +65,6 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:admin'])->prefix
     // Kelola Wilayah
     Route::resource('kelola-wilayah', \App\Http\Controllers\Admin\WilayahUmumController::class);
 
-});
-
-// Manajemen User (oleh admin, jika diizinkan)
-Route::controller(UserController::class)->group(function () {
-    Route::get('users', 'index')->name('users.index');          // Lihat daftar user
-    Route::get('users/{id}/edit', 'edit')->name('users.edit');  // Edit user
-    Route::put('users/{id}', 'update')->name('users.update');   // Update user
-    Route::delete('users/{id}', 'destroy')->name('users.destroy'); // Hapus user
 });
 
 /// Superadmin Routes

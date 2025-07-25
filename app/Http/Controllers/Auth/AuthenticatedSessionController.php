@@ -30,20 +30,21 @@ class AuthenticatedSessionController extends Controller
         // Regenerate session to prevent session fixation
         $request->session()->regenerate();
 
-        // Check the user's role and redirect accordingly
         $user = Auth::user();
 
-        // Redirect based on user role
+        // Flash message based on role
         if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');  // Admins go to the admin dashboard
+            session()->flash('success', 'Anda berhasil masuk sebagai Admin.');
+            return redirect()->route('admin.dashboard');
         }
 
         if ($user->role === 'superadmin') {
-            return redirect()->route('superadmin.dashboard');  // Superadmins go to the superadmin dashboard
+            session()->flash('success', 'Anda berhasil masuk sebagai Super Admin.');
+            return redirect()->route('superadmin.dashboard');
         }
 
-        // Default redirect for regular users
-        return redirect()->route('beranda');  // Users go to the home page or a specific route
+        session()->flash('success', 'Anda berhasil masuk sebagai User.');
+        return redirect()->route('beranda');
     }
 
     /**
@@ -51,11 +52,25 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $user = Auth::user(); // Simpan data user sebelum logout
+
+        // Logout user
         Auth::guard('web')->logout();
 
-        // Invalidate the session and regenerate the token
+        // Invalidate session dan regenerate token
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        // Flash message berdasarkan peran user
+        if ($user) {
+            if ($user->role === 'admin') {
+                $request->session()->flash('success', 'Anda berhasil log out dari Admin.');
+            } elseif ($user->role === 'superadmin') {
+                $request->session()->flash('success', 'Anda berhasil log out dari Super Admin.');
+            } else {
+                $request->session()->flash('success', 'Anda berhasil log out dari User.');
+            }
+        }
 
         return redirect('/login');
     }

@@ -25,12 +25,12 @@ return new class extends Migration {
             $table->text('isi');
             $table->foreignId('kategori_id')->constrained('kategori_umum')->onDelete('cascade');
             $table->foreignId('wilayah_id')->constrained('wilayah_umum')->onDelete('cascade');
-            $table->string('file')->nullable();
+            $table->string('file');
 
             // Lokasi
-            $table->string('lokasi')->nullable(); // Alamat
-            $table->decimal('latitude', 10, 7)->nullable();
-            $table->decimal('longitude', 10, 7)->nullable();
+            $table->string('lokasi'); // Alamat
+            $table->decimal('latitude', 10, 7);
+            $table->decimal('longitude', 10, 7);
 
             // Status laporan
             $table->enum('status', ['Diajukan', 'Dibaca', 'Direspon', 'Selesai'])->default('Diajukan');

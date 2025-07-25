@@ -8,7 +8,7 @@
 
 /* Menambahkan outline merah untuk elemen dengan border putih */
 .outline-red-500 {
-    outline: 2px solid #C0392B !important;
+    outline: 2px solid #c0392b !important;
 }
 
 a {
@@ -26,31 +26,46 @@ a:hover {
 }
 
 @keyframes smoothFadeIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 @keyframes smoothFadeOut {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.9);
-  }
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.5s ease-out;
 }
 
 .modal-animate-in {
-  animation: smoothFadeIn 0.35s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    animation: smoothFadeIn 0.35s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
 }
 .modal-animate-out {
-  animation: smoothFadeOut 0.25s ease-in forwards;
+    animation: smoothFadeOut 0.25s ease-in forwards;
 }
 
 #map {
@@ -83,3 +98,14 @@ a:hover {
     max-height: 350px;
     min-height: 250px;
 }
+
+/* Modal konfirmasi penghapusan */
+#deleteModal {
+    transition: opacity 0.3s ease-in-out;
+}
+
+#deleteModal.hidden {
+    display: none;
+    opacity: 0;
+}
+

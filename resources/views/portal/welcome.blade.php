@@ -8,17 +8,36 @@
     @php
         $user = Auth::user();
     @endphp
+    <!-- Notifikasi Sukses -->
+    @if (session('success'))
+        <div id="alert-success"
+            class="fixed top-5 right-5 z-50 flex items-center gap-3 bg-green-500 text-white px-5 py-3 rounded-lg shadow-lg transition-opacity duration-500 opacity-100 animate-fade-in">
+            <!-- Icon Wrapper -->
+            <div id="success-icon-wrapper" class="transition-all duration-300">
+                <!-- Spinner awal -->
+                <svg id="success-spinner" class="w-5 h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="white" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
 
-    <!-- Pesan Notifikasi Success/Error -->
-    @if(session('success'))
-        <div class="alert alert-success bg-green-500 text-white p-4 rounded-lg mb-6">
-            {{ session('success') }}
+                <!-- Centang, disembunyikan dulu -->
+                <svg id="success-check" class="w-6 h-6 text-white hidden" fill="none" viewBox="0 0 24 24">
+                    <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <!-- Pesan -->
+            <span>{{ session('success') }}</span>
         </div>
     @endif
 
-    @if(session('error'))
-        <div class="alert alert-danger bg-red-500 text-white p-4 rounded-lg mb-6">
-            {{ session('error') }}
+    @if (session('error'))
+        <div id="alert-error"
+            class="fixed top-5 right-5 z-50 flex items-center gap-3 bg-red-500 text-white px-5 py-3 rounded-lg shadow-lg transition-opacity duration-500 opacity-100 animate-fade-in">
+            <!-- Icon -->
+            <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24">
+                <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            <span>{{ session('error') }}</span>
         </div>
     @endif
 
@@ -301,12 +320,12 @@
                                     <span class="font-semibold">Status: </span>
                                     <span
                                         class="status-text 
-                                                                                                                                                                                                                                                                @if($report->status == 'Diajukan') bg-blue-200 text-blue-800 
-                                                                                                                                                                                                                                                                @elseif($report->status == 'Dibaca') bg-teal-200 text-teal-800 
-                                                                                                                                                                                                                                                                @elseif($report->status == 'Direspon') bg-yellow-200 text-yellow-800 
-                                                                                                                                                                                                                                                                @elseif($report->status == 'Selesai') bg-green-200 text-green-800 
-                                                                                                                                                                                                                                                                @endif 
-                                                                                                                                                                                                                                                                rounded-full px-2 py-1 text-xs font-semibold">
+                                                                                                                                                                                                                                                                                                                                        @if($report->status == 'Diajukan') bg-blue-200 text-blue-800 
+                                                                                                                                                                                                                                                                                                                                        @elseif($report->status == 'Dibaca') bg-teal-200 text-teal-800 
+                                                                                                                                                                                                                                                                                                                                        @elseif($report->status == 'Direspon') bg-yellow-200 text-yellow-800 
+                                                                                                                                                                                                                                                                                                                                        @elseif($report->status == 'Selesai') bg-green-200 text-green-800 
+                                                                                                                                                                                                                                                                                                                                        @endif 
+                                                                                                                                                                                                                                                                                                                                        rounded-full px-2 py-1 text-xs font-semibold">
                                         {{ $report->status }}
                                     </span>
                                 </div>
@@ -364,14 +383,36 @@
                     }
                 }
 
-                // === Auto Hide Notifikasi Setelah 3 Detik ===
+                const spinner = document.getElementById('success-spinner');
+                const check = document.getElementById('success-check');
+
                 setTimeout(() => {
-                    const success = document.querySelector('.alert-success');
-                    const error = document.querySelector('.alert-danger');
-                    if (success) success.style.display = 'none';
-                    if (error) error.style.display = 'none';
+                    if (spinner && check) {
+                        spinner.classList.add('hidden');
+                        check.classList.remove('hidden');
+                        check.classList.add('scale-100');
+                    }
+                }, 1000); // ganti spinner ke check setelah 1 detik
+
+                // Fade-out seluruh alert setelah 3 detik
+                const fadeOutAndRemove = (el) => {
+                    if (!el) return;
+                    el.classList.remove('opacity-100');
+                    el.classList.add('opacity-0');
+                    setTimeout(() => {
+                        el.style.display = 'none';
+                    }, 500); // durasi sama dengan transition
+                };
+
+
+                setTimeout(() => {
+                    fadeOutAndRemove(document.getElementById('alert-success'));
+                    fadeOutAndRemove(document.getElementById('alert-error'));
                 }, 3000);
             });
+
+            check.classList.remove('hidden');
+            check.classList.add('scale-100'); // Smooth zoom-in
 
             // === Leaflet Map & Lokasi Modal ===
             let map, marker;
