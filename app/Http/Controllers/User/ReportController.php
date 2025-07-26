@@ -42,7 +42,7 @@ class ReportController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul' => 'required|string|min:30|max:255',
+            'judul' => 'required|string|min:20|max:255',
             'isi' => 'required|string|min:120',
             'kategori_id' => 'required|exists:kategori_umum,id',
             'wilayah_id' => 'required|exists:wilayah_umum,id',
@@ -149,12 +149,15 @@ class ReportController extends Controller
 
         $followUp->save();
 
-        // Update status laporan menjadi 'Direspon' jika ada tindak lanjut
+        // Update status laporan menjadi 'Direspon' hanya jika status sebelumnya 'Dibaca'
         $report = Report::findOrFail($reportId);
-        $report->status = Report::STATUS_DIRESPON;
-        $report->save();
+        if ($report->status === Report::STATUS_DIBACA) {
+            $report->status = Report::STATUS_DIRESPON;
+            $report->save();
+        }
 
-        return back()->with('success', 'Tindak lanjut berhasil dikirim, Status Aduan menjadi Direspon');
+        return back()->with('success', 'Tindak lanjut berhasil dikirim' .
+            ($report->status === Report::STATUS_DIRESPON ? ', Status Aduan menjadi Direspon' : ''));
     }
 
     /**
@@ -239,13 +242,15 @@ class ReportController extends Controller
         // Hapus tindak lanjut
         $followUp->delete();
 
-        // Jika tidak ada tindak lanjut lagi, ubah status laporan menjadi 'Dibaca'
+        // Jika tidak ada tindak lanjut lagi dan status sebelumnya adalah Direspon, ubah jadi Dibaca
         $report = Report::findOrFail($reportId);
-        if ($report->followUps->isEmpty()) {
+        if ($report->followUps->isEmpty() && $report->status === Report::STATUS_DIRESPON) {
             $report->status = Report::STATUS_DIBACA;
             $report->save();
+
+            return back()->with('success', 'Tindak lanjut berhasil dihapus, Status Aduan menjadi Dibaca');
         }
 
-        return back()->with('success', 'Tindak lanjut berhasil dihapus, Status Aduan menjadi Dibaca');
+        return back()->with('success', 'Tindak lanjut berhasil dihapus');
     }
 }
