@@ -10,6 +10,7 @@
         <!-- Menu Navigasi -->
         <ul class="hidden lg:flex space-x-6 font-semibold tracking-wide">
             <li><a href="{{ route('beranda') }}" class="hover:underline hover:decoration-white">E-Lapor DIY</a></li>
+            <li><a href="{{ route('admin.dashboard') }}" class="hover:underline hover:decoration-white">Dashboard</a></li>
             <li><a href="{{ route('admin.kelola-user.index') }}" class="hover:underline hover:decoration-white">Kelola User</a></li>
             <li><a href="{{ route('admin.kelola-aduan.index') }}" class="hover:underline hover:decoration-white">Kelola Aduan</a></li>
             <li><a href="{{ route('admin.kelola-kategori.index') }}" class="hover:underline hover:decoration-white">Kelola Kategori</a></li>
@@ -72,6 +73,7 @@
             <button id="close-menu" class="text-white text-2xl absolute top-4 right-4">×</button>
             <ul class="space-y-6 font-semibold tracking-wide mt-10">
                 <li><a href="{{ route('beranda') }}" class="hover:underline hover:decoration-white">E-Lapor DIY</a></li>
+                <li><a href="{{ route('admin.dashboard') }}" class="hover:underline hover:decoration-white">Dashboard</a></li>
                 <li><a href="{{ route('admin.kelola-user.index') }}" class="hover:underline hover:decoration-white">Kelola User</a></li>
                 <li><a href="{{ route('admin.kelola-aduan.index') }}" class="hover:underline hover:decoration-white">Kelola Aduan</a></li>
                 <li><a href="{{ route('admin.kelola-kategori.index') }}" class="hover:underline hover:decoration-white">Kelola Kategori</a></li>
