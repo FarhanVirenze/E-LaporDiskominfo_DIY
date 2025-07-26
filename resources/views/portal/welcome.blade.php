@@ -411,9 +411,6 @@
                 }, 3000);
             });
 
-            check.classList.remove('hidden');
-            check.classList.add('scale-100'); // Smooth zoom-in
-
             // === Leaflet Map & Lokasi Modal ===
             let map, marker;
 
