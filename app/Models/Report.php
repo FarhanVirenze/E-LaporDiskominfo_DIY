@@ -4,13 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Report extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'tracking_id',   // <--- Tambahkan ini
         'user_id',
+        'likes',
+        'dislikes',
         'is_anonim',
         'nama_pengadu',
         'email_pengadu',
@@ -31,6 +35,7 @@ class Report extends Model
         'is_anonim' => 'boolean',
         'latitude' => 'float',
         'longitude' => 'float',
+        'file' => 'array',
     ];
 
     public const STATUS_DIAJUKAN = 'Diajukan';
@@ -71,5 +76,19 @@ class Report extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class, 'report_id');
+    }
+
+    // (Opsional) Generate tracking_id otomatis jika belum diset
+    protected static function booted()
+    {
+        static::creating(function ($report) {
+            if (empty($report->tracking_id)) {
+                do {
+                    $tanggal = now()->format('dmy'); // 6 digit, misalnya 270725
+                    $acak = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT); // 4 digit
+                    $report->tracking_id = $tanggal . $acak; // Total 10 digit
+                } while (self::where('tracking_id', $report->tracking_id)->exists());
+            }
+        });
     }
 }

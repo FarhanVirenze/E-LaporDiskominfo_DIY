@@ -36,6 +36,8 @@ Route::post('/daftar-aduan/{id}/comment', [ReportController::class, 'storeCommen
 Route::get('/reports/{id}/badges', [ReportController::class, 'getBadgeCounts'])->name('reports.badges');
 Route::delete('/daftar-aduan/komentar/{id}', [ReportController::class, 'deleteComment'])->name('reports.comment.delete');
 Route::delete('reports/{reportId}/followup/{id}', [ReportController::class, 'deleteFollowUp'])->name('reports.followup.delete');
+Route::post('/report/{id}/like', [ReportController::class, 'like'])->name('report.like');
+Route::post('/report/{id}/dislike', [ReportController::class, 'dislike'])->name('report.dislike');
 
 // User Routes
 Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:user'])->prefix('user')->name('user.')->group(function () {

@@ -16,43 +16,138 @@
         @endif
 
         {{-- Meta --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div>
-                <p><strong>Oleh</strong> {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}</p>
-                <p><strong>Kategori</strong> {{ $report->kategori->nama }}</p>
-                <p><strong>Wilayah</strong> {{ $report->wilayah->nama }}</p>
-                <p><strong>Status Aduan</strong>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-[13px] text-gray-700">
+            {{-- Kolom Kiri --}}
+            <div class="space-y-1">
+                <p>
+                    <span class="font-medium">Oleh</span>
+                    <span class="text-gray-800 font-semibold">
+                        {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}
+                    </span>
+                    <i class="fas fa-random ml-1 text-xs text-gray-500"></i>
+                    <span class="ml-1 text-gray-500">Melalui Website Pengaduan</span>
+                </p>
+
+                <p>
+                    <i class="fas fa-info-circle text-gray-500 mr-1"></i>
+                    <span class="font-medium">Status Aduan</span>
                     <span
-                        class="px-2 py-1 text-sm rounded font-semibold
-                                                                                                                                                                        @if($report->status == 'Diajukan') bg-blue-100 text-blue-700
-                                                                                                                                                                        @elseif($report->status == 'Dibaca') bg-teal-100 text-teal-700
-                                                                                                                                                                        @elseif($report->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                                                                                                                        @elseif($report->status == 'Selesai') bg-green-100 text-green-700 @endif">
-                        {{ $report->status }}
+                        class="ml-1 inline-block px-2 py-0.5 rounded-full text-xs font-semibold
+                                                                @if($report->status == 'Diajukan') bg-blue-100 text-blue-700
+                                                                @elseif($report->status == 'Dibaca') bg-teal-100 text-teal-700
+                                                                @elseif($report->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                                @elseif($report->status == 'Selesai') bg-green-100 text-green-700 @endif">
+                        Aduan {{ strtolower($report->status) }}
                     </span>
                 </p>
-            </div>
-            <div>
-                <p><strong>Diadukan pada</strong>
-                    {{ $report->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }}
+
+                <p>
+                    <i class="fas fa-tag text-gray-500 mr-1"></i>
+                    <span class="font-medium">Tracking ID:</span>
+                    <span class="font-bold">{{ $report->tracking_id }}</span>
                 </p>
+
+                <p>
+                    <i class="fas fa-folder-open text-gray-500 mr-1"></i>
+                    <span class="font-medium">Kategori Aduan</span>
+                    <span class="font-semibold">{{ $report->kategori->nama }}</span>
+                </p>
+            </div>
+
+            {{-- Kolom Kanan --}}
+            <div class=" text-gray-700">
+                <p>
+                    <span class="text-gray-600">Diadukan pada</span><br>
+                    <span class="text-gray-800">
+                        {{ $report->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }}
+                        WIB
+                    </span>
+                </p>
+
+                <p class="flex items-center">
+                    <span>Dilihat <strong>{{ $report->views }}</strong> kali</span>
+                </p>
+
+                @php
+                    $vote = session('vote_report_' . $report->id);
+                @endphp
+
+                <div class="flex items-center gap-5 mt-1">
+                    @auth
+                        {{-- Tombol Like --}}
+                        <form action="{{ route('report.like', $report->id) }}" method="POST">
+                            @csrf
+                            <button type="submit"
+                                class="flex items-center text-sm transition-all duration-200 {{ $vote === 'like' ? 'text-blue-600 font-bold' : 'text-blue-500 hover:text-blue-600' }}">
+                                <i class="fas fa-thumbs-up mr-1"></i> {{ $report->likes }}
+                            </button>
+                        </form>
+
+                        {{-- Tombol Dislike --}}
+                        <form action="{{ route('report.dislike', $report->id) }}" method="POST">
+                            @csrf
+                            <button type="submit"
+                                class="flex items-center text-sm transition-all duration-200 {{ $vote === 'dislike' ? 'text-red-600 font-bold' : 'text-red-400 hover:text-red-600' }}">
+                                <i class="fas fa-thumbs-down mr-1"></i> {{ $report->dislikes }}
+                            </button>
+                        </form>
+                    @else
+                        <div class="flex items-center gap-5 text-sm" x-data="{ showLike: false, showDislike: false }">
+                            {{-- Like --}}
+                            <div class="relative" @mouseenter="showLike = true" @mouseleave="showLike = false">
+                                <button disabled class="flex items-center text-blue-300 cursor-not-allowed">
+                                    <i class="fas fa-thumbs-up mr-1"></i> {{ $report->likes }}
+                                </button>
+                                <div x-cloak x-show="showLike"
+                                    class="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap pointer-events-none opacity-0 transition-opacity duration-200 ease-out"
+                                    :class="{ 'opacity-100': showLike }">
+                                    Harap login untuk like
+                                </div>
+                            </div>
+
+                            {{-- Dislike --}}
+                            <div class="relative" @mouseenter="showDislike = true" @mouseleave="showDislike = false">
+                                <button disabled class="flex items-center text-red-300 cursor-not-allowed">
+                                    <i class="fas fa-thumbs-down mr-1"></i> {{ $report->dislikes }}
+                                </button>
+                                <div x-cloak x-show="showDislike"
+                                    class="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap pointer-events-none opacity-0 transition-opacity duration-200 ease-out"
+                                    :class="{ 'opacity-100': showDislike }">
+                                    Harap login untuk dislike
+                                </div>
+                            </div>
+                        </div>
+                    @endauth
+                </div>
             </div>
         </div>
 
         {{-- Judul & Isi --}}
         <div class="mb-6">
-            <h2 class="text-3xl font-bold text-red-700 mb-2">{{ $report->judul }}</h2>
+            <!-- Judul dan Wilayah dalam satu baris -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2 gap-2">
+                <h2 class="text-3xl font-bold text-red-700">{{ $report->judul }}</h2>
+
+                <div class="text-sm text-gray-700 flex items-center">
+                    <i class="fas fa-map-marker-alt text-gray-500 mr-1"></i>
+                    <span class="font-medium">Wilayah:</span>
+                    <span class="font-semibold text-gray-800 ml-1">{{ $report->wilayah->nama }}</span>
+                </div>
+            </div>
+
+            <!-- Isi Laporan -->
             <div class="bg-white border rounded-lg shadow-sm p-6 max-h-96 overflow-y-scroll">
                 <p class="text-gray-800 whitespace-pre-line">{{ $report->isi }}</p>
             </div>
         </div>
+
 
         {{-- Tabs --}}
         @php
             $badges = [
                 'tindak' => $followUps->count(),
                 'komentar' => $comments->count(),
-                'lampiran' => $report->file ? 1 : 0,
+                'lampiran' => is_array($report->file) ? count($report->file) : 0,
             ];
             $tabs = [
                 'tindak' => ['label' => 'Tindak Lanjut', 'icon' => 'fa-clipboard-check'],
@@ -101,7 +196,8 @@
                         <div class="mb-6 relative group bg-gray-50 rounded-md p-3 border shadow-sm">
                             <p class="text-sm text-gray-600">
                                 <strong>{{ $item->user->name }}</strong>
-                                <span class="text-gray-500"> ({{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }})</span>
+                                <span class="text-gray-500">
+                                    ({{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }})</span>
                             </p>
                             <p class="text-gray-800 mb-2">{{ $item->pesan }}</p>
 
@@ -188,7 +284,8 @@
                         <div class="relative group mb-6 bg-gray-50 rounded-md p-3 border shadow-sm">
                             <p class="text-sm text-gray-600">
                                 <strong>{{ $item->user->name }}</strong>
-                                <span class="text-gray-500">({{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }})</span>
+                                <span
+                                    class="text-gray-500">({{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }})</span>
                             </p>
                             <p class="text-gray-800 mb-2">{{ $item->pesan }}</p>
 
@@ -279,65 +376,69 @@
 
             {{-- Lampiran --}}
             <div class="tab-pane opacity-0 translate-y-4 transition-all duration-300 hidden" data-tab="lampiran">
-                @if ($report->file)
-                    @php
-                        $filePath = asset('storage/' . $report->file);
-                        $fileExtension = pathinfo($report->file, PATHINFO_EXTENSION);
-                    @endphp
+                @if (!empty($report->file) && is_array($report->file))
+                    <div class="flex flex-wrap gap-4 mt-2">
+                        @foreach ($report->file as $file)
+                            @php
+                                $filePath = asset('storage/' . ltrim($file, '/'));
+                                $fileExtension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                            @endphp
 
-                    @if (in_array(strtolower($fileExtension), ['jpg', 'jpeg', 'png', 'gif']))
-                        <!-- Tampilkan Gambar -->
-                        <div class="mt-2">
-                            <img src="{{ $filePath }}"
-                                class="w-32 h-auto rounded shadow cursor-pointer hover:opacity-80 transition-opacity"
-                                onclick="openModal('{{ $filePath }}')" alt="Lampiran Gambar">
-                        </div>
-                    @elseif ($fileExtension === 'pdf')
-                        <!-- Tampilkan PDF -->
-                        <div class="mt-2">
-                            <a href="{{ $filePath }}"
-                                class="text-red-600 hover:bg-red-100 hover:text-red-700 p-2 rounded transition-all flex items-center"
-                                target="_blank">
-                                <i class="fas fa-file-pdf mr-2"></i> PDF File
-                            </a>
-                        </div>
-                    @elseif (in_array(strtolower($fileExtension), ['doc', 'docx']))
-                        <!-- Tampilkan Word File -->
-                        <div class="mt-2">
-                            <a href="{{ $filePath }}"
-                                class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
-                                target="_blank">
-                                <i class="fas fa-file-word mr-2"></i> Word Document
-                            </a>
-                        </div>
-                    @elseif ($fileExtension === 'zip')
-                        <!-- Tampilkan ZIP File -->
-                        <div class="mt-2">
-                            <a href="{{ $filePath }}"
-                                class="text-yellow-600 hover:bg-yellow-100 hover:text-yellow-700 p-2 rounded transition-all flex items-center"
-                                target="_blank">
-                                <i class="fas fa-file-archive mr-2"></i> ZIP Archive
-                            </a>
-                        </div>
-                    @elseif (in_array(strtolower($fileExtension), ['xls', 'xlsx']))
-                        <!-- Tampilkan Excel File -->
-                        <div class="mt-2">
-                            <a href="{{ $filePath }}"
-                                class="text-green-600 hover:bg-green-100 hover:text-green-700 p-2 rounded transition-all flex items-center"
-                                target="_blank">
-                                <i class="fas fa-file-excel mr-2"></i> Excel File
-                            </a>
-                        </div>
-                    @else
-                        <!-- File Lain yang Tidak Didukung -->
-                        <div class="mt-2">
-                            <a href="{{ $filePath }}"
-                                class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
-                                target="_blank">
-                                <i class="fas fa-file mr-2"></i> Lihat Lampiran
-                            </a>
-                        </div>
-                    @endif
+                            @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
+                                <!-- Gambar -->
+                                <div>
+                                    <img src="{{ $filePath }}"
+                                        class="w-32 h-auto rounded shadow cursor-pointer hover:opacity-80 transition-opacity"
+                                        onclick="openModal('{{ $filePath }}')" alt="Lampiran Gambar">
+                                </div>
+                            @elseif ($fileExtension === 'pdf')
+                                <!-- PDF -->
+                                <div>
+                                    <a href="{{ $filePath }}"
+                                        class="text-red-600 hover:bg-red-100 hover:text-red-700 p-2 rounded transition-all flex items-center"
+                                        target="_blank">
+                                        <i class="fas fa-file-pdf mr-2"></i> PDF File
+                                    </a>
+                                </div>
+                            @elseif (in_array($fileExtension, ['doc', 'docx']))
+                                <!-- Word -->
+                                <div>
+                                    <a href="{{ $filePath }}"
+                                        class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
+                                        target="_blank">
+                                        <i class="fas fa-file-word mr-2"></i> Word Document
+                                    </a>
+                                </div>
+                            @elseif ($fileExtension === 'zip')
+                                <!-- ZIP -->
+                                <div>
+                                    <a href="{{ $filePath }}"
+                                        class="text-yellow-600 hover:bg-yellow-100 hover:text-yellow-700 p-2 rounded transition-all flex items-center"
+                                        target="_blank">
+                                        <i class="fas fa-file-archive mr-2"></i> ZIP Archive
+                                    </a>
+                                </div>
+                            @elseif (in_array($fileExtension, ['xls', 'xlsx']))
+                                <!-- Excel -->
+                                <div>
+                                    <a href="{{ $filePath }}"
+                                        class="text-green-600 hover:bg-green-100 hover:text-green-700 p-2 rounded transition-all flex items-center"
+                                        target="_blank">
+                                        <i class="fas fa-file-excel mr-2"></i> Excel File
+                                    </a>
+                                </div>
+                            @else
+                                <!-- File lainnya -->
+                                <div>
+                                    <a href="{{ $filePath }}"
+                                        class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
+                                        target="_blank">
+                                        <i class="fas fa-file mr-2"></i> Lihat Lampiran
+                                    </a>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
                 @else
                     <p class="text-gray-500">Tidak ada lampiran.</p>
                 @endif

@@ -10,27 +10,36 @@ return new class extends Migration {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
 
-            // Relasi ke user (nullable & relasi ke 'id_user')
-            $table->foreignId('user_id')->nullable()->constrained('users', 'id_user')->onDelete('set null');
+            // Tracking ID unik
+            $table->string('tracking_id')->unique();
 
-            // Identitas Pengadu
+            // Relasi ke users (nullable, ke kolom id_user)
+            $table->foreignId('user_id')->nullable()
+                  ->constrained('users', 'id_user')->onDelete('set null');
+
+            // Identitas pengadu
             $table->boolean('is_anonim')->default(false);
             $table->string('nama_pengadu')->nullable();
             $table->string('email_pengadu')->nullable();
             $table->string('telepon_pengadu')->nullable();
             $table->string('nik')->nullable();
 
-            // Isi laporan
+            // Konten laporan
             $table->string('judul');
             $table->text('isi');
             $table->foreignId('kategori_id')->constrained('kategori_umum')->onDelete('cascade');
             $table->foreignId('wilayah_id')->constrained('wilayah_umum')->onDelete('cascade');
-            $table->string('file');
+            $table->json('file');
 
             // Lokasi
-            $table->string('lokasi'); // Alamat
+            $table->string('lokasi'); // alamat lengkap
             $table->decimal('latitude', 10, 7);
             $table->decimal('longitude', 10, 7);
+
+            // Statistik laporan
+            $table->unsignedInteger('views')->default(0);
+            $table->unsignedInteger('likes')->default(0);
+            $table->unsignedInteger('dislikes')->default(0);
 
             // Status laporan
             $table->enum('status', ['Diajukan', 'Dibaca', 'Direspon', 'Selesai'])->default('Diajukan');

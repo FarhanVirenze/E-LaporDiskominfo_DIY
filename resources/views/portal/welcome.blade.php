@@ -2,6 +2,7 @@
 
 @section('include-css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet" />
 @endsection
 
 @section('content')
@@ -108,18 +109,27 @@
 
                     <!-- Kolom Kiri -->
                     <div class="space-y-4">
-                        <input type="text" name="judul" placeholder="Judul Aduan"
-                            class="w-full border rounded px-4 py-2 bg-gray-100 @error('judul') border-red-500 @enderror"
-                            required>
+                        <!-- Input Judul -->
+                        <div class="flex flex-col leading-none">
+                            <input type="text" name="judul" id="judulInput" maxlength="150" placeholder="Judul Aduan"
+                                class="w-full border rounded-t px-4 pt-2 pb-1 bg-gray-100 @error('judul') border-red-500 @enderror"
+                                required>
+                            <span id="judulCounter" class="text-sm text-gray-500 text-left leading-none">0/150</span>
+                        </div>
                         @error('judul')
-                            <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
-                        @enderror
-                        <textarea name="isi" placeholder="Aduan Anda" rows="4"
-                            class="w-full border rounded px-4 py-2 bg-gray-100 @error('isi') border-red-500 @enderror"
-                            required></textarea>
+                            <div class="text-red-500 text-sm mt-0">{{ $message }}</div>
+                        @enderror 
+                        <!-- Textarea Isi -->
+                        <div class="flex flex-col leading-none">
+                            <textarea name="isi" id="isiInput" placeholder="Aduan Anda" rows="2" maxlength="1000"
+                                class="w-full border rounded-t px-4 pt-2 pb-1 bg-gray-100 @error('isi') border-red-500 @enderror"
+                                required></textarea>
+                            <span id="isiCounter" class="text-sm text-gray-500 text-left leading-none">0/1000</span>
+                        </div>
                         @error('isi')
-                            <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+                            <div class="text-red-500 text-sm mt-0">{{ $message }}</div>
                         @enderror
+                        <!-- Dropdown Wilayah -->
                         <select name="wilayah_id"
                             class="w-full border rounded px-4 py-2 bg-gray-100 @error('wilayah_id') border-red-500 @enderror"
                             required>
@@ -127,7 +137,7 @@
                             @forelse(App\Models\WilayahUmum::all() as $wilayah)
                                 <option value="{{ $wilayah->id }}">{{ $wilayah->nama }}</option>
                             @empty
-                                <option value="">Tidak ada wilayah tersedia</option>
+                                <option value="" disabled>Tidak ada wilayah tersedia</option>
                             @endforelse
                         </select>
                         @error('wilayah_id')
@@ -135,30 +145,96 @@
                         @enderror
                         <div class="flex gap-2">
                             <!-- Dropdown Kategori -->
-                            <select name="kategori_id"
+                            <select id="kategoriSelect" name="kategori_id"
                                 class="w-full border rounded px-4 py-2 bg-gray-100 @error('kategori_id') border-red-500 @enderror"
                                 required>
                                 <option value="">- Pilih Kategori -</option>
                                 @forelse(App\Models\KategoriUmum::all() as $kategori)
                                     <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
                                 @empty
-                                    <option value="">Tidak ada kategori tersedia</option>
+                                    <option value="" disabled>Tidak ada kategori tersedia</option>
                                 @endforelse
                             </select>
                             @error('kategori_id')
                                 <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
                             @enderror
 
-                            <label
-                                class="bg-[#c0392b] hover:bg-[#922b21] text-white px-4 py-2 rounded cursor-pointer flex items-center">
-                                <i class="fas fa-image mr-1"></i> File
-                                <input type="file" name="file" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.zip" class="hidden">
-                            </label>
+                            <!-- Tombol Trigger -->
+                            <div>
+                                <label id="openFileModalBtn"
+                                    class="bg-[#c0392b] hover:bg-[#922b21] text-white px-4 py-4 rounded cursor-pointer flex items-center">
+                                    <i class="fas fa-image mr-1"></i> File
+                                </label>
+                            </div>
 
-                            <label onclick="openLocationModal()"
-                                class="bg-[#c0392b] hover:bg-[#922b21] text-white px-4 py-2 rounded cursor-pointer flex items-center">
-                                <i class="fas fa-map-marker-alt mr-1"></i> Lokasi
-                            </label>
+                            <!-- Modal File -->
+                            <div id="fileModal"
+                                class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                                <div class="bg-white rounded-lg w-full max-w-xl p-6 shadow-lg relative">
+                                    <h2 class="text-lg font-semibold mb-3 text-gray-800">Lampirkan File</h2>
+
+                                    <!-- Keterangan -->
+                                    <p class="text-sm mb-2 text-gray-600 leading-relaxed">
+                                        Jenis file yang dapat dilampirkan: <strong>.jpg</strong>,
+                                        <strong>.jpeg</strong>,
+                                        <strong>.png</strong>,
+                                        <strong>.pdf</strong>, <strong>.doc</strong>, <strong>.docx</strong>,
+                                        <strong>.xls</strong>, <strong>.xlsx</strong>, <strong>.zip</strong>.<br>
+                                        Maksimal <strong>3 file</strong>, masing-masing <strong>tidak melebihi 10MB
+                                            (10.240KB)</strong>.
+                                    </p>
+
+                                    <!-- Daftar Input -->
+                                    <div id="fileInputs" class="space-y-2 mb-4">
+                                    </div>
+
+                                    <!-- Hidden File Inputs (dipindahkan dari modal saat tekan OK) -->
+                                    <div id="fileInputHiddenContainer" class="hidden"></div>
+
+                                    <!-- Tombol Tambah -->
+                                    <button type="button" id="addFileBtn"
+                                        class="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded w-full mb-4 text-sm font-semibold transition">
+                                        + Tambah file
+                                    </button>
+
+                                    <!-- Tombol Aksi -->
+                                    <div class="flex justify-end space-x-2">
+                                        <button onclick="closeFileModal()" type="button"
+                                            class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded transition">
+                                            Batal
+                                        </button>
+                                        <button type="button" id="confirmFileBtn"
+                                            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition">
+                                            Ok
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Modal Konfirmasi Hapus -->
+                            <div id="deleteConfirmModal"
+                                class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                                <div class="bg-white rounded-lg p-6 w-96 text-center shadow-lg">
+                                    <p class="text-lg mb-4 text-gray-800">Yakin ingin menghapus file ini?</p>
+                                    <div class="flex justify-center space-x-4">
+                                        <button id="confirmDeleteBtn"
+                                            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition">
+                                            Hapus
+                                        </button>
+                                        <button onclick="closeDeleteModal()"
+                                            class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded transition">
+                                            Batal
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label onclick="openLocationModal()"
+                                    class="bg-[#c0392b] hover:bg-[#922b21] text-white px-4 py-4 rounded cursor-pointer flex items-center">
+                                    <i class="fas fa-map-marker-alt mr-1"></i> Lokasi
+                                </label>
+                            </div>
 
                             <!-- Hidden Inputs -->
                             <input type="hidden" name="lokasi" id="lokasiInput">
@@ -320,12 +396,12 @@
                                     <span class="font-semibold">Status: </span>
                                     <span
                                         class="status-text 
-                                                                                                                                                                                                                                                                                                                                        @if($report->status == 'Diajukan') bg-blue-200 text-blue-800 
-                                                                                                                                                                                                                                                                                                                                        @elseif($report->status == 'Dibaca') bg-teal-200 text-teal-800 
-                                                                                                                                                                                                                                                                                                                                        @elseif($report->status == 'Direspon') bg-yellow-200 text-yellow-800 
-                                                                                                                                                                                                                                                                                                                                        @elseif($report->status == 'Selesai') bg-green-200 text-green-800 
-                                                                                                                                                                                                                                                                                                                                        @endif 
-                                                                                                                                                                                                                                                                                                                                        rounded-full px-2 py-1 text-xs font-semibold">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @if($report->status == 'Diajukan') bg-blue-200 text-blue-800 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status == 'Dibaca') bg-teal-200 text-teal-800 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status == 'Direspon') bg-yellow-200 text-yellow-800 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status == 'Selesai') bg-green-200 text-green-800 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @endif 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                rounded-full px-2 py-1 text-xs font-semibold">
                                         {{ $report->status }}
                                     </span>
                                 </div>
@@ -346,72 +422,10 @@
         <!-- Leaflet CSS & JS -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 
         <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                // === Fokus Input: Hapus Error ===
-                document.querySelectorAll('input, textarea, select').forEach((element) => {
-                    element.addEventListener('focus', () => {
-                        element.classList.remove('border-red-500');
-                        const errorMessage = element.parentElement.querySelector('.text-red-500');
-                        if (errorMessage) {
-                            errorMessage.remove();
-                        }
-                    });
-                });
-
-                // === Checkbox Anonim: Sembunyikan Identitas ===
-                const anonimCheckbox = document.getElementById('anonimCheckbox');
-                const identitasGroup = document.querySelector('.identitas-group');
-                if (anonimCheckbox && identitasGroup) {
-                    anonimCheckbox.addEventListener('change', function () {
-                        identitasGroup.style.display = this.checked ? 'none' : 'block';
-                    });
-                }
-
-                // === Overlay Login Jika Belum Login ===
-                const formContainer = document.getElementById('aduanCepatBox');
-                const overlay = document.getElementById('form-overlay');
-                if (overlay && formContainer) {
-                    formContainer.addEventListener('mouseenter', () => overlay.classList.remove('hidden'));
-                    formContainer.addEventListener('mouseleave', () => overlay.classList.add('hidden'));
-                    const form = formContainer.querySelector('form');
-                    if (form) {
-                        form.addEventListener('submit', function (e) {
-                            e.preventDefault(); // Tidak kirim form
-                        });
-                    }
-                }
-
-                const spinner = document.getElementById('success-spinner');
-                const check = document.getElementById('success-check');
-
-                setTimeout(() => {
-                    if (spinner && check) {
-                        spinner.classList.add('hidden');
-                        check.classList.remove('hidden');
-                        check.classList.add('scale-100');
-                    }
-                }, 1000); // ganti spinner ke check setelah 1 detik
-
-                // Fade-out seluruh alert setelah 3 detik
-                const fadeOutAndRemove = (el) => {
-                    if (!el) return;
-                    el.classList.remove('opacity-100');
-                    el.classList.add('opacity-0');
-                    setTimeout(() => {
-                        el.style.display = 'none';
-                    }, 500); // durasi sama dengan transition
-                };
-
-
-                setTimeout(() => {
-                    fadeOutAndRemove(document.getElementById('alert-success'));
-                    fadeOutAndRemove(document.getElementById('alert-error'));
-                }, 3000);
-            });
-
-            // === Leaflet Map & Lokasi Modal ===
+            // ==== GLOBAL LOKASI & PETA ====
             let map, marker;
 
             function openLocationModal() {
@@ -429,8 +443,7 @@
                     }).addTo(map);
 
                     map.on('click', function (e) {
-                        const lat = e.latlng.lat;
-                        const lng = e.latlng.lng;
+                        const { lat, lng } = e.latlng;
 
                         if (marker) {
                             marker.setLatLng(e.latlng);
@@ -460,8 +473,8 @@
 
                 setTimeout(() => {
                     modal.classList.add('hidden');
-                    content.classList.remove('modal-animate-out'); // reset
-                }, 250); // match anim duration
+                    content.classList.remove('modal-animate-out');
+                }, 250);
             }
 
             function saveLocation() {
@@ -480,21 +493,234 @@
                 closeLocationModal();
             }
 
-            // Tambahkan di sini ⬇️
             function resetMapToDefault() {
                 const defaultLatLng = [-7.797068, 110.370529];
                 map.setView(defaultLatLng, 13);
 
-                // Hapus marker jika ada
                 if (marker) {
                     map.removeLayer(marker);
                     marker = null;
                 }
 
-                // Kosongkan input koordinat dan alamat
                 document.getElementById('latitudeField').value = '';
                 document.getElementById('longitudeField').value = '';
                 document.getElementById('alamatField').value = '';
             }
+
+            // ==== SAAT DOM TERLOAD ====
+            document.addEventListener('DOMContentLoaded', () => {
+                // Hilangkan error border saat fokus input
+                document.querySelectorAll('input, textarea, select').forEach(el => {
+                    el.addEventListener('focus', () => {
+                        el.classList.remove('border-red-500');
+                        const err = el.parentElement.querySelector('.text-red-500');
+                        if (err) err.remove();
+                    });
+                });
+
+                // Inisialisasi variabel
+                let maxFiles = 3;
+                let fileToDelete = null;
+
+                const addFileBtn = document.getElementById('addFileBtn');
+                const fileInputsContainer = document.getElementById('fileInputs');
+                const fileInputHiddenContainer = document.getElementById('fileInputHiddenContainer');
+                const fileModal = document.getElementById('fileModal');
+                const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+                const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+                const confirmFileBtn = document.getElementById('confirmFileBtn');
+                const openFileModalBtn = document.getElementById('openFileModalBtn');
+                const judulInput = document.getElementById('judulInput');
+                const judulCounter = document.getElementById('judulCounter');
+                const isiInput = document.getElementById('isiInput');
+                const isiCounter = document.getElementById('isiCounter');
+
+                judulInput.addEventListener('input', () => {
+                    judulCounter.textContent = `${judulInput.value.length}/150`;
+                });
+
+                isiInput.addEventListener('input', () => {
+                    isiCounter.textContent = `${isiInput.value.length}/1000`;
+                });
+
+                // Fungsi untuk update tombol tambah
+                function updateAddFileButtonVisibility() {
+                    const currentInputs = fileInputsContainer.querySelectorAll('input[type="file"]');
+                    if (addFileBtn) {
+                        if (currentInputs.length >= maxFiles) {
+                            addFileBtn.classList.add('hidden');
+                        } else {
+                            addFileBtn.classList.remove('hidden');
+                        }
+                    }
+                }
+
+                // Tombol tambah file
+                if (addFileBtn) {
+                    addFileBtn.addEventListener('click', () => {
+                        const currentInputs = fileInputsContainer.querySelectorAll('input[type="file"]');
+                        if (currentInputs.length >= maxFiles) return;
+
+                        const div = document.createElement('div');
+                        div.className = 'flex items-center gap-3 mb-2';
+                        div.innerHTML = `
+                                                                                                                                                                <input type="file" name="file[]" 
+                                                                                                                                                                       accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
+                                                                                                                                                                       class="file-input flex-1 border px-2 py-1 rounded text-sm">
+                                                                                                                                                                <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
+                                                                                                                                                                    <i class="fas fa-trash-alt"></i>
+                                                                                                                                                                </button>
+                                                                                                                                                            `;
+                        fileInputsContainer.appendChild(div);
+                        updateAddFileButtonVisibility();
+                    });
+                }
+
+                // Delegasi klik tombol hapus untuk tampilkan modal konfirmasi
+                fileInputsContainer.addEventListener('click', function (e) {
+                    const deleteBtn = e.target.closest('.deleteFileBtn');
+                    if (deleteBtn) {
+                        fileToDelete = deleteBtn.closest('.flex'); // ambil elemen container div input+button
+                        if (fileToDelete && deleteConfirmModal) {
+                            deleteConfirmModal.classList.remove('hidden');
+                            deleteConfirmModal.classList.add('flex');
+                        }
+                    }
+                });
+
+                // Konfirmasi hapus
+                if (confirmDeleteBtn) {
+                    confirmDeleteBtn.addEventListener('click', () => {
+                        if (fileToDelete) {
+                            fileToDelete.remove();
+                            fileToDelete = null;
+                            updateAddFileButtonVisibility(); // <-- Tambahkan ini
+                        }
+                        closeDeleteModal();
+                    });
+                }
+
+                // Saat tekan tombol OK / Konfirmasi
+                if (confirmFileBtn) {
+                    confirmFileBtn.addEventListener('click', () => {
+                        const inputs = fileInputsContainer.querySelectorAll('input[type="file"]');
+                        let validFiles = 0;
+
+                        inputs.forEach(input => {
+                            if (input.files.length > 0) validFiles++;
+                        });
+
+                        if (validFiles > maxFiles) {
+                            alert('Maksimal 3 file!');
+                            return;
+                        }
+
+                        // Pindahkan input yang valid ke container hidden
+                        fileInputHiddenContainer.innerHTML = '';
+                        inputs.forEach(input => {
+                            if (input.files.length > 0) {
+                                fileInputHiddenContainer.appendChild(input); // pindahkan
+                            }
+                        });
+
+                        fileInputsContainer.innerHTML = ''; // kosongkan modal
+                        fileModal.classList.remove('flex');
+                        fileModal.classList.add('hidden');
+                        addFileBtn.classList.remove('hidden'); // reset tombol tambah
+                    });
+                }
+
+                // Saat buka modal, pindahkan kembali input dari hidden ke modal
+                if (openFileModalBtn && fileModal) {
+                    openFileModalBtn.addEventListener('click', () => {
+                        fileModal.classList.remove('hidden');
+                        fileModal.classList.add('flex');
+
+                        const hiddenInputs = fileInputHiddenContainer.querySelectorAll('input[type="file"]');
+                        hiddenInputs.forEach(input => {
+                            fileInputsContainer.appendChild(input); // kembalikan ke modal
+                        });
+                        fileInputHiddenContainer.innerHTML = '';
+
+                        updateAddFileButtonVisibility(); // tampilkan/hide tombol tambah sesuai
+                    });
+                }
+
+                // Anonimitas toggle
+                const anonimCheckbox = document.getElementById('anonimCheckbox');
+                const identitasGroup = document.querySelector('.identitas-group');
+                if (anonimCheckbox && identitasGroup) {
+                    anonimCheckbox.addEventListener('change', function () {
+                        identitasGroup.style.display = this.checked ? 'none' : 'block';
+                    });
+                }
+
+                // Overlay login
+                const formContainer = document.getElementById('aduanCepatBox');
+                const overlay = document.getElementById('form-overlay');
+                if (overlay && formContainer) {
+                    formContainer.addEventListener('mouseenter', () => overlay.classList.remove('hidden'));
+                    formContainer.addEventListener('mouseleave', () => overlay.classList.add('hidden'));
+
+                    const form = formContainer.querySelector('form');
+                    form?.addEventListener('submit', e => e.preventDefault());
+                }
+
+                // Spinner ke checklist
+                const spinner = document.getElementById('success-spinner');
+                const check = document.getElementById('success-check');
+                setTimeout(() => {
+                    if (spinner && check) {
+                        spinner.classList.add('hidden');
+                        check.classList.remove('hidden');
+                        check.classList.add('scale-100');
+                    }
+                }, 1000);
+
+                // Auto fade alert
+                const fadeOutAndRemove = el => {
+                    if (!el) return;
+                    el.classList.remove('opacity-100');
+                    el.classList.add('opacity-0');
+                    setTimeout(() => el.style.display = 'none', 500);
+                };
+
+                setTimeout(() => {
+                    fadeOutAndRemove(document.getElementById('alert-success'));
+                    fadeOutAndRemove(document.getElementById('alert-error'));
+                }, 3000);
+
+                new TomSelect('#kategoriSelect', {
+                    placeholder: '- Pilih Kategori -',
+                    allowEmptyOption: true,
+                    create: false,
+                    sortField: {
+                        field: 'text',
+                        direction: 'asc'
+                    }
+                });
+            });
+
+            // Fungsi tutup modal
+            function closeFileModal() {
+                const fileModal = document.getElementById('fileModal');
+                const fileInputsContainer = document.getElementById('fileInputs');
+
+                if (fileModal) {
+                    fileModal.classList.remove('flex');
+                    fileModal.classList.add('hidden');
+                }
+
+                // Reset input file (hapus semuanya)
+                if (fileInputsContainer) {
+                    fileInputsContainer.innerHTML = '';
+                }
+            }
+
+            function closeDeleteModal() {
+                deleteConfirmModal.classList.add('hidden');
+                deleteConfirmModal.classList.remove('flex');
+            }
+
         </script>
     @endpush

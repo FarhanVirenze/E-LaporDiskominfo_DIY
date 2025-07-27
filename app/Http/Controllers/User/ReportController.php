@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Vote;
 use App\Models\Report;
 use App\Models\FollowUp;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ReportController extends Controller
 {
@@ -42,20 +44,29 @@ class ReportController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul' => 'required|string|min:20|max:255',
-            'isi' => 'required|string|min:120',
+            'judul' => 'required|string|min:20|max:150',
+            'isi' => 'required|string|min:120|max:1000',
             'kategori_id' => 'required|exists:kategori_umum,id',
             'wilayah_id' => 'required|exists:wilayah_umum,id',
-            'file' => 'required|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip|max:10240',
+            'file' => 'required|array|max:3',
+            'file.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip|max:10240',
             'lokasi' => 'required|string|max:255',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
             'is_anonim' => 'nullable|boolean',
         ]);
 
-        // File handling
+        // Jika ada file yang diunggah
         if ($request->hasFile('file')) {
-            $validated['file'] = $request->file('file')->store('report_files', 'public');
+            $filePaths = [];
+
+            foreach ($request->file('file') as $uploadedFile) {
+                // Simpan file ke 'storage/app/public/report_files'
+                $filePaths[] = $uploadedFile->store('report_files', 'public');
+            }
+
+            // Simpan langsung sebagai array (jika model sudah pakai $casts['file' => 'array'])
+            $validated['file'] = $filePaths;
         }
 
         $validated['is_anonim'] = $request->boolean('is_anonim');
@@ -92,7 +103,6 @@ class ReportController extends Controller
      */
     public function show($id)
     {
-        // Cari laporan beserta relasi kategori, wilayah, user, followUps, dan comments
         $report = Report::with([
             'kategori',
             'wilayah',
@@ -101,26 +111,92 @@ class ReportController extends Controller
             'comments.user'
         ])->findOrFail($id);
 
-        // Pastikan hanya admin yang bisa mengubah status laporan menjadi 'Dibaca' dan statusnya masih 'Diajukan'
-        if (auth()->check() && auth()->user()->role === 'admin' && $report->status === Report::STATUS_DIAJUKAN) {
-            // Ubah status laporan menjadi 'Dibaca'
-            $report->status = Report::STATUS_DIBACA;
-            $report->save(); // Simpan perubahan status
+        // Tambah jumlah view (gunakan session agar 1 user tidak spam view)
+        $sessionKey = 'report_viewed_' . $id;
+        if (!session()->has($sessionKey)) {
+            $report->increment('views');
+            session()->put($sessionKey, true);
+        }
 
-            // Set pesan sukses
+        // Hanya admin bisa ubah status jadi 'Dibaca' jika masih 'Diajukan'
+        if (auth()->check() && auth()->user()->role === 'admin' && $report->status === Report::STATUS_DIAJUKAN) {
+            $report->status = Report::STATUS_DIBACA;
+            $report->save();
             session()->flash('success', 'Status laporan berhasil diperbarui menjadi Dibaca');
         }
 
-        // Filter followUps untuk hanya menampilkan yang dibuat oleh user dengan role 'admin'
-        $followUps = $report->followUps->filter(
-            fn($item) => $item->user && $item->user->role === 'admin'
-        );
-
-        // Ambil semua komentar terkait laporan
+        $followUps = $report->followUps->filter(fn($item) => $item->user && $item->user->role === 'admin');
         $comments = $report->comments;
 
-        // Tampilkan view dengan data yang telah diolah
         return view('portal.daftar-aduan.detail.index', compact('report', 'followUps', 'comments'));
+    }
+
+    public function like($id)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Silakan login untuk memberikan like.');
+        }
+
+        $report = Report::findOrFail($id);
+        $vote = Vote::where('user_id', $user->id_user)->where('report_id', $report->id)->first();
+
+        if ($vote && $vote->vote_type === 'like') {
+            // Batal like
+            $vote->delete();
+            $report->decrement('likes');
+        } elseif ($vote && $vote->vote_type === 'dislike') {
+            // Ganti dari dislike ke like
+            $vote->update(['vote_type' => 'like']);
+            $report->increment('likes');
+            $report->decrement('dislikes');
+        } else {
+            // Belum vote → like
+            Vote::create([
+                'user_id' => $user->id_user,
+                'report_id' => $report->id,
+                'vote_type' => 'like',
+            ]);
+            $report->increment('likes');
+        }
+
+        return back();
+    }
+
+    public function dislike($id)
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Silakan login untuk memberikan dislike.');
+        }
+
+        $report = Report::findOrFail($id);
+        $vote = Vote::where('user_id', $user->id_user)->where('report_id', $report->id)->first();
+
+        if ($vote && $vote->vote_type === 'dislike') {
+            // Sudah dislike → batal dislike
+            $vote->delete();
+            if ($report->dislikes > 0) {
+                $report->decrement('dislikes');
+            }
+        } elseif ($vote && $vote->vote_type === 'like') {
+            // Ganti dari like ke dislike
+            $vote->update(['vote_type' => 'dislike']);
+            if ($report->likes > 0) {
+                $report->decrement('likes');
+            }
+            $report->increment('dislikes');
+        } else {
+            // Belum vote → kasih dislike
+            Vote::create([
+                'user_id' => $user->id_user,
+                'report_id' => $report->id,
+                'vote_type' => 'dislike',
+            ]);
+            $report->increment('dislikes');
+        }
+
+        return back();
     }
 
     /**
