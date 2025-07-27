@@ -114,7 +114,7 @@
                             <input type="text" name="judul" id="judulInput" maxlength="150" placeholder="Judul Aduan"
                                 class="w-full border rounded-t px-4 pt-2 pb-1 bg-gray-100 @error('judul') border-red-500 @enderror"
                                 required>
-                            <span id="judulCounter" class="text-sm text-gray-500 text-left leading-none">0/150</span>
+                            <span id="judulCounter" class="text-sm text-gray-500 text-left leading-none mt-2">0/150</span>
                         </div>
                         @error('judul')
                             <div class="text-red-500 text-sm mt-0">{{ $message }}</div>
@@ -124,7 +124,7 @@
                             <textarea name="isi" id="isiInput" placeholder="Aduan Anda" rows="2" maxlength="1000"
                                 class="w-full border rounded-t px-4 pt-2 pb-1 bg-gray-100 @error('isi') border-red-500 @enderror"
                                 required></textarea>
-                            <span id="isiCounter" class="text-sm text-gray-500 text-left leading-none">0/1000</span>
+                            <span id="isiCounter" class="text-sm text-gray-500 text-left leading-none mt-2">0/1000</span>
                         </div>
                         @error('isi')
                             <div class="text-red-500 text-sm mt-0">{{ $message }}</div>
