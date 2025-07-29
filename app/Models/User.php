@@ -24,7 +24,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-    
+
     public function reports(): HasMany
     {
         return $this->hasMany(Report::class, 'user_id');
@@ -34,4 +34,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(WbsReport::class, 'user_id');
     }
+
+    public function kategori()
+    {
+        return $this->hasMany(KategoriUmum::class, 'admin_id', 'id_user');
+    }
+
 }

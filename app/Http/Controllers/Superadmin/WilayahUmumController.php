@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Superadmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\WilayahUmum;
@@ -14,7 +14,7 @@ class WilayahUmumController extends Controller
     public function index()
     {
         $wilayah = WilayahUmum::paginate(5); // Paginate 5 entries per page
-        return view('admin.wilayah_umum.index', compact('wilayah'));
+        return view('superadmin.wilayah_umum.index', compact('wilayah'));
     }
 
     /**
@@ -30,7 +30,7 @@ class WilayahUmumController extends Controller
             'nama' => $request->nama,
         ]);
 
-        return redirect()->route('admin.kelola-wilayah.index')->with('success', 'Wilayah berhasil ditambahkan.');
+        return redirect()->route('superadmin.kelola-wilayah.index')->with('success', 'Wilayah berhasil ditambahkan.');
     }
 
     /**
@@ -48,7 +48,7 @@ class WilayahUmumController extends Controller
             'nama' => $request->nama,
         ]);
 
-        return redirect()->route('admin.kelola-wilayah.index')->with('success', 'Wilayah berhasil diperbarui.');
+        return redirect()->route('superadmin.kelola-wilayah.index')->with('success', 'Wilayah berhasil diperbarui.');
     }
     /**
      * Remove the specified resource from storage.
@@ -58,6 +58,6 @@ class WilayahUmumController extends Controller
         $wilayah = WilayahUmum::findOrFail($id);
         $wilayah->delete();
 
-        return redirect()->route('admin.kelola-wilayah.index')->with('success', 'Wilayah berhasil dihapus.');
+        return redirect()->route('superadmin.kelola-wilayah.index')->with('success', 'Wilayah berhasil dihapus.');
     }
 }

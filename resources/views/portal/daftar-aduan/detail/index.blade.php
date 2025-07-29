@@ -33,12 +33,25 @@
                     <span class="font-medium">Status Aduan</span>
                     <span
                         class="ml-1 inline-block px-2 py-0.5 rounded-full text-xs font-semibold
-                                                                @if($report->status == 'Diajukan') bg-blue-100 text-blue-700
-                                                                @elseif($report->status == 'Dibaca') bg-teal-100 text-teal-700
-                                                                @elseif($report->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                @elseif($report->status == 'Selesai') bg-green-100 text-green-700 @endif">
+                                                                                            @if($report->status == 'Diajukan') bg-blue-100 text-blue-700
+                                                                                            @elseif($report->status == 'Dibaca') bg-teal-100 text-teal-700
+                                                                                            @elseif($report->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                                                            @elseif($report->status == 'Selesai') bg-green-100 text-green-700 @endif">
                         Aduan {{ strtolower($report->status) }}
                     </span>
+                </p>
+
+                {{-- Disposisi --}}
+                <p class="text-sm text-gray-700 flex items-center">
+                    <i class="fas fa-share-square text-gray-500 mr-1"></i>
+                    <span class="font-medium">Aduan ini didisposisikan ke</span>
+                    @if($report->admin)
+                        <span class="ml-1 px-2 py-1 rounded-full bg-gray-600 text-white text-xs font-medium">
+                            {{ $report->admin->name }}
+                        </span>
+                    @else
+                        <span class="ml-1 italic text-gray-500">Belum didisposisikan</span>
+                    @endif
                 </p>
 
                 <p>
@@ -51,6 +64,12 @@
                     <i class="fas fa-folder-open text-gray-500 mr-1"></i>
                     <span class="font-medium">Kategori Aduan</span>
                     <span class="font-semibold">{{ $report->kategori->nama }}</span>
+                </p>
+
+                <p class="text-sm text-gray-700 flex items-center">
+                    <i class="fas fa-map-marker-alt text-gray-500 mr-1"></i>
+                    <span class="ml-1.5 font-medium">Wilayah</span>
+                    <span class="font-semibold text-gray-800 ml-1">{{ $report->wilayah->nama }}</span>
                 </p>
             </div>
 
@@ -69,7 +88,9 @@
                 </p>
 
                 @php
-                    $vote = session('vote_report_' . $report->id);
+                    $vote = auth()->check()
+                        ? \App\Models\Vote::where('user_id', auth()->user()->id_user)->where('report_id', $report->id)->value('vote_type')
+                        : null;
                 @endphp
 
                 <div class="flex items-center gap-5 mt-1">
@@ -78,7 +99,8 @@
                         <form action="{{ route('report.like', $report->id) }}" method="POST">
                             @csrf
                             <button type="submit"
-                                class="flex items-center text-sm transition-all duration-200 {{ $vote === 'like' ? 'text-blue-600 font-bold' : 'text-blue-500 hover:text-blue-600' }}">
+                                class="flex items-center text-sm transition-all duration-200 
+                                                                {{ session('vote_report_' . $report->id) === 'like' ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
                                 <i class="fas fa-thumbs-up mr-1"></i> {{ $report->likes }}
                             </button>
                         </form>
@@ -87,15 +109,16 @@
                         <form action="{{ route('report.dislike', $report->id) }}" method="POST">
                             @csrf
                             <button type="submit"
-                                class="flex items-center text-sm transition-all duration-200 {{ $vote === 'dislike' ? 'text-red-600 font-bold' : 'text-red-400 hover:text-red-600' }}">
+                                class="flex items-center text-sm transition-all duration-200 
+                                                                {{ session('vote_report_' . $report->id) === 'dislike' ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
                                 <i class="fas fa-thumbs-down mr-1"></i> {{ $report->dislikes }}
                             </button>
                         </form>
                     @else
                         <div class="flex items-center gap-5 text-sm" x-data="{ showLike: false, showDislike: false }">
-                            {{-- Like --}}
+                            {{-- Like (Guest) --}}
                             <div class="relative" @mouseenter="showLike = true" @mouseleave="showLike = false">
-                                <button disabled class="flex items-center text-blue-300 cursor-not-allowed">
+                                <button disabled class="flex items-center text-gray-400 cursor-not-allowed">
                                     <i class="fas fa-thumbs-up mr-1"></i> {{ $report->likes }}
                                 </button>
                                 <div x-cloak x-show="showLike"
@@ -105,9 +128,9 @@
                                 </div>
                             </div>
 
-                            {{-- Dislike --}}
+                            {{-- Dislike (Guest) --}}
                             <div class="relative" @mouseenter="showDislike = true" @mouseleave="showDislike = false">
-                                <button disabled class="flex items-center text-red-300 cursor-not-allowed">
+                                <button disabled class="flex items-center text-gray-400 cursor-not-allowed">
                                     <i class="fas fa-thumbs-down mr-1"></i> {{ $report->dislikes }}
                                 </button>
                                 <div x-cloak x-show="showDislike"
@@ -124,15 +147,9 @@
 
         {{-- Judul & Isi --}}
         <div class="mb-6">
-            <!-- Judul dan Wilayah dalam satu baris -->
+            <!-- Judul -->
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2 gap-2">
                 <h2 class="text-3xl font-bold text-red-700">{{ $report->judul }}</h2>
-
-                <div class="text-sm text-gray-700 flex items-center">
-                    <i class="fas fa-map-marker-alt text-gray-500 mr-1"></i>
-                    <span class="font-medium">Wilayah:</span>
-                    <span class="font-semibold text-gray-800 ml-1">{{ $report->wilayah->nama }}</span>
-                </div>
             </div>
 
             <!-- Isi Laporan -->

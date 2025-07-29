@@ -2,16 +2,20 @@
 <nav class="bg-gradient-to-r from-[#B5332A] to-[#8B1E1E] py-3 text-white shadow-md relative z-50">
     <div class="container mx-auto px-4 flex items-center justify-between">
         <!-- Logo dan Judul -->
-        <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3">
+        <a href="{{ route('superadmin.dashboard') }}" class="flex items-center space-x-3">
             <img src="{{ asset('images/logo-diy.png') }}" alt="Logo" class="h-12 w-auto drop-shadow-md">
-            <span class="text-xl font-bold tracking-wide">E-LAPOR DIY Admin</span>
+            <span class="text-xl font-bold tracking-wide">E-LAPOR DIY Superadmin</span>
         </a>
 
         <!-- Menu Navigasi -->
         <ul class="hidden lg:flex space-x-6 font-semibold tracking-wide">
             <li><a href="{{ route('beranda') }}" class="hover:underline hover:decoration-white">E-Lapor DIY</a></li>
-            <li><a href="{{ route('admin.dashboard') }}" class="hover:underline hover:decoration-white">Dashboard</a></li>
-            <li><a href="{{ route('admin.kelola-aduan.index') }}" class="hover:underline hover:decoration-white">Kelola Aduan</a></li>
+            <li><a href="{{ route('superadmin.dashboard') }}" class="hover:underline hover:decoration-white">Dashboard</a></li>
+            <li><a href="{{ route('superadmin.kelola-user.index') }}" class="hover:underline hover:decoration-white">Kelola User</a></li>
+            <li><a href="{{ route('superadmin.kelola-aduan.index') }}" class="hover:underline hover:decoration-white">Kelola Aduan</a></li>
+            <li><a href="{{ route('superadmin.kelola-kategori.index') }}" class="hover:underline hover:decoration-white">Kelola Kategori</a></li>
+            <li><a href="{{ route('superadmin.kategori-admin.index') }}" class="hover:underline hover:decoration-white">Kelola Kategori Admin</a></li>
+            <li><a href="{{ route('superadmin.kelola-wilayah.index') }}" class="hover:underline hover:decoration-white">Kelola Wilayah</a></li>
 
             @guest
                 <li><a href="{{ route('login') }}" class="hover:underline hover:decoration-white">LOGIN</a></li>
@@ -37,7 +41,7 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('admin.profile.edit')" class="text-black">
+                        <x-dropdown-link :href="route('superadmin.profile.edit')" class="text-black">
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
@@ -70,15 +74,19 @@
             <button id="close-menu" class="text-white text-2xl absolute top-4 right-4">×</button>
             <ul class="space-y-6 font-semibold tracking-wide mt-10">
                 <li><a href="{{ route('beranda') }}" class="hover:underline hover:decoration-white">E-Lapor DIY</a></li>
-                <li><a href="{{ route('admin.dashboard') }}" class="hover:underline hover:decoration-white">Dashboard</a></li>
-                <li><a href="{{ route('admin.kelola-aduan.index') }}" class="hover:underline hover:decoration-white">Kelola Aduan</a></li>
+                <li><a href="{{ route('superadmin.dashboard') }}" class="hover:underline hover:decoration-white">Dashboard</a></li>
+                <li><a href="{{ route('superadmin.kelola-user.index') }}" class="hover:underline hover:decoration-white">Kelola User</a></li>
+                <li><a href="{{ route('superadmin.kelola-aduan.index') }}" class="hover:underline hover:decoration-white">Kelola Aduan</a></li>
+                <li><a href="{{ route('superadmin.kelola-kategori.index') }}" class="hover:underline hover:decoration-white">Kelola Kategori</a></li>
+                <li><a href="{{ route('superadmin.kategori-admin.index') }}" class="hover:underline hover:decoration-white">Kelola Kategori Admin</a></li>
+                <li><a href="{{ route('superadmin.kelola-wilayah.index') }}" class="hover:underline hover:decoration-white">Kelola Wilayah</a></li>
 
                 @guest
                     <li><a href="{{ route('login') }}" class="hover:underline hover:decoration-white">LOGIN</a></li>
                 @endguest
 
                 @auth
-                    <li><a href="{{ route('admin.profile.edit') }}" class="hover:underline hover:decoration-white">Profile</a></li>
+                    <li><a href="{{ route('superadmin.profile.edit') }}" class="hover:underline hover:decoration-white">Profile</a></li>
                     <li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

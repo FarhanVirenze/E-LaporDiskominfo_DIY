@@ -44,7 +44,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         session()->flash('success', 'Anda berhasil masuk sebagai User.');
-        return redirect()->route('beranda');
+        return redirect()->route('user.aduan.riwayat');
     }
 
     /**

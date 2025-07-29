@@ -13,6 +13,7 @@ class Report extends Model
     protected $fillable = [
         'tracking_id',   // <--- Tambahkan ini
         'user_id',
+        'admin_id',
         'likes',
         'dislikes',
         'is_anonim',
@@ -76,6 +77,11 @@ class Report extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class, 'report_id');
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(User::class, 'admin_id', 'id_user');
     }
 
     // (Opsional) Generate tracking_id otomatis jika belum diset

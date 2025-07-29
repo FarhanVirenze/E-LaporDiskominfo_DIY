@@ -7,8 +7,10 @@ use App\Models\Vote;
 use App\Models\Report;
 use App\Models\FollowUp;
 use App\Models\Comment;
+use App\Models\KategoriUmum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 class ReportController extends Controller
@@ -19,12 +21,30 @@ class ReportController extends Controller
     public function index()
     {
         if (auth()->check()) {
-            $reports = Report::where('user_id', auth()->user()->id_user)
-                ->latest()
-                ->get(['id_report', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'created_at']);
+            $user = auth()->user();
+
+            if ($user->role === 'admin') {
+                // Ambil ID kategori yang ditugaskan ke admin
+                $kategoriIds = $user->kategori->pluck('id')->toArray();
+
+                // Ambil hanya laporan sesuai kategori admin
+                $reports = Report::whereIn('kategori_id', $kategoriIds)
+                    ->latest()
+                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'created_at']);
+            } elseif ($user->role === 'superadmin') {
+                // Superadmin bisa melihat semua aduan
+                $reports = Report::latest()
+                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'created_at']);
+            } else {
+                // User biasa, hanya lihat aduan sendiri
+                $reports = Report::where('user_id', $user->id_user)
+                    ->latest()
+                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'created_at']);
+            }
         } else {
+            // Pengunjung (belum login), tampilkan semua
             $reports = Report::latest()
-                ->get(['id_report', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'created_at']);
+                ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'created_at']);
         }
 
         return view('portal.welcome', compact('reports'));
@@ -56,16 +76,12 @@ class ReportController extends Controller
             'is_anonim' => 'nullable|boolean',
         ]);
 
-        // Jika ada file yang diunggah
+        // Simpan file
         if ($request->hasFile('file')) {
             $filePaths = [];
-
             foreach ($request->file('file') as $uploadedFile) {
-                // Simpan file ke 'storage/app/public/report_files'
                 $filePaths[] = $uploadedFile->store('report_files', 'public');
             }
-
-            // Simpan langsung sebagai array (jika model sudah pakai $casts['file' => 'array'])
             $validated['file'] = $filePaths;
         }
 
@@ -90,9 +106,17 @@ class ReportController extends Controller
             $validated['nik'] = null;
         }
 
+        // Ambil admin_id dari kategori_umum
+        $kategori = KategoriUmum::find($validated['kategori_id']);
+        if ($kategori && $kategori->admin_id) {
+            $validated['admin_id'] = $kategori->admin_id;
+        } else {
+            return back()->with('error', 'Kategori belum memiliki admin yang ditugaskan.');
+        }
+
         try {
             Report::create($validated);
-            return redirect()->route('beranda')->with('success', 'Laporan berhasil dikirim.');
+            return redirect()->route('user.aduan.riwayat')->with('success', 'Laporan berhasil dikirim.');
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal menyimpan laporan: ' . $e->getMessage());
         }
@@ -111,18 +135,25 @@ class ReportController extends Controller
             'comments.user'
         ])->findOrFail($id);
 
-        // Tambah jumlah view (gunakan session agar 1 user tidak spam view)
+        // Validasi: Admin hanya bisa melihat laporan yang sesuai dengan kategori yang ia tangani
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            if ($report->admin_id !== auth()->user()->id_user) {
+                return response()->view('errors.akses-ditolak', [], 403);
+            }
+        }
+
+        // Tambah jumlah view
         $sessionKey = 'report_viewed_' . $id;
         if (!session()->has($sessionKey)) {
             $report->increment('views');
             session()->put($sessionKey, true);
         }
 
-        // Hanya admin bisa ubah status jadi 'Dibaca' jika masih 'Diajukan'
+        // Update status jika admin membuka aduan yang belum dibaca
         if (auth()->check() && auth()->user()->role === 'admin' && $report->status === Report::STATUS_DIAJUKAN) {
             $report->status = Report::STATUS_DIBACA;
             $report->save();
-            session()->flash('success', 'Status laporan berhasil diperbarui menjadi Dibaca');
+            session()->flash('success', 'Status laporan diperbarui menjadi Dibaca');
         }
 
         $followUps = $report->followUps->filter(fn($item) => $item->user && $item->user->role === 'admin');
@@ -142,26 +173,27 @@ class ReportController extends Controller
         $vote = Vote::where('user_id', $user->id_user)->where('report_id', $report->id)->first();
 
         if ($vote && $vote->vote_type === 'like') {
-            // Batal like
             $vote->delete();
             $report->decrement('likes');
+            Session::forget('vote_report_' . $report->id); // hapus session
         } elseif ($vote && $vote->vote_type === 'dislike') {
-            // Ganti dari dislike ke like
             $vote->update(['vote_type' => 'like']);
             $report->increment('likes');
             $report->decrement('dislikes');
+            Session::put('vote_report_' . $report->id, 'like');
         } else {
-            // Belum vote → like
             Vote::create([
                 'user_id' => $user->id_user,
                 'report_id' => $report->id,
                 'vote_type' => 'like',
             ]);
             $report->increment('likes');
+            Session::put('vote_report_' . $report->id, 'like');
         }
 
         return back();
     }
+
 
     public function dislike($id)
     {
@@ -174,26 +206,26 @@ class ReportController extends Controller
         $vote = Vote::where('user_id', $user->id_user)->where('report_id', $report->id)->first();
 
         if ($vote && $vote->vote_type === 'dislike') {
-            // Sudah dislike → batal dislike
             $vote->delete();
             if ($report->dislikes > 0) {
                 $report->decrement('dislikes');
             }
+            Session::forget('vote_report_' . $report->id); // hapus session
         } elseif ($vote && $vote->vote_type === 'like') {
-            // Ganti dari like ke dislike
             $vote->update(['vote_type' => 'dislike']);
             if ($report->likes > 0) {
                 $report->decrement('likes');
             }
             $report->increment('dislikes');
+            Session::put('vote_report_' . $report->id, 'dislike');
         } else {
-            // Belum vote → kasih dislike
             Vote::create([
                 'user_id' => $user->id_user,
                 'report_id' => $report->id,
                 'vote_type' => 'dislike',
             ]);
             $report->increment('dislikes');
+            Session::put('vote_report_' . $report->id, 'dislike');
         }
 
         return back();
@@ -328,5 +360,45 @@ class ReportController extends Controller
         }
 
         return back()->with('success', 'Tindak lanjut berhasil dihapus');
+    }
+
+    public function lacak(Request $request)
+    {
+        $request->validate([
+            'tracking_id' => 'required|string',
+        ]);
+
+        $report = Report::where('tracking_id', $request->tracking_id)->first();
+
+        if (!$report) {
+            return redirect()->back()->with('error', 'Nomor Tiket Aduan tidak ditemukan.');
+        }
+
+        // Redirect ke halaman detail
+        return redirect()->route('reports.show', ['id' => $report->id]);
+    }
+
+    public function riwayat()
+    {
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Silakan login untuk melihat riwayat aduan Anda.');
+        }
+
+        $aduan = Report::where('user_id', auth()->user()->id_user)
+            ->latest()
+            ->get(['id', 'tracking_id', 'judul', 'status', 'created_at']);
+
+        return view('portal.daftar-aduan.riwayat', compact('aduan'));
+    }
+
+    public function riwayatWbs()
+    {
+        // Misal: pakai model WbsReport, atau kamu bisa sesuaikan sendiri
+        $aduan = Report::where('user_id', auth()->id()) // ganti kalau beda tabel
+            ->where('kategori_id', 999) // contoh filter WBS
+            ->latest()
+            ->get(['id', 'tracking_id', 'judul', 'status', 'created_at']);
+
+        return view('portal.daftar-aduan.riwayat-wbs', compact('aduan'));
     }
 }

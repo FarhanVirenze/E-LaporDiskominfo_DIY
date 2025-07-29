@@ -29,6 +29,12 @@
                         <li><a href="{{ route('admin.dashboard') }}" class="hover:underline">KELOLA ADMIN</a></li>
                     @endif
                 @endauth
+
+                 @auth
+                    @if (Auth::user()->role === 'superadmin')
+                        <li><a href="{{ route('superadmin.dashboard') }}" class="hover:underline">KELOLA SUPERADMIN</a></li>
+                    @endif
+                @endauth
             </ul>
         </div>
 

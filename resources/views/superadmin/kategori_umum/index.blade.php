@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('superadmin.layouts.app')
 
 @section('content')
     <div class="container">
@@ -10,8 +10,33 @@
             </div>
         @endif
 
-        <!-- Button to trigger Add Category modal -->
-        <button class="btn btn-primary mb-4" data-toggle="modal" data-target="#addKategoriModal">Tambah Kategori</button>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
+            <!-- Tombol Tambah Kategori -->
+            <button class="btn btn-primary" data-toggle="modal" data-target="#addKategoriModal">
+                Tambah Kategori
+            </button>
+
+            <!-- Form Search -->
+            <form action="{{ route('superadmin.kelola-kategori.index') }}" method="GET" class="w-full sm:w-auto">
+                <div class="flex items-center gap-2">
+                    <input type="text" name="search"
+                        class="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Cari kategori..." value="{{ request('search') }}">
+
+                    <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200">
+                        Cari
+                    </button>
+
+                    @if(request('search'))
+                        <a href="{{ route('superadmin.kelola-kategori.index') }}"
+                            class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-200">
+                            Reset
+                        </a>
+                    @endif
+                </div>
+            </form>
+        </div>
 
         <!-- Table to display categories -->
         @if($kategori->isEmpty())
@@ -19,25 +44,29 @@
                 Tidak ada kategori saat ini.
             </div>
         @else
-            <table class="table table-striped table-bordered">
+            <table class="table table-striped table-bordered w-full">
                 <thead>
                     <tr>
+                        <th class="w-8 text-center">No</th> {{-- Kolom Nomor --}}
                         <th>Nama Kategori</th>
-                        <th>Aksi</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($kategori as $kat)
+                    @foreach($kategori as $index => $kat)
                         <tr>
+                            <td class="w-8 text-center">
+                                {{ ($kategori->currentPage() - 1) * $kategori->perPage() + $loop->iteration }}
+                            </td>
                             <td>{{ $kat->nama }}</td>
-                            <td>
-                                <!-- Edit button, triggers the edit modal -->
+                            <td class="text-center">
+                                {{-- Tombol Edit --}}
                                 <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editKategoriModal"
                                     data-id="{{ $kat->id }}" data-nama="{{ $kat->nama }}">
                                     Edit
                                 </button>
 
-                                <!-- Delete button, triggers the delete confirmation modal -->
+                                {{-- Tombol Hapus --}}
                                 <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteKategoriModal"
                                     data-id="{{ $kat->id }}" data-nama="{{ $kat->nama }}">
                                     Hapus
@@ -59,7 +88,7 @@
             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form action="{{ route('admin.kelola-kategori.store') }}" method="POST">
+                    <form action="{{ route('superadmin.kelola-kategori.store') }}" method="POST">
                         @csrf
                         <div class="modal-header">
                             <h5 class="modal-title" id="addKategoriModalLabel">Tambah Kategori</h5>
@@ -87,7 +116,7 @@
             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form action="{{ route('admin.kelola-kategori.update', 'placeholder') }}" method="POST"
+                    <form action="{{ route('superadmin.kelola-kategori.update', 'placeholder') }}" method="POST"
                         id="editKategoriForm">
                         @csrf
                         @method('PUT')
@@ -113,11 +142,12 @@
         </div>
 
         <!-- Delete Category Modal -->
-        <div class="modal fade" id="deleteKategoriModal" tabindex="-1" role="dialog" aria-labelledby="deleteKategoriModalLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="deleteKategoriModal" tabindex="-1" role="dialog"
+            aria-labelledby="deleteKategoriModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form action="{{ route('admin.kelola-kategori.destroy', 'placeholder') }}" method="POST" id="deleteKategoriForm">
+                    <form action="{{ route('superadmin.kelola-kategori.destroy', 'placeholder') }}" method="POST"
+                        id="deleteKategoriForm">
                         @csrf
                         @method('DELETE')
                         <div class="modal-header">

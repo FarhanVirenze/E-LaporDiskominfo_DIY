@@ -13,9 +13,13 @@ return new class extends Migration {
             // Tracking ID unik
             $table->string('tracking_id')->unique();
 
-            // Relasi ke users (nullable, ke kolom id_user)
+            // Relasi ke pelapor (user biasa)
             $table->foreignId('user_id')->nullable()
-                  ->constrained('users', 'id_user')->onDelete('set null');
+                ->constrained('users', 'id_user')->onDelete('set null');
+
+            // Relasi ke admin (disposisi otomatis)
+            $table->foreignId('admin_id')->nullable()
+                ->constrained('users', 'id_user')->onDelete('set null');
 
             // Identitas pengadu
             $table->boolean('is_anonim')->default(false);

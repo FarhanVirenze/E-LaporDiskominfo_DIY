@@ -118,7 +118,7 @@
                         </div>
                         @error('judul')
                             <div class="text-red-500 text-sm mt-0">{{ $message }}</div>
-                        @enderror 
+                        @enderror
                         <!-- Textarea Isi -->
                         <div class="flex flex-col leading-none">
                             <textarea name="isi" id="isiInput" placeholder="Aduan Anda" rows="2" maxlength="1000"
@@ -318,17 +318,17 @@
                         </label>
 
                         <div class="identitas-group space-y-4">
-                            <input type="text" name="nama_pengadu" placeholder="Nama Anda"
-                                value="{{ $user && $user->role === 'user' ? $user->name : '' }}"
+                            <input type="text" name="nama_pengadu" placeholder="Nama Anda" value="{{ $user?->name }}"
                                 class="w-full border rounded px-4 py-2 bg-gray-100" readonly>
+
                             <input type="email" name="email_pengadu" placeholder="Alamat email Anda"
-                                value="{{ $user && $user->role === 'user' ? $user->email : '' }}"
-                                class="w-full border rounded px-4 py-2 bg-gray-100" readonly>
+                                value="{{ $user?->email }}" class="w-full border rounded px-4 py-2 bg-gray-100" readonly>
+
                             <input type="text" name="telepon_pengadu" placeholder="Nomor telepon"
-                                value="{{ $user && $user->role === 'user' ? $user->nomor_telepon : '' }}"
-                                class="w-full border rounded px-4 py-2 bg-gray-100" readonly>
-                            <input type="text" name="nik" placeholder="NIK"
-                                value="{{ $user && $user->role === 'user' ? $user->nik : '' }}"
+                                value="{{ $user?->nomor_telepon }}" class="w-full border rounded px-4 py-2 bg-gray-100"
+                                readonly>
+
+                            <input type="text" name="nik" placeholder="NIK" value="{{ $user?->nik }}"
                                 class="w-full border rounded px-4 py-2 bg-gray-100" readonly>
                         </div>
 
@@ -347,12 +347,63 @@
                 </form>
             </div>
 
+            <!-- Lacak Aduanmu -->
+            <div class="container mx-auto text-center px-4 mt-14">
+                <div class="w-full max-w-4xl mx-auto text-center">
+                    <h2 class="text-2xl md:text-3xl font-extrabold uppercase text-gray-800 mb-6">
+                        CARI DAN LACAK ADUANMU DISINI
+                    </h2>
+
+                    <form action="{{ route('report.lacak') }}" method="POST"
+                        class="flex flex-col md:flex-row justify-center items-center gap-4">
+                        @csrf
+                        <input type="text" name="tracking_id" placeholder="Nomor Tiket Aduan"
+                            class="w-full md:flex-1 px-6 py-3 border border-gray-300 rounded-full shadow 
+                                               focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 
+                                               text-lg text-center font-semibold uppercase tracking-wider transition duration-300" required>
+
+                        <button type="submit" class="bg-[#c0392b] hover:bg-[#922b21] text-white font-bold px-8 py-3 rounded-full 
+                                                    uppercase tracking-wide shadow transition-all duration-200">
+                            LACAK
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            @php
+                use Illuminate\Support\Facades\Auth;
+
+                $user = Auth::user();
+
+                if ($user && $user->role === 'admin') {
+                    // Ambil ID kategori yang ditugaskan ke admin
+                    $kategoriIds = $user->kategori->pluck('id')->toArray();
+
+                    // Ambil hanya laporan sesuai kategori admin
+                    $reports = \App\Models\Report::whereIn('kategori_id', $kategoriIds)
+                        ->latest()
+                        ->take(5)
+                        ->get();
+                } elseif ($user && $user->role === 'superadmin') {
+                    // Superadmin bisa melihat semua
+                    $reports = \App\Models\Report::latest()
+                        ->take(5)
+                        ->get();
+                } else {
+                    // Pengguna biasa atau belum login
+                    $reports = \App\Models\Report::latest()
+                        ->take(5)
+                        ->get();
+                }
+            @endphp
+
             <!-- Aduan Terbaru -->
             <div
                 class="relative bg-white border shadow-md rounded-lg p-8 w-full max-w-7xl mx-auto mt-16 animate__animated animate__fadeInUp">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center border-b pb-2">DAFTAR ADUAN</h2>
+                <h2 class="text-2xl font-extrabold text-gray-800 mb-6 text-center border-b pb-2">ADUAN TERBARU</h2>
+
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                    @forelse (\App\Models\Report::latest()->take(5)->get() as $report)
+                    @forelse ($reports as $report)
                         <div
                             class="bg-white border-2 border-gray-300 p-4 shadow-lg rounded-lg hover:shadow-xl transition duration-300 w-full mx-auto">
                             <h3 class="font-semibold text-lg text-gray-800 text-left truncate">
@@ -369,14 +420,14 @@
                                 </a>
                             </p>
 
-                            <div class="mt-4">
-                                <!-- User Info and Date -->
-                                <div class="flex items-center text-xs text-gray-500 space-x-2">
+                            <div class="mt-4 space-y-2 text-xs text-gray-500">
+                                <div class="flex items-center gap-2">
                                     <i class="fas fa-user text-blue-500"></i>
-                                    <span class="font-semibold">{{ $report->nama_pengadu }}</span>
+                                    <span
+                                        class="font-semibold">{{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}</span>
                                 </div>
 
-                                <div class="flex items-center text-xs text-gray-500 mt-2 space-x-2">
+                                <div class="flex items-center gap-2">
                                     <i class="fas fa-clock text-gray-500"></i>
                                     <span>
                                         Dikirim pada:
@@ -385,31 +436,34 @@
                                     </span>
                                 </div>
 
-                                <!-- Category and Status -->
-                                <div class="flex items-center text-xs text-gray-500 mt-2 space-x-2">
+                                <div class="flex items-center gap-2">
                                     <i class="fas fa-list-alt text-green-500"></i>
                                     <span>{{ $report->kategori->nama }}</span>
                                 </div>
 
-                                <div class="flex items-center text-xs text-gray-500 mt-2 space-x-2">
+                                <div class="flex items-center gap-2">
                                     <i class="fas fa-tasks text-yellow-500"></i>
-                                    <span class="font-semibold">Status: </span>
-                                    <span
-                                        class="status-text 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @if($report->status == 'Diajukan') bg-blue-200 text-blue-800 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status == 'Dibaca') bg-teal-200 text-teal-800 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status == 'Direspon') bg-yellow-200 text-yellow-800 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status == 'Selesai') bg-green-200 text-green-800 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @endif 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                rounded-full px-2 py-1 text-xs font-semibold">
+                                    <span class="font-semibold">Status:</span>
+                                    <span class="rounded-full px-2 py-1 font-semibold text-xs
+                                            @if($report->status === 'Diajukan')
+                                                bg-blue-200 text-blue-800
+                                            @elseif($report->status === 'Dibaca')
+                                                bg-teal-200 text-teal-800
+                                            @elseif($report->status === 'Direspon')
+                                                bg-yellow-200 text-yellow-800
+                                            @elseif($report->status === 'Selesai')
+                                                bg-green-200 text-green-800
+                                            @else
+                                                bg-gray-200 text-gray-700
+                                            @endif">
                                         {{ $report->status }}
                                     </span>
                                 </div>
                             </div>
                         </div>
                     @empty
-                        <!-- Jika tidak ada data laporan, tampilkan pesan alert -->
-                        <div class="alert alert-info col-span-full">
+                        <div
+                            class="col-span-full text-center text-sm text-gray-600 bg-blue-100 border border-blue-300 rounded p-4">
                             Tidak ada aduan terbaru saat ini.
                         </div>
                     @endforelse
@@ -564,13 +618,13 @@
                         const div = document.createElement('div');
                         div.className = 'flex items-center gap-3 mb-2';
                         div.innerHTML = `
-                                                                                                                                                                <input type="file" name="file[]" 
-                                                                                                                                                                       accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
-                                                                                                                                                                       class="file-input flex-1 border px-2 py-1 rounded text-sm">
-                                                                                                                                                                <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
-                                                                                                                                                                    <i class="fas fa-trash-alt"></i>
-                                                                                                                                                                </button>
-                                                                                                                                                            `;
+                                                                                                                                                                                                                <input type="file" name="file[]" 
+                                                                                                                                                                                                                       accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
+                                                                                                                                                                                                                       class="file-input flex-1 border px-2 py-1 rounded text-sm">
+                                                                                                                                                                                                                <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
+                                                                                                                                                                                                                    <i class="fas fa-trash-alt"></i>
+                                                                                                                                                                                                                </button>
+                                                                                                                                                                                                            `;
                         fileInputsContainer.appendChild(div);
                         updateAddFileButtonVisibility();
                     });
@@ -721,6 +775,5 @@
                 deleteConfirmModal.classList.add('hidden');
                 deleteConfirmModal.classList.remove('flex');
             }
-
         </script>
     @endpush

@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('superadmin.layouts.app')
 
 @section('content')
     <div class="container">
@@ -59,7 +59,7 @@
             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form action="{{ route('admin.kelola-wilayah.index') }}" method="POST">
+                    <form action="{{ route('superadmin.kelola-wilayah.index') }}" method="POST">
                         @csrf
                         <div class="modal-header">
                             <h5 class="modal-title" id="addWilayahModalLabel">Tambah Wilayah</h5>
@@ -88,7 +88,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <!-- Action mengarah ke route admin.kelola-wilayah.update dan menggunakan ID dinamis -->
-                    <form action="{{ route('admin.kelola-wilayah.update', 'placeholder') }}" method="POST"
+                    <form action="{{ route('superadmin.kelola-wilayah.update', 'placeholder') }}" method="POST"
                         id="editWilayahForm">
                         @csrf
                         @method('PUT')
@@ -118,7 +118,7 @@
             aria-labelledby="deleteWilayahModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form action="{{ route('admin.kelola-wilayah.destroy', 'placeholder') }}" method="POST"
+                    <form action="{{ route('superadmin.kelola-wilayah.destroy', 'placeholder') }}" method="POST"
                         id="deleteWilayahForm">
                         @csrf
                         @method('DELETE')
