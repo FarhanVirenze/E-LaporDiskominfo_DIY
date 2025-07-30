@@ -5,93 +5,59 @@
 @section('content')
     <div class="container py-4">
 
-        <!-- Notifikasi Sukses -->
+        <!-- Flash Message -->
         @if (session('success'))
             <div id="alert-success"
                 class="fixed top-5 right-5 z-50 flex items-center gap-3 bg-green-500 text-white px-5 py-3 rounded-lg shadow-lg transition-opacity duration-500 opacity-100 animate-fade-in">
-                <!-- Icon Wrapper -->
-                <div id="success-icon-wrapper" class="transition-all duration-300">
-                    <!-- Spinner awal -->
-                    <svg id="success-spinner" class="w-5 h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="white" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                    </svg>
-
-                    <!-- Centang, disembunyikan dulu -->
-                    <svg id="success-check" class="w-6 h-6 text-white hidden" fill="none" viewBox="0 0 24 24">
-                        <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                            d="M5 13l4 4L19 7" />
-                    </svg>
-                </div>
-                <!-- Pesan -->
+                <svg id="success-spinner" class="w-5 h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="white" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                </svg>
+                <svg id="success-check" class="w-6 h-6 text-white hidden" fill="none" viewBox="0 0 24 24">
+                    <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                </svg>
                 <span>{{ session('success') }}</span>
             </div>
         @endif
 
-        @if (session('error'))
-            <div id="alert-error"
-                class="fixed top-5 right-5 z-50 flex items-center gap-3 bg-red-500 text-white px-5 py-3 rounded-lg shadow-lg transition-opacity duration-500 opacity-100 animate-fade-in">
-                <!-- Icon -->
-                <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24">
-                    <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                <span>{{ session('error') }}</span>
-            </div>
-        @endif
-        <h2 class="mb-4 font-weight-bold">Dashboard Superadmin</h2>
+        <h2 class="mb-4 text-2xl font-semibold text-[#37474F]">Dashboard Superadmin</h2>
 
         <div class="row g-4">
-            <!-- Total Pengguna -->
-            <div class="col-12 col-sm-6 col-md-3">
-                <div class="card shadow-sm rounded bg-primary text-white text-center p-3">
-                    <i class="bi bi-people-fill fs-1 mb-2"></i>
-                    <h6>Total Pengguna</h6>
-                    <h3>{{ $totalUsers }}</h3>
+            <!-- Kartu Dashboard -->
+            @php
+                $cards = [
+                    ['title' => 'Total Pengguna', 'count' => $totalUsers, 'icon' => 'bi-people-fill', 'bg' => 'bg-primary'],
+                    ['title' => 'Total User', 'count' => $userCount, 'icon' => 'bi-person-circle', 'bg' => 'bg-info'],
+                    ['title' => 'Total Admin', 'count' => $adminCount, 'icon' => 'bi-shield-lock-fill', 'bg' => 'bg-danger'],
+                    ['title' => 'Total Aduan', 'count' => $totalReports, 'icon' => 'bi-file-earmark-text-fill', 'bg' => 'bg-success'],
+                ];
+            @endphp
+
+            @foreach ($cards as $card)
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card material-card text-white text-center p-3 {{ $card['bg'] }}">
+                        <i class="bi {{ $card['icon'] }} material-icon"></i>
+                        <h6 class="material-subtitle text-white">{{ $card['title'] }}</h6>
+                        <h3 class="material-title text-white">{{ $card['count'] }}</h3>
+                    </div>
                 </div>
-            </div>
-            <!-- User -->
-            <div class="col-12 col-sm-6 col-md-3">
-                <div class="card shadow-sm rounded bg-info text-white text-center p-3">
-                    <i class="bi bi-person-circle fs-1 mb-2"></i>
-                    <h6>Total User</h6>
-                    <h3>{{ $userCount }}</h3>
-                </div>
-            </div>
-            <!-- Admin -->
-            <div class="col-12 col-sm-6 col-md-3">
-                <div class="card shadow-sm rounded bg-danger text-white text-center p-3">
-                    <i class="bi bi-shield-lock-fill fs-1 mb-2"></i>
-                    <h6>Total Admin</h6>
-                    <h3>{{ $adminCount }}</h3>
-                </div>
-            </div>
-            <!-- Laporan -->
-            <div class="col-12 col-sm-6 col-md-3">
-                <div class="card shadow-sm rounded bg-success text-white text-center p-3">
-                    <i class="bi bi-file-earmark-text-fill fs-1 mb-2"></i>
-                    <h6>Total Aduan</h6>
-                    <h3>{{ $totalReports }}</h3>
-                </div>
-            </div>
+            @endforeach
         </div>
 
         <!-- Charts -->
         <div class="row mt-5 g-4">
-            <!-- Bar Chart -->
             <div class="col-12 col-lg-6">
-                <div class="card shadow rounded p-3 h-100">
-                    <h5 class="text-center mb-3">Distribusi Role Pengguna</h5>
+                <div class="card material-card p-4 h-100 bg-white">
+                    <h5 class="text-center text-[#37474F] mb-3">Distribusi Role Pengguna</h5>
                     <div style="position: relative; height: 350px;">
                         <canvas id="userRoleChart"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- Pie Chart -->
             <div class="col-12 col-lg-6">
-                <div class="card shadow rounded p-3 h-100">
-                    <h5 class="text-center mb-3">Distribusi Status Aduan</h5>
+                <div class="card material-card p-4 h-100 bg-white">
+                    <h5 class="text-center text-[#37474F] mb-3">Distribusi Status Aduan</h5>
                     <div style="position: relative; height: 300px;">
                         <canvas id="reportStatusChart"></canvas>
                     </div>
@@ -113,8 +79,9 @@
                     datasets: [{
                         label: 'Jumlah Pengguna',
                         data: [{{ $userCount }}, {{ $adminCount }}],
-                        backgroundColor: ['#36A2EB', '#FF6384'],
-                        borderRadius: 5
+                        backgroundColor: ['#1976D2', '#D32F2F'], // Material Blue & Red
+                        borderRadius: 8,
+                        hoverBackgroundColor: ['#1565C0', '#C62828']
                     }]
                 },
                 options: {
@@ -123,15 +90,37 @@
                     plugins: {
                         legend: { display: false },
                         tooltip: {
+                            backgroundColor: '#fff',
+                            titleColor: '#333',
+                            bodyColor: '#444',
+                            borderColor: '#ddd',
+                            borderWidth: 1,
+                            titleFont: { weight: '600' },
+                            bodyFont: { weight: '500' },
                             callbacks: {
                                 label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}`
                             }
                         }
                     },
                     scales: {
+                        x: {
+                            ticks: {
+                                color: '#37474F',
+                                font: { weight: '500' }
+                            },
+                            grid: { display: false }
+                        },
                         y: {
                             beginAtZero: true,
-                            ticks: { stepSize: 1 }
+                            ticks: {
+                                color: '#37474F',
+                                stepSize: 1,
+                                font: { weight: '500' }
+                            },
+                            grid: {
+                                color: '#e0e0e0',
+                                borderDash: [4, 4]
+                            }
                         }
                     }
                 }
@@ -144,7 +133,7 @@
                     labels: ['Diajukan', 'Dibaca', 'Direspon', 'Selesai'],
                     datasets: [{
                         data: [{{ $pendingCount }}, {{ $readCount }}, {{ $respondedCount }}, {{ $completedCount }}],
-                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                        backgroundColor: ['#F44336', '#2196F3', '#FFC107', '#4CAF50'], // Material Red, Blue, Yellow, Green
                         borderColor: '#fff',
                         borderWidth: 2
                     }]
@@ -155,9 +144,19 @@
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: { color: '#333' }
+                            labels: {
+                                color: '#37474F',
+                                font: { size: 14, weight: '500' },
+                                usePointStyle: true,
+                                padding: 20
+                            }
                         },
                         tooltip: {
+                            backgroundColor: '#fff',
+                            titleColor: '#333',
+                            bodyColor: '#444',
+                            borderColor: '#ddd',
+                            borderWidth: 1,
                             callbacks: {
                                 label: function (ctx) {
                                     const total = ctx.dataset.data.reduce((a, b) => a + b, 0);

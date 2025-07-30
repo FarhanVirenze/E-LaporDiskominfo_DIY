@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Superadmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vote;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
-class ReportController extends Controller
+class ReportSuperadminController extends Controller
 {
     /**
      * Menampilkan semua laporan milik user (atau semua jika tidak login).
@@ -47,7 +47,7 @@ class ReportController extends Controller
                 ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'created_at']);
         }
 
-        return view('portal.welcome', compact('reports'));
+        return view('superadmin.welcome', compact('reports'));
     }
 
     /**
@@ -116,7 +116,7 @@ class ReportController extends Controller
 
         try {
             Report::create($validated);
-            return redirect()->route('user.aduan.riwayat')->with('success', 'Laporan berhasil dikirim.');
+            return redirect()->route('superadmin.aduan.riwayat')->with('success', 'Laporan berhasil dikirim.');
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal menyimpan laporan: ' . $e->getMessage());
         }
@@ -149,17 +149,10 @@ class ReportController extends Controller
             session()->put($sessionKey, true);
         }
 
-        // Update status jika admin membuka aduan yang belum dibaca
-        if (auth()->check() && auth()->user()->role === 'admin' && $report->status === Report::STATUS_DIAJUKAN) {
-            $report->status = Report::STATUS_DIBACA;
-            $report->save();
-            session()->flash('success', 'Status laporan diperbarui menjadi Dibaca');
-        }
-
         $followUps = $report->followUps->filter(fn($item) => $item->user && $item->user->role === 'admin');
         $comments = $report->comments;
 
-        return view('portal.daftar-aduan.detail.index', compact('report', 'followUps', 'comments'));
+        return view('superadmin.daftar-aduan.detail.index', compact('report', 'followUps', 'comments'));
     }
 
     public function like($id)
@@ -375,7 +368,7 @@ class ReportController extends Controller
         }
 
         // Redirect ke halaman detail
-        return redirect()->route('reports.show', ['id' => $report->id]);
+        return redirect()->route('superadmin.reports.show', ['id' => $report->id]);
     }
 
     public function riwayat()
@@ -391,7 +384,7 @@ class ReportController extends Controller
             ->latest()
             ->get(['id', 'tracking_id', 'judul', 'status', 'created_at']);
 
-        return view('portal.daftar-aduan.riwayat', compact('aduan'));
+        return view('superadmin.daftar-aduan.riwayat', compact('aduan'));
     }
 
     public function riwayatWbs()
@@ -402,6 +395,6 @@ class ReportController extends Controller
             ->latest()
             ->get(['id', 'tracking_id', 'judul', 'status', 'created_at']);
 
-        return view('portal.daftar-aduan.riwayat-wbs', compact('aduan'));
+        return view('superadmin.daftar-aduan.riwayat-wbs', compact('aduan'));
     }
 }

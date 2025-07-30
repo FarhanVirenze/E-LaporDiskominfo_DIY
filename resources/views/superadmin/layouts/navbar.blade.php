@@ -1,115 +1,183 @@
-<!-- Navbar Admin -->
-<nav class="bg-gradient-to-r from-[#B5332A] to-[#8B1E1E] py-3 text-white shadow-md relative z-50">
-    <div class="container mx-auto px-4 flex items-center justify-between">
-        <!-- Logo dan Judul -->
-        <a href="{{ route('superadmin.dashboard') }}" class="flex items-center space-x-3">
-            <img src="{{ asset('images/logo-diy.png') }}" alt="Logo" class="h-12 w-auto drop-shadow-md">
-            <span class="text-xl font-bold tracking-wide">E-LAPOR DIY Superadmin</span>
-        </a>
+<!-- Layout Wrapper -->
+<div class="flex min-h-screen bg-gray-100 text-white">
 
-        <!-- Menu Navigasi -->
-        <ul class="hidden lg:flex space-x-6 font-semibold tracking-wide">
-            <li><a href="{{ route('beranda') }}" class="hover:underline hover:decoration-white">E-Lapor DIY</a></li>
-            <li><a href="{{ route('superadmin.dashboard') }}" class="hover:underline hover:decoration-white">Dashboard</a></li>
-            <li><a href="{{ route('superadmin.kelola-user.index') }}" class="hover:underline hover:decoration-white">Kelola User</a></li>
-            <li><a href="{{ route('superadmin.kelola-aduan.index') }}" class="hover:underline hover:decoration-white">Kelola Aduan</a></li>
-            <li><a href="{{ route('superadmin.kelola-kategori.index') }}" class="hover:underline hover:decoration-white">Kelola Kategori</a></li>
-            <li><a href="{{ route('superadmin.kategori-admin.index') }}" class="hover:underline hover:decoration-white">Kelola Kategori Admin</a></li>
-            <li><a href="{{ route('superadmin.kelola-wilayah.index') }}" class="hover:underline hover:decoration-white">Kelola Wilayah</a></li>
+    <!-- Sidebar -->
+    <aside id="sidebar"
+        class="bg-white w-72 flex flex-col fixed inset-y-0 left-0 z-50 text-gray-800 transition-transform duration-300 sidebar-visible">
 
-            @guest
-                <li><a href="{{ route('login') }}" class="hover:underline hover:decoration-white">LOGIN</a></li>
-            @endguest
-        </ul>
-
-        <!-- Settings Dropdown (Auth) -->
-        @auth
-            <div class="relative hidden lg:flex items-center">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button
-                            class="inline-flex items-center px-3 py-2 border border-white text-sm font-medium rounded-md text-black bg-white hover:text-gray-700 focus:outline-none transition">
-                            <div>{{ Auth::user()->name }}</div>
-                            <div class="ml-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                          clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('superadmin.profile.edit')" class="text-black">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Logout -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <x-dropdown-link :href="route('logout')"
-                                             onclick="event.preventDefault(); this.closest('form').submit();" class="text-black">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
+        <!-- Sidebar Header -->
+        <div class="bg-[#2962FF] text-white flex items-center justify-between px-6"
+            style="padding-top: 16px; padding-bottom: 20px;">
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('images/logo-diy.png') }}" class="h-12" />
+                <span class="text-lg font-semibold">E-LAPOR DIY</span>
             </div>
-        @endauth
+            <button id="toggleSidebar"
+                class="bg-[#2962FF] text-white text-xl p-2 rounded-md shadow-md focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
 
-        <!-- Toggle Mobile Menu -->
-        <button id="toggle-menu" class="lg:hidden text-white">
-            <svg class="fill-current h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                <path fill-rule="evenodd"
-                      d="M4 5h12a1 1 0 010 2H4a1 1 0 010-2zM4 10h12a1 1 0 010 2H4a1 1 0 010-2zM4 15h12a1 1 0 010 2H4a1 1 0 010-2z"
-                      clip-rule="evenodd" />
-            </svg>
-        </button>
-    </div>
+        <!-- Sidebar Menu -->
+        <nav class="flex-1 overflow-y-auto px-4 py-5 text-sm space-y-6 shadow-lg scrollbar-hide">
+            <!-- MAIN -->
+            <div class="space-y-2">
+                <p class="text-[11px] uppercase text-blue-600 font-bold tracking-wide mb-2">Main</p>
 
-    <!-- Mobile Sidebar -->
-    <div id="mobile-sidebar" class="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 hidden">
-        <div class="bg-[#B5332A] w-64 h-full px-4 py-6">
-            <button id="close-menu" class="text-white text-2xl absolute top-4 right-4">×</button>
-            <ul class="space-y-6 font-semibold tracking-wide mt-10">
-                <li><a href="{{ route('beranda') }}" class="hover:underline hover:decoration-white">E-Lapor DIY</a></li>
-                <li><a href="{{ route('superadmin.dashboard') }}" class="hover:underline hover:decoration-white">Dashboard</a></li>
-                <li><a href="{{ route('superadmin.kelola-user.index') }}" class="hover:underline hover:decoration-white">Kelola User</a></li>
-                <li><a href="{{ route('superadmin.kelola-aduan.index') }}" class="hover:underline hover:decoration-white">Kelola Aduan</a></li>
-                <li><a href="{{ route('superadmin.kelola-kategori.index') }}" class="hover:underline hover:decoration-white">Kelola Kategori</a></li>
-                <li><a href="{{ route('superadmin.kategori-admin.index') }}" class="hover:underline hover:decoration-white">Kelola Kategori Admin</a></li>
-                <li><a href="{{ route('superadmin.kelola-wilayah.index') }}" class="hover:underline hover:decoration-white">Kelola Wilayah</a></li>
+                <a href="{{ route('superadmin.beranda') }}"
+                    class="flex items-center gap-4 px-4 py-2 rounded-lg transition font-medium
+               {{ request()->routeIs('superadmin.beranda') ? 'bg-blue-600 text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                    <i
+                        class="fas fa-home text-base w-5 {{ request()->routeIs('superadmin.beranda') ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
+                    <span>Beranda</span>
+                </a>
 
-                @guest
-                    <li><a href="{{ route('login') }}" class="hover:underline hover:decoration-white">LOGIN</a></li>
-                @endguest
+                <a href="{{ route('superadmin.dashboard') }}"
+                    class="flex items-center gap-4 px-4 py-2 rounded-lg transition font-medium
+               {{ request()->routeIs('superadmin.dashboard') ? 'bg-blue-600 text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                    <i
+                        class="fas fa-chart-bar text-base w-5 {{ request()->routeIs('superadmin.dashboard') ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
+                    <span>Dashboard</span>
+                </a>
+            </div>
+
+            <!-- ADMIN -->
+            <div class="space-y-2">
+                <p class="text-[11px] uppercase text-blue-600 font-bold tracking-wide mb-2">Admin</p>
+
+                @php
+                    $menus = [
+                        ['route' => 'superadmin.kelola-user.*', 'icon' => 'fa-users-cog', 'label' => 'Kelola User', 'url' => route('superadmin.kelola-user.index')],
+                        ['route' => 'superadmin.kelola-aduan.*', 'icon' => 'fa-comments', 'label' => 'Kelola Aduan', 'url' => route('superadmin.kelola-aduan.index')],
+                        ['route' => 'superadmin.kelola-kategori.*', 'icon' => 'fa-tags', 'label' => 'Kelola Kategori', 'url' => route('superadmin.kelola-kategori.index')],
+                        ['route' => 'superadmin.kategori-admin.*', 'icon' => 'fa-user-shield', 'label' => 'Kategori Admin', 'url' => route('superadmin.kategori-admin.index')],
+                        ['route' => 'superadmin.kelola-wilayah.*', 'icon' => 'fa-map-marker-alt', 'label' => 'Wilayah', 'url' => route('superadmin.kelola-wilayah.index')],
+                    ];
+                @endphp
+
+                @foreach($menus as $menu)
+                    <a href="{{ $menu['url'] }}"
+                        class="flex items-center gap-4 px-4 py-2 rounded-lg transition font-medium
+                                                   {{ request()->routeIs($menu['route']) ? 'bg-blue-600 text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                        <i
+                            class="fas {{ $menu['icon'] }} text-base w-5 {{ request()->routeIs($menu['route']) ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
+                        <span>{{ $menu['label'] }}</span>
+                    </a>
+                @endforeach
+            </div>
+
+            <!-- SETTING -->
+            @auth
+                <div class="space-y-2">
+                    <p class="text-[11px] uppercase text-blue-600 font-bold tracking-wide mt-4 mb-2">Setting</p>
+
+                    <a href="{{ route('superadmin.profile.edit') }}"
+                        class="flex items-center gap-4 px-4 py-2 rounded-lg transition font-medium
+                                                   {{ request()->routeIs('superadmin.profile.edit') ? 'bg-blue-600 text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                        <i
+                            class="fas fa-user text-base w-5 {{ request()->routeIs('superadmin.profile.edit') ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
+                        <span>Profil</span>
+                    </a>
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                            class="w-full text-left flex items-center gap-4 px-4 py-2 rounded-lg transition font-medium hover:bg-blue-100 hover:text-blue-600 text-gray-800">
+                            <i class="fas fa-sign-out-alt text-base w-5 text-gray-500 hover:text-blue-600"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </div>
+            @endauth
+        </nav>
+    </aside>
+
+    <!-- Toggle Button (outside sidebar, shown when sidebar is hidden) -->
+    <button id="toggleSidebarOutside"
+        class="fixed top-4 left-8 z-50 bg-[#2962FF] text-white text-xl p-2 rounded-md shadow-md focus:outline-none hidden">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="flex-1 lg:ml-72 w-full transition-all duration-300">
+
+        <!-- Navbar -->
+        <nav class="bg-[#2962FF] py-4 px-6 flex items-center justify-between sticky top-0 z-40">
+
+            <!-- Left: Kosong -->
+            <div></div>
+
+            <!-- Right: Search & Icons -->
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <input type="text" placeholder="Search..."
+                        class="rounded-full text-sm px-4 py-1 text-gray-900 bg-white focus:outline-none placeholder-gray-400" />
+                    <i class="fas fa-search absolute right-3 top-2 text-gray-400 text-sm"></i>
+                </div>
 
                 @auth
-                    <li><a href="{{ route('superadmin.profile.edit') }}" class="hover:underline hover:decoration-white">Profile</a></li>
-                    <li>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="w-full text-left hover:underline hover:decoration-white">Log Out</button>
-                        </form>
-                    </li>
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button
+                                class="inline-flex items-center px-3 py-2 bg-white text-[#2962FF] text-sm font-medium rounded-md hover:bg-gray-100 transition">
+                                <span>{{ Auth::user()->name }}</span>
+                                <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                            </button>
+                        </x-slot>
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('superadmin.profile.edit')">Profil</x-dropdown-link>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault(); this.closest('form').submit();">
+                                    Logout
+                                </x-dropdown-link>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
                 @endauth
-            </ul>
-        </div>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <main class="p-6 bg-gray-50 min-h-screen text-gray-900">
+            @yield('content')
+        </main>
     </div>
-</nav>
+</div>
 
-<!-- Mobile Menu Script -->
+<!-- Toggle Sidebar -->
 <script>
-    const toggleMenuButton = document.getElementById('toggle-menu');
-    const mobileSidebar = document.getElementById('mobile-sidebar');
-    const closeMenuButton = document.getElementById('close-menu');
+    const toggleSidebar = document.getElementById('toggleSidebar'); // dalam sidebar
+    const toggleSidebarOutside = document.getElementById('toggleSidebarOutside'); // luar sidebar
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
 
-    toggleMenuButton?.addEventListener('click', () => {
-        mobileSidebar.classList.remove('hidden');
-    });
+    let isSidebarVisible = true;
 
-    closeMenuButton?.addEventListener('click', () => {
-        mobileSidebar.classList.add('hidden');
+    function toggleSidebarAction() {
+        if (isSidebarVisible) {
+            sidebar.classList.remove('sidebar-visible');
+            sidebar.classList.add('sidebar-hidden');
+            mainContent.classList.remove('lg:ml-72');
+            toggleSidebarOutside.classList.remove('hidden');
+        } else {
+            sidebar.classList.remove('sidebar-hidden');
+            sidebar.classList.add('sidebar-visible');
+            mainContent.classList.add('lg:ml-72');
+            toggleSidebarOutside.classList.add('hidden');
+        }
+        isSidebarVisible = !isSidebarVisible;
+    }
+
+    toggleSidebar?.addEventListener('click', toggleSidebarAction);
+    toggleSidebarOutside?.addEventListener('click', toggleSidebarAction);
+
+    window.addEventListener('DOMContentLoaded', () => {
+        sidebar.classList.add('sidebar-visible');
+        toggleSidebarOutside.classList.add('hidden');
     });
 </script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">

@@ -57,7 +57,7 @@
                                     </button>
 
                                     <!-- Detail button, redirects to the detail page -->
-                                    <a href="{{ route('reports.show', ['id' => $report->id]) }}"
+                                    <a href="{{ route('admin.reports.show', ['id' => $report->id]) }}"
                                         class="btn btn-info btn-sm">Lihat</a>
                                 </div>
                             </td>

@@ -26,6 +26,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Slot: Konten Profil -->
+            @component('components.riwayatadmin-tabs')
             <div class="space-y-6">
                 <!-- Profile Information Section -->
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg border-2 border-white outline-8 outline-red-500">
@@ -48,6 +49,7 @@
                     </div>
                 </div>
             </div>
+            @endcomponent
         </div>
     </div>
 @endsection

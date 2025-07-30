@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
+use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -82,5 +83,37 @@ class ProfileAdminController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/')->with('status', 'Your account has been deleted successfully.');
+    }
+
+    public function riwayat()
+    {
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Silakan login untuk melihat riwayat aduan.');
+        }
+
+        $user = auth()->user();
+
+        // Tidak peduli role-nya apa, ambil aduan berdasarkan siapa yang mengajukan (user_id)
+        $aduan = Report::where('user_id', $user->id_user)
+            ->latest()
+            ->get(['id', 'tracking_id', 'judul', 'status', 'created_at']);
+
+        return view('admin.daftar-aduan.riwayat', compact('aduan'));
+    }
+
+    public function riwayatWbs()
+    {
+        // Misal: pakai model WbsReport, atau kamu bisa sesuaikan sendiri
+        if (auth()->user()->role === 'admin') {
+            $aduan = Report::where('kategori_id', 999)
+                ->latest()
+                ->get(['id', 'tracking_id', 'judul', 'status', 'created_at']);
+        } else {
+            $aduan = Report::where('user_id', auth()->id())
+                ->where('kategori_id', 999)
+                ->latest()
+                ->get(['id', 'tracking_id', 'judul', 'status', 'created_at']);
+        }
+        return view('portal.daftar-aduan.riwayat-wbs', compact('aduan'));
     }
 }

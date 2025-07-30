@@ -2,14 +2,14 @@
 <nav class="bg-gradient-to-r from-[#B5332A] to-[#8B1E1E] py-3 text-white shadow-md relative z-50">
     <div class="container mx-auto px-4 flex items-center justify-between">
         <!-- Logo dan Judul -->
-        <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3">
+        <a href="{{ route('admin.beranda') }}" class="flex items-center space-x-3">
             <img src="{{ asset('images/logo-diy.png') }}" alt="Logo" class="h-12 w-auto drop-shadow-md">
-            <span class="text-xl font-bold tracking-wide">E-LAPOR DIY Admin</span>
+            <span class="text-xl font-bold tracking-wide">E-LAPOR DIY ADMIN</span>
         </a>
 
         <!-- Menu Navigasi -->
         <ul class="hidden lg:flex space-x-6 font-semibold tracking-wide">
-            <li><a href="{{ route('beranda') }}" class="hover:underline hover:decoration-white">E-Lapor DIY</a></li>
+            <li><a href="{{ route('admin.beranda') }}" class="hover:underline hover:decoration-white">E-Lapor DIY Admin</a></li>
             <li><a href="{{ route('admin.dashboard') }}" class="hover:underline hover:decoration-white">Dashboard</a></li>
             <li><a href="{{ route('admin.kelola-aduan.index') }}" class="hover:underline hover:decoration-white">Kelola Aduan</a></li>
 
@@ -69,7 +69,7 @@
         <div class="bg-[#B5332A] w-64 h-full px-4 py-6">
             <button id="close-menu" class="text-white text-2xl absolute top-4 right-4">×</button>
             <ul class="space-y-6 font-semibold tracking-wide mt-10">
-                <li><a href="{{ route('beranda') }}" class="hover:underline hover:decoration-white">E-Lapor DIY</a></li>
+                <li><a href="{{ route('admin.beranda') }}" class="hover:underline hover:decoration-white">E-Lapor DIY Admin</a></li>
                 <li><a href="{{ route('admin.dashboard') }}" class="hover:underline hover:decoration-white">Dashboard</a></li>
                 <li><a href="{{ route('admin.kelola-aduan.index') }}" class="hover:underline hover:decoration-white">Kelola Aduan</a></li>
 

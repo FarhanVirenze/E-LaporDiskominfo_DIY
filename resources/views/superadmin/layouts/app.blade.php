@@ -14,7 +14,10 @@
     <meta name="robots" content="noindex, nofollow">
 
     {{-- Fonts --}}
+    <!-- Google Fonts Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Menambahkan jQuery sebelum Bootstrap JS -->
@@ -26,6 +29,41 @@
     {{-- Styles & Scripts --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    {{-- Tambahan CSS Materially --}}
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F5F7FB;
+        }
+
+        .material-card {
+            border-radius: 1rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .material-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .material-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #37474F;
+        }
+
+        .material-subtitle {
+            font-size: 0.9rem;
+            color: #607D8B;
+        }
+
+        .material-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+    
     {{-- Tambahan CSS dari halaman --}}
     @yield('include-css')
 </head>
@@ -43,14 +81,6 @@
                 </div>
             </header>
         @endisset
-
-        {{-- Main Content --}}
-        <main class="flex-grow">
-            @yield('content')
-        </main>
-
-        {{-- Footer --}}
-        @include('superadmin.layouts.footer')
     </div>
 
     {{-- Tambahan JS dari halaman --}}

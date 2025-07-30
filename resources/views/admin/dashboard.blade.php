@@ -144,7 +144,7 @@
                     labels: ['Diajukan', 'Dibaca', 'Direspon', 'Selesai'],
                     datasets: [{
                         data: [{{ $pendingCount }}, {{ $readCount }}, {{ $respondedCount }}, {{ $completedCount }}],
-                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                        backgroundColor: ['#3B82F6', '#14B8A6', '#EAB308', '#22C55E'],
                         borderColor: '#fff',
                         borderWidth: 2
                     }]
