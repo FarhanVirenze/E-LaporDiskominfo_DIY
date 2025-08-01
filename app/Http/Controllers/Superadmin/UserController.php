@@ -25,7 +25,7 @@ class UserController extends Controller
                 });
             })
             ->whereIn('role', ['user', 'admin', 'superadmin']) // sekarang tampilkan juga superadmin
-            ->paginate(5)
+            ->paginate(8)
             ->appends([
                 'role' => $role,
                 'search' => $search,

@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container mt-4">
-        <h1 class="mb-4 font-weight-bold">Kelola User</h1>
+        <h2 class="mb-4 text-2xl font-semibold text-[#37474F]">Kelola User</h2>
 
         <div class="flex flex-wrap items-center gap-2 mb-4">
 
@@ -60,7 +60,7 @@
             <!-- Tabel untuk Desktop -->
             <div class="table-responsive d-none d-md-block">
                 <table class="table table-striped table-bordered w-100">
-                    <thead class="thead-light">
+                    <thead class="bg-gradient-to-r from-blue-700 to-blue-500 text-white">
                         <tr>
                             <th>No</th>
                             <th>Nama</th>
@@ -73,33 +73,36 @@
                     </thead>
                     <tbody>
                         @foreach($users as $index => $user)
-                            <tr>
-                                <td>{{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td class="text-nowrap">{{ $user->email }}</td>
-                                <td>{{ $user->nik ?? '-' }}</td>
-                                <td>{{ $user->nomor_telepon ?? '-' }}</td>
-                                <td class="text-capitalize">{{ $user->role }}</td>
-                                <td>
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editUserModal"
-                                            data-id="{{ $user->id_user }}" data-name="{{ $user->name }}"
-                                            data-email="{{ $user->email }}" data-nik="{{ $user->nik }}"
-                                            data-phone="{{ $user->nomor_telepon }}" data-role="{{ $user->role }}">
-                                            Edit
-                                        </button>
-
-                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteUserModal"
-                                            data-id="{{ $user->id_user }}" data-name="{{ $user->name }}">
-                                            Hapus
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                              <tr class="border-b">
+                            <td class="px-4 py-3">{{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}</td>
+                            <td class="px-4 py-3">{{ $user->name }}</td>
+                            <td class="px-4 py-3">{{ $user->email }}</td>
+                            <td class="px-4 py-3">{{ $user->nik ?? '-' }}</td>
+                            <td class="px-4 py-3">{{ $user->nomor_telepon ?? '-' }}</td>
+                            <td class="px-4 py-3 capitalize">{{ $user->role }}</td>
+                            <td class="px-4 py-3">
+                                <div class="flex gap-2 flex-wrap">
+                                    <button type="button"
+                                        class="px-3 py-1 text-sm bg-yellow-400 hover:bg-yellow-500 rounded text-white"
+                                        data-toggle="modal" data-target="#editUserModal"
+                                        data-id="{{ $user->id_user }}" data-name="{{ $user->name }}"
+                                        data-email="{{ $user->email }}" data-nik="{{ $user->nik }}"
+                                        data-phone="{{ $user->nomor_telepon }}" data-role="{{ $user->role }}">
+                                        Edit
+                                    </button>
+                                    <button type="button"
+                                        class="px-3 py-1 text-sm bg-red-500 hover:bg-red-600 rounded text-white"
+                                        data-toggle="modal" data-target="#deleteUserModal"
+                                        data-id="{{ $user->id_user }}" data-name="{{ $user->name }}">
+                                        Hapus
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
             <!-- Card View untuk Mobile -->
             <div class="d-block d-md-none">
@@ -131,7 +134,7 @@
             </div>
         @endif
 
-        <div class="mt-4 d-flex justify-content-center">
+        <div class="mt-6 d-flex justify-content-center">
             {{ $users->links() }}
         </div>
 
