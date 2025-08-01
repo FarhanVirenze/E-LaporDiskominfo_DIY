@@ -3,19 +3,15 @@
 
     <!-- Sidebar -->
     <aside id="sidebar"
-        class="bg-white w-72 flex flex-col fixed inset-y-0 left-0 z-50 text-gray-800 transition-transform duration-300 sidebar-visible">
+        class="bg-white w-72 flex flex-col fixed inset-y-0 left-0 z-50 text-gray-800 transition-transform duration-300">
 
         <!-- Sidebar Header -->
-        <div class="bg-[#2962FF] text-white flex items-center justify-between px-6"
+        <div class="bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white flex items-center justify-between px-6"
             style="padding-top: 16px; padding-bottom: 20px;">
             <div class="flex items-center gap-3">
-                <img src="{{ asset('images/logo-diy.png') }}" class="h-12" />
+                <img src="{{ asset('images/logo-diy.png') }}" class="h-14 ml-2" />
                 <span class="text-lg font-semibold">E-LAPOR DIY</span>
             </div>
-            <button id="toggleSidebar"
-                class="bg-[#2962FF] text-white text-xl p-2 rounded-md shadow-md focus:outline-none">
-                <i class="fas fa-bars"></i>
-            </button>
         </div>
 
         <!-- Sidebar Menu -->
@@ -26,7 +22,7 @@
 
                 <a href="{{ route('superadmin.beranda') }}"
                     class="flex items-center gap-4 px-4 py-2 rounded-lg transition font-medium
-               {{ request()->routeIs('superadmin.beranda') ? 'bg-blue-600 text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+               {{ request()->routeIs('superadmin.beranda') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                     <i
                         class="fas fa-home text-base w-5 {{ request()->routeIs('superadmin.beranda') ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
                     <span>Beranda</span>
@@ -34,7 +30,7 @@
 
                 <a href="{{ route('superadmin.dashboard') }}"
                     class="flex items-center gap-4 px-4 py-2 rounded-lg transition font-medium
-               {{ request()->routeIs('superadmin.dashboard') ? 'bg-blue-600 text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+               {{ request()->routeIs('superadmin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                     <i
                         class="fas fa-chart-bar text-base w-5 {{ request()->routeIs('superadmin.dashboard') ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
                     <span>Dashboard</span>
@@ -58,7 +54,7 @@
                 @foreach($menus as $menu)
                     <a href="{{ $menu['url'] }}"
                         class="flex items-center gap-4 px-4 py-2 rounded-lg transition font-medium
-                                                   {{ request()->routeIs($menu['route']) ? 'bg-blue-600 text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                                                                                   {{ request()->routeIs($menu['route']) ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                         <i
                             class="fas {{ $menu['icon'] }} text-base w-5 {{ request()->routeIs($menu['route']) ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
                         <span>{{ $menu['label'] }}</span>
@@ -73,7 +69,7 @@
 
                     <a href="{{ route('superadmin.profile.edit') }}"
                         class="flex items-center gap-4 px-4 py-2 rounded-lg transition font-medium
-                                                   {{ request()->routeIs('superadmin.profile.edit') ? 'bg-blue-600 text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                                                                                   {{ request()->routeIs('superadmin.profile.edit') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                         <i
                             class="fas fa-user text-base w-5 {{ request()->routeIs('superadmin.profile.edit') ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
                         <span>Profil</span>
@@ -92,22 +88,19 @@
         </nav>
     </aside>
 
-    <!-- Toggle Button (outside sidebar, shown when sidebar is hidden) -->
-    <button id="toggleSidebarOutside"
-        class="fixed top-4 left-8 z-50 bg-[#2962FF] text-white text-xl p-2 rounded-md shadow-md focus:outline-none hidden">
-        <i class="fas fa-bars"></i>
-    </button>
-
     <!-- Main Content -->
     <div id="mainContent" class="flex-1 lg:ml-72 w-full transition-all duration-300">
 
-        <!-- Navbar -->
-        <nav class="bg-[#2962FF] py-4 px-6 flex items-center justify-between sticky top-0 z-40">
+        <!-- Navbar Desktop -->
+        <nav class="bg-gradient-to-b from-[#2962FF] to-[#0039CB] py-4 px-6 flex items-center justify-between sticky top-0 z-40 hidden lg:flex">
 
-            <!-- Left: Kosong -->
-            <div></div>
+            <div>
+                <button id="toggleSidebar"
+                    class="bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white text-xl p-2 rounded-md shadow-md focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
 
-            <!-- Right: Search & Icons -->
             <div class="flex items-center gap-4">
                 <div class="relative">
                     <input type="text" placeholder="Search..."
@@ -139,6 +132,25 @@
             </div>
         </nav>
 
+        <!-- Navbar Mobile -->
+        <nav class="bg-gradient-to-b from-[#2962FF] to-[#0039CB] py-4 px-6 flex items-center justify-between sticky top-0 z-50 lg:hidden">
+
+            <!-- Logo atau Teks -->
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('images/logo-diy.png') }}" class="h-14 ml-1" />
+                <span class="text-lg font-semibold text-white">E-LAPOR DIY</span>
+            </div>
+
+            <!-- Toggle Button di Kanan -->
+            <div>
+                <button id="toggleSidebarMobile"
+                    class="bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white text-xl p-2 rounded-md shadow-md focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+        </nav>
+
         <!-- Page Content -->
         <main class="p-6 bg-gray-50 min-h-screen text-gray-900">
             @yield('content')
@@ -148,8 +160,8 @@
 
 <!-- Toggle Sidebar -->
 <script>
-    const toggleSidebar = document.getElementById('toggleSidebar'); // dalam sidebar
-    const toggleSidebarOutside = document.getElementById('toggleSidebarOutside'); // luar sidebar
+    const toggleSidebar = document.getElementById('toggleSidebar');
+    const toggleSidebarMobile = document.getElementById('toggleSidebarMobile');
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('mainContent');
 
@@ -160,23 +172,27 @@
             sidebar.classList.remove('sidebar-visible');
             sidebar.classList.add('sidebar-hidden');
             mainContent.classList.remove('lg:ml-72');
-            toggleSidebarOutside.classList.remove('hidden');
         } else {
             sidebar.classList.remove('sidebar-hidden');
             sidebar.classList.add('sidebar-visible');
             mainContent.classList.add('lg:ml-72');
-            toggleSidebarOutside.classList.add('hidden');
         }
         isSidebarVisible = !isSidebarVisible;
     }
 
     toggleSidebar?.addEventListener('click', toggleSidebarAction);
-    toggleSidebarOutside?.addEventListener('click', toggleSidebarAction);
+    toggleSidebarMobile?.addEventListener('click', toggleSidebarAction);
 
     window.addEventListener('DOMContentLoaded', () => {
-        sidebar.classList.add('sidebar-visible');
-        toggleSidebarOutside.classList.add('hidden');
+        if (window.innerWidth >= 1024) {
+            sidebar.classList.add('sidebar-visible'); // Desktop: langsung tampil
+            isSidebarVisible = true;
+        } else {
+            sidebar.classList.add('sidebar-hidden');  // Mobile: sembunyikan dulu
+            isSidebarVisible = false;
+        }
     });
+
 </script>
 
 <!-- Font Awesome -->

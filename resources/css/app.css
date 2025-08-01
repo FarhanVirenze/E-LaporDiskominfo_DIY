@@ -135,13 +135,3 @@ canvas:hover {
 .sidebar-visible {
     transform: translateX(0);
 }
-
-.main-with-sidebar {
-    margin-left: 18rem; /* 72 Tailwind units */
-    transition: margin-left 0.3s ease;
-}
-
-.main-full {
-    margin-left: 0;
-    transition: margin-left 0.3s ease;
-}
