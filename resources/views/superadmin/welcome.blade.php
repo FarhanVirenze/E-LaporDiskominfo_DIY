@@ -382,17 +382,14 @@
                     // Ambil hanya laporan sesuai kategori admin
                     $reports = \App\Models\Report::whereIn('kategori_id', $kategoriIds)
                         ->latest()
-                        ->take(5)
                         ->get();
                 } elseif ($user && $user->role === 'superadmin') {
                     // Superadmin bisa melihat semua
                     $reports = \App\Models\Report::latest()
-                        ->take(5)
                         ->get();
                 } else {
                     // Pengguna biasa atau belum login
                     $reports = \App\Models\Report::latest()
-                        ->take(5)
                         ->get();
                 }
             @endphp

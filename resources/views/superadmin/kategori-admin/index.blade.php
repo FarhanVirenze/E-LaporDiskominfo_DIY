@@ -68,8 +68,8 @@
                 <thead class="bg-gradient-to-r from-blue-700 to-blue-500 text-white">
                     <tr>
                         <th class="text-center">No</th>
-                        <th>Admin OPD</th>
-                        <th>Kategori Saat Ini</th>
+                        <th class="text-center">Admin OPD</th>
+                        <th class="text-center">Kategori Saat Ini</th>
                         <th class="text-center">Atur Kategori</th>
                     </tr>
                 </thead>

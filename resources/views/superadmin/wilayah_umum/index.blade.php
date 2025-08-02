@@ -28,15 +28,17 @@
                 <table class="table table-striped table-bordered">
                     <thead class="bg-gradient-to-r from-blue-700 to-blue-500 text-white">
                         <tr>
-                            <th>No</th>
-                            <th>Nama Wilayah</th>
+                            <th class="text-center">No</th>
+                            <th class="text-center">Nama Wilayah</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($wilayah as $index => $wil)
                             <tr>
-                                <td>{{ ($wilayah->currentPage() - 1) * $wilayah->perPage() + $loop->iteration }}</td>
+                               <td class="text-center align-middle">
+    {{ ($wilayah->currentPage() - 1) * $wilayah->perPage() + $loop->iteration }}
+</td>
                                 <td>{{ $wil->nama }}</td>
                                 <td class="text-center">
                                     <div class="flex gap-2 justify-center flex-wrap">

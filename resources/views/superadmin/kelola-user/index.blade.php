@@ -61,20 +61,22 @@
             <div class="table-responsive d-none d-md-block">
                 <table class="table table-striped table-bordered w-100">
                     <thead class="bg-gradient-to-r from-blue-700 to-blue-500 text-white">
-                        <tr>
-                            <th>No</th>
-                            <th>Nama</th>
-                            <th>Email</th>
-                            <th>NIK</th>
-                            <th>No Telepon</th>
-                            <th>Role</th>
-                            <th>Aksi</th>
-                        </tr>
+                      <tr>
+    <th class="text-center align-middle">No</th>
+    <th class="text-center align-middle">Nama</th>
+    <th class="text-center align-middle">Email</th>
+    <th class="text-center align-middle">NIK</th>
+    <th class="text-center align-middle">No Telepon</th>
+    <th class="text-center align-middle">Role</th>
+    <th class="text-center align-middle">Aksi</th>
+</tr>
                     </thead>
                     <tbody>
                         @foreach($users as $index => $user)
                               <tr class="border-b">
-                            <td class="px-4 py-3">{{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}</td>
+              <td class="px-4 py-3 text-center align-middle">
+    {{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}
+</td>
                             <td class="px-4 py-3">{{ $user->name }}</td>
                             <td class="px-4 py-3">{{ $user->email }}</td>
                             <td class="px-4 py-3">{{ $user->nik ?? '-' }}</td>

@@ -11,7 +11,7 @@
     <div class="container mx-auto px-4">
         <!-- Grid yang menampilkan 3 kolom di desktop, 1 kolom di mobile -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            @forelse (\App\Models\Report::latest()->take(5)->get() as $report)
+            @forelse (\App\Models\Report::latest()->get() as $report)
                 <div
                     class="bg-white border-2 border-gray-300 p-4 shadow-lg rounded-lg hover:shadow-xl transition duration-300 w-full mx-auto">
                     <h3 class="font-semibold text-lg text-gray-800 text-left truncate">

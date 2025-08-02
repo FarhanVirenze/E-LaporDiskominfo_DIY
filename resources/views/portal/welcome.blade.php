@@ -359,11 +359,11 @@
                         @csrf
                         <input type="text" name="tracking_id" placeholder="Nomor Tiket Aduan"
                             class="w-full md:flex-1 px-6 py-3 border border-gray-300 rounded-full shadow 
-                                               focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 
-                                               text-lg text-center font-semibold uppercase tracking-wider transition duration-300" required>
+                                                       focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 
+                                                       text-lg text-center font-semibold uppercase tracking-wider transition duration-300" required>
 
                         <button type="submit" class="bg-[#c0392b] hover:bg-[#922b21] text-white font-bold px-8 py-3 rounded-full 
-                                                    uppercase tracking-wide shadow transition-all duration-200">
+                                                            uppercase tracking-wide shadow transition-all duration-200">
                             LACAK
                         </button>
                     </form>
@@ -382,17 +382,17 @@
                     // Ambil hanya laporan sesuai kategori admin
                     $reports = \App\Models\Report::whereIn('kategori_id', $kategoriIds)
                         ->latest()
-                        ->take(5)
+                        ->take(9)
                         ->get();
                 } elseif ($user && $user->role === 'superadmin') {
                     // Superadmin bisa melihat semua
                     $reports = \App\Models\Report::latest()
-                        ->take(5)
+                        ->take(9)
                         ->get();
                 } else {
                     // Pengguna biasa atau belum login
                     $reports = \App\Models\Report::latest()
-                        ->take(5)
+                        ->take(9)
                         ->get();
                 }
             @endphp
@@ -403,7 +403,7 @@
                 <h2 class="text-2xl font-extrabold text-gray-800 mb-6 text-center border-b pb-2">ADUAN TERBARU</h2>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                    @forelse ($reports as $report)
+                    @forelse ($reports as $report)  
                         <div
                             class="bg-white border-2 border-gray-300 p-4 shadow-lg rounded-lg hover:shadow-xl transition duration-300 w-full mx-auto">
                             <h3 class="font-semibold text-lg text-gray-800 text-left truncate">
@@ -445,17 +445,17 @@
                                     <i class="fas fa-tasks text-yellow-500"></i>
                                     <span class="font-semibold">Status:</span>
                                     <span class="rounded-full px-2 py-1 font-semibold text-xs
-                                            @if($report->status === 'Diajukan')
-                                                bg-blue-200 text-blue-800
-                                            @elseif($report->status === 'Dibaca')
-                                                bg-teal-200 text-teal-800
-                                            @elseif($report->status === 'Direspon')
-                                                bg-yellow-200 text-yellow-800
-                                            @elseif($report->status === 'Selesai')
-                                                bg-green-200 text-green-800
-                                            @else
-                                                bg-gray-200 text-gray-700
-                                            @endif">
+                                                            @if($report->status === 'Diajukan')
+                                                                bg-blue-200 text-blue-800
+                                                            @elseif($report->status === 'Dibaca')
+                                                                bg-teal-200 text-teal-800
+                                                            @elseif($report->status === 'Direspon')
+                                                                bg-yellow-200 text-yellow-800
+                                                            @elseif($report->status === 'Selesai')
+                                                                bg-green-200 text-green-800
+                                                            @else
+                                                                bg-gray-200 text-gray-700
+                                                            @endif">
                                         {{ $report->status }}
                                     </span>
                                 </div>
@@ -618,13 +618,13 @@
                         const div = document.createElement('div');
                         div.className = 'flex items-center gap-3 mb-2';
                         div.innerHTML = `
-                                                                                                                                                                                                                <input type="file" name="file[]" 
-                                                                                                                                                                                                                       accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
-                                                                                                                                                                                                                       class="file-input flex-1 border px-2 py-1 rounded text-sm">
-                                                                                                                                                                                                                <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
-                                                                                                                                                                                                                    <i class="fas fa-trash-alt"></i>
-                                                                                                                                                                                                                </button>
-                                                                                                                                                                                                            `;
+                                                                                                                                                                                                                        <input type="file" name="file[]" 
+                                                                                                                                                                                                                               accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
+                                                                                                                                                                                                                               class="file-input flex-1 border px-2 py-1 rounded text-sm">
+                                                                                                                                                                                                                        <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
+                                                                                                                                                                                                                            <i class="fas fa-trash-alt"></i>
+                                                                                                                                                                                                                        </button>
+                                                                                                                                                                                                                    `;
                         fileInputsContainer.appendChild(div);
                         updateAddFileButtonVisibility();
                     });

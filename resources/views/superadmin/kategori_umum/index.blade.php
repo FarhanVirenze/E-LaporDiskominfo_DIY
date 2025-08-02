@@ -53,7 +53,7 @@
                     <thead class="bg-gradient-to-r from-blue-700 to-blue-500 text-white">
                         <tr>
                             <th class="text-center w-12">No</th>
-                            <th>Nama Kategori</th>
+                            <th class="text-center">Nama Kategori</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                     </thead>

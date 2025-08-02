@@ -47,7 +47,7 @@
 
             {{-- Distribusi Role & Jenis Pelapor --}}
             <div class="bg-white rounded-xl p-5 shadow-md">
-                <h5 class="text-center text-[#37474F] mb-3 font-semibold">Distribusi Role & Jenis Pelapor</h5>
+                <h5 class="text-center text-[#37474F] mb-3 font-semibold">Distribusi Role & Jenis Aduan</h5>
                 <div class="relative h-[325px]">
                     <canvas id="gabunganUserPelaporChart"></canvas>
                 </div>
@@ -69,43 +69,54 @@
                 </div>
             </div>
 
-            {{-- Top Kategori --}}
+            {{-- Statistik Kategori Aduan --}}
             <div class="bg-white rounded-xl p-5 shadow-md">
-                <h5 class="text-center text-[#37474F] mb-3 font-semibold">Top 10 Kategori Aduan</h5>
-                <div class="relative h-[350px]">
+                <div class="flex items-center justify-between mb-3">
+                    <h5 id="kategoriUmumTitle" class="text-[#37474F] font-semibold">Top 10 Kategori Aduan</h5>
+                    <select id="kategoriUmumFilter"
+                        class="border-gray-300 rounded-md text-sm text-[#37474F] shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <option value="top10">Top 10</option>
+                        <option value="all">Semua</option>
+                    </select>
+                </div>
+                <div class="relative h-[355px]">
                     <canvas id="kategoriChart"></canvas>
                 </div>
             </div>
 
             {{-- Grafik Aktivitas --}}
-           <div class="bg-white rounded-xl p-5 shadow-md">
+            <div class="bg-white rounded-xl p-5 shadow-md">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-                    <h5 class="text-[#37474F] font-semibold">
-                        Grafik Aktivitas Laporan
-                        @if($range == '7') (1 Minggu Terakhir)
-                        @elseif($range == '30') (1 Bulan Terakhir)
-                        @elseif($range == '60') (2 Bulan Terakhir)
-                        @elseif($range == '90') (3 Bulan Terakhir)
-                        @endif
+                    <h5 id="judulAktivitas" class="text-[#37474F] font-semibold">
+                        Grafik Aktivitas Aduan
                     </h5>
-                    <form method="GET" action="{{ route('superadmin.dashboard') }}" class="w-full sm:w-auto">
-                        <select name="range" onchange="this.form.submit()"
+                    <div class="w-full sm:w-auto">
+                        <select id="rangeSelector"
                             class="w-full sm:w-auto border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
-                            <option value="7" {{ $range == '7' ? 'selected' : '' }}>1 Minggu</option>
-                            <option value="30" {{ $range == '30' ? 'selected' : '' }}>1 Bulan</option>
-                            <option value="60" {{ $range == '60' ? 'selected' : '' }}>2 Bulan</option>
-                            <option value="90" {{ $range == '90' ? 'selected' : '' }}>3 Bulan</option>
+                            <option value="7" selected>1 Minggu</option>
+                            <option value="30">1 Bulan</option>
+                            <option value="60">2 Bulan</option>
+                            <option value="90">3 Bulan</option>
                         </select>
-                    </form>
+                    </div>
                 </div>
-                <div class="relative h-[323px]">
-                    <canvas id="aktivitasChart"></canvas>
+                <div class="relative h-[350px] w-full">
+                    <canvas id="aktivitasChart" class="w-full h-full"></canvas>
                 </div>
             </div>
 
             {{-- Top Admin Penerima --}}
             <div class="bg-white rounded-xl p-5 shadow-md">
-                <h5 class="text-center text-[#37474F] mb-3 font-semibold">Top 10 Admin Penerima Laporan</h5>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+                    <h5 class="text-[#37474F] font-semibold text-base" id="judulTopAdmin">Top 10 Admin Penerima Aduan</h5>
+                    <form class="w-full sm:w-auto">
+                        <select id="topAdminFilter"
+                            class="w-full sm:w-auto border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            <option value="top10" selected>Top 10</option>
+                            <option value="semua">Semua</option>
+                        </select>
+                    </form>
+                </div>
                 <div class="relative h-[350px]">
                     <canvas id="topAdminChart"></canvas>
                 </div>
@@ -113,7 +124,18 @@
 
             {{-- Kategori per Admin --}}
             <div class="bg-white rounded-xl p-5 shadow-md sm:col-span-2 xl:col-span-3">
-                <h5 class="text-center text-[#37474F] mb-3 font-semibold">Top 10 Kategori Aduan per Admin</h5>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+                    <h5 id="kategoriPerAdminTitle" class="text-[#37474F] font-semibold text-base">
+                        Top 10 Kategori Aduan per Admin
+                    </h5>
+                    <form class="w-full sm:w-auto">
+                        <select id="adminFilter"
+                            class="w-full sm:w-auto border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            <option value="top10" selected>Top 10</option>
+                            <option value="all">Semua</option>
+                        </select>
+                    </form>
+                </div>
                 <div class="relative h-[450px]">
                     <canvas id="kategoriPerAdminChart"></canvas>
                 </div>
@@ -173,7 +195,7 @@
                 data: {
                     labels: ['User (Role)', 'Admin (Role)', 'Anonim (Pelapor)', 'Terdaftar (Pelapor)'],
                     datasets: [{
-                        label: 'Jumlah',
+                        label: 'Jumlah Role & Jenis Aduan',
                         data: [{{ $userCount }}, {{ $adminCount }}, {{ $anonimCount }}, {{ $registeredCount }}],
                         backgroundColor: materialPalette.slice(0, 4)
                     }]
@@ -182,6 +204,17 @@
                     ...chartOptions,
                     plugins: {
                         ...chartOptions.plugins,
+                        legend: {
+                            display: true, // Menampilkan label 'Jumlah' dengan kotak warna
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 16,
+                                color: '#37474F',
+                                font: {
+                                    weight: '500'
+                                }
+                            }
+                        },
                         tooltip: {
                             ...chartOptions.plugins.tooltip,
                             callbacks: {
@@ -207,36 +240,119 @@
             });
 
             // === KATEGORI PER ADMIN ===
-            const kategoriAdminData = @json($kategoriAdminData);
-            const adminLabels = kategoriAdminData.map(item => item.admin);
-            const adminKategoriLabels = [...new Set(kategoriAdminData.flatMap(item => Object.keys(item.kategori)))];
-            const adminDatasets = adminKategoriLabels.map((kategori, i) => ({
-                label: kategori,
-                data: kategoriAdminData.map(item => item.kategori[kategori] || 0),
-                backgroundColor: materialPalette[i % materialPalette.length]
-            }));
+            const kategoriAdminDataTop10 = @json($kategoriAdminDataTop10);
+            const kategoriAdminDataAll = @json($kategoriAdminDataAll);
 
-            new Chart(document.getElementById('kategoriPerAdminChart'), {
-                type: 'bar',
-                data: { labels: adminLabels, datasets: adminDatasets },
-                options: {
-                    ...chartOptions,
-                    scales: {
-                        x: { stacked: true },
-                        y: { stacked: true, beginAtZero: true }
+            const ctxKategori = document.getElementById('kategoriPerAdminChart').getContext('2d');
+            const titleKategori = document.getElementById('kategoriPerAdminTitle');
+            const adminFilter = document.getElementById('adminFilter');
+
+            let kategoriChart;
+
+            function generateKategoriChartData(data) {
+                const adminLabels = data.map(item => item.admin);
+                const kategoriLabels = [...new Set(data.flatMap(item => Object.keys(item.kategori)))];
+
+                const datasets = kategoriLabels.map((kategori, i) => ({
+                    type: 'bar',
+                    label: kategori,
+                    data: data.map(item => item.kategori[kategori] || 0),
+                    backgroundColor: materialPalette[i % materialPalette.length],
+                    stack: 'stack1'
+                }));
+
+                return { labels: adminLabels, datasets };
+            }
+
+            function renderKategoriChart(data) {
+                const chartData = generateKategoriChartData(data);
+                if (kategoriChart) kategoriChart.destroy();
+
+                kategoriChart = new Chart(ctxKategori, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.labels,
+                        datasets: chartData.datasets
+                    },
+                    options: {
+                        ...chartOptions,
+                        responsive: true,
+                        plugins: {
+                            ...chartOptions.plugins,
+                            legend: {
+                                display: true,
+                                position: 'bottom',
+                                labels: {
+                                    boxWidth: 16,
+                                    color: '#37474F',
+                                    font: { weight: '500' }
+                                }
+                            },
+                            tooltip: {
+                                ...chartOptions.plugins.tooltip,
+                                callbacks: {
+                                    label: function (ctx) {
+                                        const label = ctx.dataset.label || '';
+                                        const value = ctx.raw;
+                                        return `${label}: ${value}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                stacked: true,
+                                ticks: {
+                                    color: '#37474F',
+                                    font: { weight: '500' }
+                                },
+                                grid: { display: false }
+                            },
+                            y: {
+                                stacked: true,
+                                beginAtZero: true,
+                                ticks: {
+                                    color: '#37474F',
+                                    font: { weight: '500' },
+                                    stepSize: 1
+                                },
+                                grid: {
+                                    color: '#e0e0e0',
+                                    borderDash: [4, 4]
+                                }
+                            }
+                        }
                     }
+                });
+            }
+
+            adminFilter.addEventListener('change', function () {
+                const selected = this.value;
+
+                if (selected === 'all') {
+                    renderKategoriChart(kategoriAdminDataAll);
+                    titleKategori.innerText = 'Semua Kategori Aduan per Admin';
+                } else {
+                    renderKategoriChart(kategoriAdminDataTop10);
+                    titleKategori.innerText = 'Top 10 Kategori Aduan per Admin';
                 }
             });
 
+            // Inisialisasi awal
+            renderKategoriChart(kategoriAdminDataTop10);
+
             // === TOP ADMIN ===
-            new Chart(document.getElementById('topAdminChart'), {
+            const adminData = @json($adminData);
+            const ctxTopAdmin = document.getElementById('topAdminChart').getContext('2d');
+
+            let topAdminChart = new Chart(ctxTopAdmin, {
                 type: 'bar',
                 data: {
-                    labels: {!! json_encode($adminLabels) !!},
+                    labels: adminData.top10.labels,
                     datasets: [{
-                        label: 'Jumlah Laporan',
-                        data: {!! json_encode($adminCounts) !!},
-                        backgroundColor: materialPalette
+                        label: 'Jumlah Admin Penerima Aduan',
+                        data: adminData.top10.data,
+                        backgroundColor: materialPalette,
                     }]
                 },
                 options: {
@@ -244,25 +360,68 @@
                     indexAxis: 'y',
                     plugins: {
                         ...chartOptions.plugins,
-                        legend: { display: false }
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 16,
+                                color: '#37474F',
+                                font: { weight: '500' }
+                            }
+                        },
+                        tooltip: {
+                            ...chartOptions.plugins.tooltip,
+                            callbacks: {
+                                label: function (ctx) {
+                                    return `${ctx.dataset.label}: ${ctx.raw}`;
+                                }
+                            }
+                        }
                     },
                     scales: {
                         x: {
                             beginAtZero: true,
-                            reverse: true
+                            reverse: true,
+                            ticks: { color: '#37474F', font: { weight: '500' } },
+                            grid: { color: '#e0e0e0', borderDash: [4, 4] }
+                        },
+                        y: {
+                            ticks: { color: '#37474F', font: { weight: '500' } },
+                            grid: { display: false }
                         }
                     }
                 }
             });
 
+            document.getElementById('topAdminFilter').addEventListener('change', function () {
+                const selected = this.value;
+                topAdminChart.data.labels = adminData[selected].labels;
+                topAdminChart.data.datasets[0].data = adminData[selected].data;
+                document.getElementById('judulTopAdmin').innerText =
+                    selected === 'top10' ? 'Top 10 Admin Penerima Aduan' : 'Semua Admin Penerima Aduan';
+                topAdminChart.update();
+            });
+
             // === KATEGORI UMUM ===
-            new Chart(document.getElementById('kategoriChart'), {
+            const kategoriUmumData = {
+                top10: {
+                    labels: {!! json_encode($kategoriUmumData['top10']['labels']) !!},
+                    counts: {!! json_encode($kategoriUmumData['top10']['counts']) !!}
+                },
+                all: {
+                    labels: {!! json_encode($kategoriUmumData['all']['labels']) !!},
+                    counts: {!! json_encode($kategoriUmumData['all']['counts']) !!}
+                }
+            };
+
+            const ctxKategoriUmum = document.getElementById('kategoriChart').getContext('2d');
+            let kategoriUmumChart = new Chart(ctxKategoriUmum, {
                 type: 'bar',
                 data: {
-                    labels: {!! json_encode($kategoriLabels) !!},
+                    labels: kategoriUmumData.top10.labels,
                     datasets: [{
-                        label: 'Jumlah Aduan',
-                        data: {!! json_encode($kategoriCounts) !!},
+                        label: 'Jumlah Kategori Aduan',
+                        data: kategoriUmumData.top10.counts,
                         backgroundColor: materialPalette
                     }]
                 },
@@ -271,9 +430,58 @@
                     indexAxis: 'y',
                     plugins: {
                         ...chartOptions.plugins,
-                        legend: { display: false }
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 16,
+                                color: '#37474F',
+                                font: { weight: '500' }
+                            }
+                        },
+                        tooltip: {
+                            ...chartOptions.plugins.tooltip,
+                            callbacks: {
+                                label: function (ctx) {
+                                    return `${ctx.dataset.label}: ${ctx.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#37474F',
+                                font: { weight: '500' }
+                            },
+                            grid: {
+                                color: '#e0e0e0',
+                                borderDash: [4, 4]
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#37474F',
+                                font: { weight: '500' }
+                            },
+                            grid: { display: false }
+                        }
                     }
                 }
+            });
+
+            document.getElementById('kategoriUmumFilter').addEventListener('change', function () {
+                const selected = this.value;
+
+                // Update data chart
+                kategoriUmumChart.data.labels = kategoriUmumData[selected].labels;
+                kategoriUmumChart.data.datasets[0].data = kategoriUmumData[selected].counts;
+                kategoriUmumChart.update();
+
+                // Update judul chart
+                const title = selected === 'top10' ? 'Top 10 Kategori Aduan' : 'Semua Kategori Aduan';
+                document.getElementById('kategoriUmumTitle').textContent = title;
             });
 
             // === WILAYAH DOUGHNUT ===
@@ -288,7 +496,20 @@
                         borderWidth: 2
                     }]
                 },
-                options: chartOptions
+                options: {
+                    ...chartOptions,
+                    cutout: '60%', // Ukuran lubang tengah (bisa sesuaikan)
+                    plugins: {
+                        ...chartOptions.plugins,
+                        legend: {
+                            display: true,
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    }
+                }
             });
 
             // === STATUS PIE ===
@@ -307,6 +528,10 @@
                     ...chartOptions,
                     plugins: {
                         ...chartOptions.plugins,
+                        legend: {
+                            display: true,
+                            position: 'bottom'
+                        },
                         tooltip: {
                             ...chartOptions.plugins.tooltip,
                             callbacks: {
@@ -322,14 +547,32 @@
                 }
             });
 
-            // === LINE AKTIVITAS ===
-            new Chart(document.getElementById('aktivitasChart'), {
+            // Semua data grafik 7/30/60/90 hari dimuat langsung
+            const aktivitasData = {
+                '7': {!! json_encode($aktivitasSemuaRange['7']) !!},
+                '30': {!! json_encode($aktivitasSemuaRange['30']) !!},
+                '60': {!! json_encode($aktivitasSemuaRange['60']) !!},
+                '90': {!! json_encode($aktivitasSemuaRange['90']) !!}
+            };
+
+            const labelRange = {
+                '7': '1 Minggu',
+                '30': '1 Bulan',
+                '60': '2 Bulan',
+                '90': '3 Bulan'
+            };
+
+            const defaultRange = document.getElementById('rangeSelector').value;
+            document.getElementById('judulAktivitas').innerText = `Grafik Aktivitas Aduan ${labelRange[defaultRange]}`;
+
+            const ctx = document.getElementById('aktivitasChart');
+            const aktivitasChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: {!! json_encode($tanggalAktivitas) !!},
+                    labels: aktivitasData[defaultRange].tanggal,
                     datasets: [{
-                        label: 'Jumlah Laporan',
-                        data: {!! json_encode($jumlahAktivitas) !!},
+                        label: 'Grafik Aktivitas Aduan',
+                        data: aktivitasData[defaultRange].jumlah,
                         borderColor: '#2962FF',
                         backgroundColor: 'rgba(41, 98, 255, 0.2)',
                         fill: true,
@@ -339,7 +582,19 @@
                     }]
                 },
                 options: {
-                    ...chartOptions,
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 16,
+                                color: '#37474F',
+                                font: { weight: '500' }
+                            }
+                        }
+                    },
                     scales: {
                         x: {
                             ticks: { color: '#37474F' },
@@ -352,6 +607,15 @@
                         }
                     }
                 }
+            });
+
+            document.getElementById('rangeSelector').addEventListener('change', function () {
+                const selectedRange = this.value;
+                document.getElementById('judulAktivitas').innerText = `Grafik Aktivitas Aduan ${labelRange[selectedRange]}`;
+
+                aktivitasChart.data.labels = aktivitasData[selectedRange].tanggal;
+                aktivitasChart.data.datasets[0].data = aktivitasData[selectedRange].jumlah;
+                aktivitasChart.update();
             });
 
             // === Flash message ===

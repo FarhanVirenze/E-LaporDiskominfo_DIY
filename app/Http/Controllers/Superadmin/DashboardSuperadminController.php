@@ -25,11 +25,11 @@ class DashboardSuperadminController extends Controller
         $completedCount = Report::where('status', 'Selesai')->count();
         $totalReports = $pendingCount + $readCount + $respondedCount + $completedCount;
 
-        $topAdmins = Report::whereNotNull('admin_id')
+        // === Top Admin Penerima (Top 10 dan Semua) ===
+        $adminSemua = Report::whereNotNull('admin_id')
             ->selectRaw('admin_id, COUNT(*) as jumlah')
             ->groupBy('admin_id')
             ->orderByDesc('jumlah')
-            ->take(10) // ambil 5 admin teratas
             ->get()
             ->map(function ($item) {
                 $admin = User::find($item->admin_id);
@@ -39,8 +39,19 @@ class DashboardSuperadminController extends Controller
                 ];
             });
 
-        $adminLabels = $topAdmins->pluck('nama');
-        $adminCounts = $topAdmins->pluck('jumlah');
+        $adminTop10 = $adminSemua->take(10);
+
+        // Format data
+        $adminData = [
+            'top10' => [
+                'labels' => $adminTop10->pluck('nama'),
+                'data' => $adminTop10->pluck('jumlah'),
+            ],
+            'semua' => [
+                'labels' => $adminSemua->pluck('nama'),
+                'data' => $adminSemua->pluck('jumlah'),
+            ],
+        ];
 
         // Anonim vs Terdaftar
         $anonimCount = Report::where('is_anonim', true)->count();
@@ -55,16 +66,32 @@ class DashboardSuperadminController extends Controller
         $wilayahCounts = $wilayahData->pluck('total');
 
         // Statistik kategori aduan
-        $kategoriData = Report::selectRaw('kategori_id, COUNT(*) as total')
+        $kategoriSemua = Report::selectRaw('kategori_id, COUNT(*) as total')
             ->groupBy('kategori_id')
             ->with('kategori')
-            ->orderByDesc('total') // Tambahkan ini
-            ->take(10) // Tambahkan ini
-            ->get();
-        $kategoriLabels = $kategoriData->pluck('kategori.nama');
-        $kategoriCounts = $kategoriData->pluck('total');
+            ->orderByDesc('total')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'nama' => $item->kategori->nama ?? 'Tidak diketahui',
+                    'jumlah' => $item->total,
+                ];
+            });
 
-        // Kategori berdasarkan admin (Top 5 admin + kategorinya)
+        $kategoriTop10 = $kategoriSemua->take(10);
+
+        $kategoriUmumData = [
+            'top10' => [
+                'labels' => $kategoriTop10->pluck('nama'),
+                'counts' => $kategoriTop10->pluck('jumlah'),
+            ],
+            'all' => [
+                'labels' => $kategoriSemua->pluck('nama'),
+                'counts' => $kategoriSemua->pluck('jumlah'),
+            ],
+        ];
+
+        // Kategori berdasarkan admin (Top 10 admin + kategorinya)
         $kategoriPerAdmin = Report::selectRaw('admin_id, kategori_id, COUNT(*) as total')
             ->whereNotNull('admin_id')
             ->groupBy('admin_id', 'kategori_id')
@@ -72,38 +99,39 @@ class DashboardSuperadminController extends Controller
             ->get()
             ->groupBy('admin_id');
 
-        // Urutkan dan ambil top 10 admin dengan total aduan terbanyak
-        $kategoriAdminData = $kategoriPerAdmin->map(function ($reports, $adminId) {
+        $kategoriAdminDataAll = $kategoriPerAdmin->map(function ($reports, $adminId) {
             $admin = $reports->first()->admin;
             $kategori = $reports->mapWithKeys(function ($item) {
                 return [$item->kategori->nama ?? 'Tidak diketahui' => $item->total];
             });
-            $total = $kategori->sum(); // jumlah total aduan dari admin ini
+            $total = $kategori->sum();
 
             return [
                 'admin' => $admin ? $admin->name : 'Tidak diketahui',
                 'kategori' => $kategori,
                 'total' => $total,
             ];
-        })
-            ->sortByDesc('total') // urutkan berdasarkan total
-            ->take(10) // ambil 5 teratas
-            ->values(); // reset indexing
+        })->sortByDesc('total')->values();
 
-        // === Grafik Aktivitas Laporan ===
-        $range = $request->query('range', '7');
-        $days = in_array($range, ['7', '30', '60', '90']) ? (int) $range : 30;
+        $kategoriAdminDataTop10 = $kategoriAdminDataAll->take(10);
 
-        $startDate = Carbon::now()->subDays($days);
+        // === Grafik Aktivitas Laporan (Semua Range Sekaligus) ===
+        $ranges = ['7', '30', '60', '90'];
+        $aktivitasSemuaRange = [];
 
-        $aktivitasData = Report::selectRaw('DATE(created_at) as tanggal, COUNT(*) as jumlah')
-            ->where('created_at', '>=', $startDate)
-            ->groupBy('tanggal')
-            ->orderBy('tanggal')
-            ->get();
+        foreach ($ranges as $range) {
+            $start = Carbon::now()->subDays((int) $range);
+            $data = Report::selectRaw('DATE(created_at) as tanggal, COUNT(*) as jumlah')
+                ->where('created_at', '>=', $start)
+                ->groupBy('tanggal')
+                ->orderBy('tanggal')
+                ->get();
 
-        $tanggalAktivitas = $aktivitasData->pluck('tanggal');
-        $jumlahAktivitas = $aktivitasData->pluck('jumlah');
+            $aktivitasSemuaRange[$range] = [
+                'tanggal' => $data->pluck('tanggal'),
+                'jumlah' => $data->pluck('jumlah'),
+            ];
+        }
 
         return view('superadmin.dashboard', compact(
             'adminCount',
@@ -114,18 +142,15 @@ class DashboardSuperadminController extends Controller
             'respondedCount',
             'completedCount',
             'totalReports',
-            'kategoriLabels',
-            'kategoriCounts',
+            'kategoriUmumData',
             'wilayahLabels',
             'wilayahCounts',
             'anonimCount',
             'registeredCount',
-            'tanggalAktivitas',
-            'jumlahAktivitas',
-            'adminLabels',
-            'adminCounts',
-            'kategoriAdminData',
-            'range'
+            'aktivitasSemuaRange',
+            'adminData',
+            'kategoriAdminDataTop10',
+            'kategoriAdminDataAll'
         ));
     }
 }

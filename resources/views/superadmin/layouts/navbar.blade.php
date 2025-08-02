@@ -15,24 +15,24 @@
         </div>
 
         <!-- Sidebar Menu -->
-        <nav class="flex-1 overflow-y-auto px-4 py-5 text-sm space-y-6 shadow-lg scrollbar-hide">
+        <nav class="flex-1 overflow-y-auto px-4 py-5 text-[15px] space-y-6 shadow-lg scrollbar-hide">
             <!-- MAIN -->
             <div class="space-y-2">
                 <p class="text-[11px] uppercase text-blue-600 font-bold tracking-wide mb-2">Main</p>
 
                 <a href="{{ route('superadmin.beranda') }}"
-                    class="flex items-center gap-4 px-4 py-2 rounded-lg transition font-medium
-               {{ request()->routeIs('superadmin.beranda') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                    class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+            {{ request()->routeIs('superadmin.beranda') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                     <i
-                        class="fas fa-home text-base w-5 {{ request()->routeIs('superadmin.beranda') ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
+                        class="fas fa-home text-[17px] w-5 {{ request()->routeIs('superadmin.beranda') ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
                     <span>Beranda</span>
                 </a>
 
                 <a href="{{ route('superadmin.dashboard') }}"
-                    class="flex items-center gap-4 px-4 py-2 rounded-lg transition font-medium
-               {{ request()->routeIs('superadmin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                    class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+            {{ request()->routeIs('superadmin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                     <i
-                        class="fas fa-chart-bar text-base w-5 {{ request()->routeIs('superadmin.dashboard') ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
+                        class="fas fa-chart-bar text-[17px] w-5 {{ request()->routeIs('superadmin.dashboard') ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
                     <span>Dashboard</span>
                 </a>
             </div>
@@ -53,10 +53,10 @@
 
                 @foreach($menus as $menu)
                     <a href="{{ $menu['url'] }}"
-                        class="flex items-center gap-4 px-4 py-2 rounded-lg transition font-medium
-                                                                                   {{ request()->routeIs($menu['route']) ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                        class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                    {{ request()->routeIs($menu['route']) ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                         <i
-                            class="fas {{ $menu['icon'] }} text-base w-5 {{ request()->routeIs($menu['route']) ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
+                            class="fas {{ $menu['icon'] }} text-[17px] w-5 {{ request()->routeIs($menu['route']) ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
                         <span>{{ $menu['label'] }}</span>
                     </a>
                 @endforeach
@@ -68,18 +68,18 @@
                     <p class="text-[11px] uppercase text-blue-600 font-bold tracking-wide mt-4 mb-2">Setting</p>
 
                     <a href="{{ route('superadmin.profile.edit') }}"
-                        class="flex items-center gap-4 px-4 py-2 rounded-lg transition font-medium
-                                                                                   {{ request()->routeIs('superadmin.profile.edit') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                        class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                    {{ request()->routeIs('superadmin.profile.edit') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                         <i
-                            class="fas fa-user text-base w-5 {{ request()->routeIs('superadmin.profile.edit') ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
+                            class="fas fa-user text-[17px] w-5 {{ request()->routeIs('superadmin.profile.edit') ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
                         <span>Profil</span>
                     </a>
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit"
-                            class="w-full text-left flex items-center gap-4 px-4 py-2 rounded-lg transition font-medium hover:bg-blue-100 hover:text-blue-600 text-gray-800">
-                            <i class="fas fa-sign-out-alt text-base w-5 text-gray-500 hover:text-blue-600"></i>
+                            class="w-full text-left flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium hover:bg-blue-100 hover:text-blue-600 text-gray-800">
+                            <i class="fas fa-sign-out-alt text-[17px] w-5 text-gray-500 hover:text-blue-600"></i>
                             <span>Logout</span>
                         </button>
                     </form>
@@ -92,7 +92,8 @@
     <div id="mainContent" class="flex-1 lg:ml-72 w-full transition-all duration-300">
 
         <!-- Navbar Desktop -->
-        <nav class="bg-gradient-to-b from-[#2962FF] to-[#0039CB] py-4 px-6 flex items-center justify-between sticky top-0 z-40 hidden lg:flex">
+        <nav
+            class="bg-gradient-to-b from-[#2962FF] to-[#0039CB] py-4 px-6 flex items-center justify-between sticky top-0 z-40 hidden lg:flex">
 
             <div>
                 <button id="toggleSidebar"
@@ -133,7 +134,8 @@
         </nav>
 
         <!-- Navbar Mobile -->
-        <nav class="bg-gradient-to-b from-[#2962FF] to-[#0039CB] py-4 px-6 flex items-center justify-between sticky top-0 z-50 lg:hidden">
+        <nav
+            class="bg-gradient-to-b from-[#2962FF] to-[#0039CB] py-4 px-6 flex items-center justify-between sticky top-0 z-50 lg:hidden">
 
             <!-- Logo atau Teks -->
             <div class="flex items-center gap-3">

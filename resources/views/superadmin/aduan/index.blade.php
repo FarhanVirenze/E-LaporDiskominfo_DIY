@@ -23,14 +23,18 @@
                 <table class="table table-striped table-bordered w-100">
                     <thead class="bg-gradient-to-r from-blue-700 to-blue-500 text-white">
                         <tr>
-                            <th>Judul</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
+                            <th class="text-center">No</th>
+                            <th class="text-center">Judul</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($reports as $report)
-                            <tr>
+                       @foreach($reports as $index => $report)
+    <tr>
+      <td class="text-center align-middle">
+    {{ ($reports->currentPage() - 1) * $reports->perPage() + $loop->iteration }}
+</td>
                                 <td>{{ $report->judul }}</td>
                                 <td>
                                     <span class="rounded-full px-2 py-1 text-xs font-semibold
