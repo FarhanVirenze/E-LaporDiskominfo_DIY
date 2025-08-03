@@ -4,18 +4,43 @@ namespace App\Http\Controllers\Superadmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Report;
+use App\Models\User;
+use App\Models\KategoriUmum;
 use Illuminate\Http\Request;
 
 class AduanController extends Controller
 {
     // Menampilkan semua laporan (aduan) yang ada
-    public function index()
+   public function index(Request $request)
     {
-        // Ambil semua laporan (aduan) yang telah terdaftar
-        $reports = Report::paginate(5);
+        $adminId = $request->input('admin_id');
+        $kategoriId = $request->input('kategori_id');
 
-        // Tampilkan ke halaman view 'admin.aduan.index'
-        return view('superadmin.aduan.index', compact('reports'));
+        $admins = User::where('role', 'admin')->get();
+
+        $query = Report::with('admin', 'kategori');
+
+        if ($adminId) {
+            $query->where('admin_id', $adminId);
+        }
+
+        if ($kategoriId) {
+            $query->where('kategori_id', $kategoriId);
+        }
+
+        $reports = $query->paginate(5);
+
+        // Ambil kategori umum yang hanya digunakan dalam laporan admin terkait
+        $kategoriIds = Report::when($adminId, function ($q) use ($adminId) {
+                $q->where('admin_id', $adminId);
+            })
+            ->select('kategori_id')
+            ->distinct()
+            ->pluck('kategori_id');
+
+        $kategoris = KategoriUmum::whereIn('id', $kategoriIds)->get();
+
+        return view('superadmin.aduan.index', compact('reports', 'admins', 'kategoris', 'adminId', 'kategoriId'));
     }
 
     // Mengupdate status laporan
@@ -32,7 +57,7 @@ class AduanController extends Controller
         $report->save(); // Simpan perubahan
 
         return redirect()->route('superadmin.kelola-aduan.index')
-                         ->with('success', 'Status laporan berhasil diperbarui.');
+            ->with('success', 'Status laporan berhasil diperbarui.');
     }
 
     // Menghapus laporan
@@ -45,6 +70,6 @@ class AduanController extends Controller
         $report->delete();
 
         return redirect()->route('superadmin.kelola-aduan.index')
-                         ->with('success', 'Laporan berhasil dihapus.');
+            ->with('success', 'Laporan berhasil dihapus.');
     }
 }

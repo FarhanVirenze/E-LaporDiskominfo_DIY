@@ -85,7 +85,7 @@
                             <td class="px-4 py-3">
                                 <div class="flex gap-2 flex-wrap">
                                     <button type="button"
-                                        class="px-3 py-1 text-sm bg-yellow-400 hover:bg-yellow-500 rounded text-white"
+                                        class="px-3 py-1 text-sm bg-yellow-500 hover:bg-yellow-600 rounded text-white"
                                         data-toggle="modal" data-target="#editUserModal"
                                         data-id="{{ $user->id_user }}" data-name="{{ $user->name }}"
                                         data-email="{{ $user->email }}" data-nik="{{ $user->nik }}"

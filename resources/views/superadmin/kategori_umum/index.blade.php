@@ -67,7 +67,7 @@
                                 <td class="text-center">
                                     <div class="flex gap-2 justify-center flex-wrap">
                                         <button type="button"
-                                            class="px-3 py-1 text-sm bg-yellow-400 hover:bg-yellow-500 rounded text-white"
+                                            class="px-3 py-1 text-sm bg-yellow-500 hover:bg-yellow-600 rounded text-white"
                                             data-toggle="modal" data-target="#editKategoriModal"
                                             data-id="{{ $kat->id }}" data-nama="{{ $kat->nama }}">
                                             Edit
