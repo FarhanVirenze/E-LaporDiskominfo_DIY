@@ -9,6 +9,7 @@ use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -30,8 +31,13 @@ class ProfileSuperadminController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-
         $user = $request->user();
+
+        // Upload foto
+        if ($request->hasFile('foto')) {
+            $fotoPath = $request->file('foto')->store('foto-profil', 'public');
+            $user->foto = $fotoPath;
+        }
 
         $user->update([
             'name' => $validated['name'],
@@ -42,10 +48,25 @@ class ProfileSuperadminController extends Controller
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
-            $user->save();
         }
 
+        $user->save();
+
         return Redirect::route('superadmin.profile.edit')->with('status', 'profile-updated');
+    }
+
+    public function resetFoto(Request $request)
+    {
+        $user = auth()->user();
+
+        if ($user->foto && Storage::disk('public')->exists($user->foto)) {
+            Storage::disk('public')->delete($user->foto);
+        }
+
+        $user->foto = null;
+        $user->save();
+
+        return redirect()->route('superadmin.profile.edit')->with('status', 'Foto berhasil direset.');
     }
 
     /**

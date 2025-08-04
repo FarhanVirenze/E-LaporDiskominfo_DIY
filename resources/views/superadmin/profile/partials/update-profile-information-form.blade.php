@@ -9,13 +9,32 @@
         </p>
     </header>
 
+    <!-- Form Verifikasi Email -->
     <form id="send-verification" method="post" action="{{ route('verification.send') }}">
         @csrf
     </form>
 
-    <form method="post" action="{{ route('superadmin.profile.update') }}" class="mt-6 space-y-6">
+    <!-- Form Update Profile -->
+    <form method="post" action="{{ route('superadmin.profile.update') }}" enctype="multipart/form-data"
+        class="mt-6 space-y-6">
         @csrf
         @method('patch')
+
+        <!-- Foto Profil -->
+        <div class="flex flex-col items-center">
+            <img src="{{ $user->foto ? asset('storage/' . $user->foto) : asset('images/avatar.jpg') }}"
+                alt="Foto Profil" class="w-24 h-24 rounded-full object-cover mb-2">
+
+            <!-- Ganti Foto -->
+            <label class="cursor-pointer text-sm text-blue-600 hover:underline">
+                <span>Ganti Foto</span>
+                <input type="file" name="foto" class="hidden" accept="image/*">
+            </label>
+
+            @error('foto')
+                <span class="text-red-600 text-sm mt-1">{{ $message }}</span>
+            @enderror
+        </div>
 
         <!-- Name -->
         <div>
@@ -64,6 +83,7 @@
             @endif
         </div>
 
+        <!-- Tombol Simpan -->
         <div class="flex items-center gap-4">
             <x-profile-button>{{ __('Save') }}</x-profile-button>
 
@@ -89,4 +109,17 @@
             @endif
         </div>
     </form>
+
+    <!-- Form Reset Foto (DI LUAR form update!) -->
+    @if ($user->foto)
+        <form method="POST" action="{{ route('superadmin.profile.resetFoto') }}"
+            onsubmit="return confirm('Yakin ingin menghapus foto dan kembali ke default?')"
+            class="flex justify-center mt-4">
+            @csrf
+            @method('PATCH')
+            <button type="submit" class="text-red-600 hover:underline text-sm">
+                Defaultkan Foto
+            </button>
+        </form>
+    @endif
 </section>

@@ -48,6 +48,7 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:user'])->prefix(
     Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::put('password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::patch('/profile/reset-foto', [ProfileController::class, 'resetFoto'])->name('profile.resetFoto');
 
     Route::get('/riwayat-aduan', [ReportController::class, 'riwayat'])->name('aduan.riwayat');
     Route::get('/riwayat-aduan-wbs', [ReportController::class, 'riwayatWbs'])->name('aduan.riwayatWbs');
@@ -121,6 +122,7 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:superadmin'])->p
     Route::patch('profile', [ProfileSuperadminController::class, 'update'])->name('profile.update');
     Route::delete('profile', [ProfileSuperadminController::class, 'destroy'])->name('profile.destroy');
     Route::put('password', [ProfileSuperadminController::class, 'updatePassword'])->name('password.update');
+    Route::patch('/profile/reset-foto', [ProfileSuperadminController::class, 'resetFoto'])->name('profile.resetFoto');
 
     // Kelola User
     Route::resource('kelola-user', \App\Http\Controllers\Superadmin\UserController::class)->except(['create', 'store', 'show']);

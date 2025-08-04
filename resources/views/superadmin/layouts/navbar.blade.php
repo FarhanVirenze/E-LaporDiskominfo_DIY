@@ -54,37 +54,13 @@
                 @foreach($menus as $menu)
                     <a href="{{ $menu['url'] }}"
                         class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                    {{ request()->routeIs($menu['route']) ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                                                                        {{ request()->routeIs($menu['route']) ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                         <i
                             class="fas {{ $menu['icon'] }} text-[17px] w-5 {{ request()->routeIs($menu['route']) ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
                         <span>{{ $menu['label'] }}</span>
                     </a>
                 @endforeach
             </div>
-
-            <!-- SETTING -->
-            @auth
-                <div class="space-y-2">
-                    <p class="text-[11px] uppercase text-blue-600 font-bold tracking-wide mt-4 mb-2">Setting</p>
-
-                    <a href="{{ route('superadmin.profile.edit') }}"
-                        class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                    {{ request()->routeIs('superadmin.profile.edit') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
-                        <i
-                            class="fas fa-user text-[17px] w-5 {{ request()->routeIs('superadmin.profile.edit') ? 'text-white' : 'hover:text-blue-600 text-gray-500' }}"></i>
-                        <span>Profil</span>
-                    </a>
-
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit"
-                            class="w-full text-left flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium hover:bg-blue-100 hover:text-blue-600 text-gray-800">
-                            <i class="fas fa-sign-out-alt text-[17px] w-5 text-gray-500 hover:text-blue-600"></i>
-                            <span>Logout</span>
-                        </button>
-                    </form>
-                </div>
-            @endauth
         </nav>
     </aside>
 
@@ -93,42 +69,100 @@
 
         <!-- Navbar Desktop -->
         <nav
-            class="bg-gradient-to-b from-[#2962FF] to-[#0039CB] py-4 px-6 flex items-center justify-between sticky top-0 z-40 hidden lg:flex">
+            class="bg-gradient-to-b from-[#2962FF] to-[#0039CB] py-4 px-6 flex items-center sticky top-0 z-40 hidden lg:flex">
 
-            <div>
+            <!-- Kiri: Toggle Sidebar + Search -->
+            <div class="flex items-center gap-4 w-full">
+                <!-- Toggle Sidebar -->
                 <button id="toggleSidebar"
                     class="bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white text-xl p-2 rounded-md shadow-md focus:outline-none">
                     <i class="fas fa-bars"></i>
                 </button>
+
+                <!-- Search Bar -->
+                <div class="relative w-62 ml-3">
+                    <input type="text" placeholder="Search..."
+                        class="w-full rounded-md text-sm px-4 py-2 text-gray-900 bg-white focus:outline-none placeholder-gray-400" />
+                    <i class="fas fa-search absolute right-3 top-2.5 text-gray-400 text-sm"></i>
+                </div>
             </div>
 
-            <div class="flex items-center gap-4">
-                <div class="relative">
-                    <input type="text" placeholder="Search..."
-                        class="rounded-full text-sm px-4 py-1 text-gray-900 bg-white focus:outline-none placeholder-gray-400" />
-                    <i class="fas fa-search absolute right-3 top-2 text-gray-400 text-sm"></i>
-                </div>
-
+            <!-- Profile -->
+            <div class="flex items-center ml-auto">
                 @auth
-                    <x-dropdown align="right" width="48">
-                        <x-slot name="trigger">
-                            <button
-                                class="inline-flex items-center px-3 py-2 bg-white text-[#2962FF] text-sm font-medium rounded-md hover:bg-gray-100 transition">
-                                <span>{{ Auth::user()->name }}</span>
-                                <i class="fas fa-chevron-down ml-2 text-xs"></i>
-                            </button>
-                        </x-slot>
-                        <x-slot name="content">
-                            <x-dropdown-link :href="route('superadmin.profile.edit')">Profil</x-dropdown-link>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault(); this.closest('form').submit();">
-                                    Logout
-                                </x-dropdown-link>
-                            </form>
-                        </x-slot>
-                    </x-dropdown>
+                            <x-dropdown align="right" width="56">
+                                <x-slot name="trigger">
+                                    <button
+                                        class="flex items-center bg-white px-4 py-1 text-sm rounded-md border border-white shadow hover:bg-gray-100 transition-all space-x-3">
+
+                                        <!-- Nama + NIK -->
+                                        <div class="text-[#2962FF] text-sm font-medium whitespace-nowrap">
+                                            {{ Auth::user()->name }} <span class="mx-1 text-[#2962FF]">|</span>
+                                            {{ Auth::user()->nik }}
+                                        </div>
+
+                                        <!-- Avatar -->
+                                        @if (Auth::user()->foto)
+                                            <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="Avatar"
+                                                class="h-8 w-8 object-cover rounded-full border-2 border-white shadow" />
+                                        @else
+                                            <img src="{{ asset('images/avatar.jpg') }}" alt="Avatar"
+                                                class="h-8 w-8 object-cover rounded-full border-2 border-white shadow" />
+                                        @endif
+
+                                        <!-- Chevron -->
+                                        <i class="fas fa-chevron-down text-xs text-[#2962FF] mr-3"></i>
+                                    </button>
+                                </x-slot>
+
+                                <x-slot name="content">
+                                    <!-- Header Profil -->
+                                    <div class="px-4 pt-3 pb-2 text-sm text-gray-700">
+                                        <div class="flex flex-col items-center text-center">
+                                            @if (Auth::user()->foto)
+                                                <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="Avatar"
+                                                    class="h-14 w-14 rounded-full object-cover border border-gray-300 mb-2 bg-white" />
+                                            @else
+                                                <img src="{{ asset('images/avatar.jpg') }}" alt="Avatar"
+                                                    class="h-14 w-14 rounded-full object-cover border border-gray-300 mb-2 bg-white" />
+                                            @endif
+
+                                            <div class="text-[#2962FF] font-semibold">{{ Auth::user()->name }}</div>
+                                            <div class="text-[#2962FF] text-xs capitalize">{{ Auth::user()->nik }}</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Divider -->
+                                    <div class="border-t border-gray-100 my-1"></div>
+
+                                    <!-- Menu Profil -->
+                                    <a href="{{ route('superadmin.profile.edit') }}" class="flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium
+                                                                                {{ request()->routeIs('superadmin.profile.edit')
+                    ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
+                    : 'text-gray-800 hover:bg-blue-100 hover:text-[#2962FF]' }}">
+
+                                        <i class="fas fa-user text-[16px] w-5 
+                                                                                    {{ request()->routeIs('superadmin.profile.edit')
+                    ? 'text-white'
+                    : 'text-gray-500 group-hover:text-[#2962FF]' }}"></i>
+
+                                        <span>Profil</span>
+                                    </a>
+
+                                    <!-- Menu Logout -->
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit"
+                                            class="w-full text-left flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium 
+                                                                                        text-gray-800 hover:bg-blue-100 hover:text-[#2962FF]">
+
+                                            <i
+                                                class="fas fa-sign-out-alt text-[16px] w-5 text-gray-500 group-hover:text-[#2962FF]"></i>
+                                            <span>Logout</span>
+                                        </button>
+                                    </form>
+                                </x-slot>
+                            </x-dropdown>
                 @endauth
             </div>
         </nav>
@@ -137,19 +171,79 @@
         <nav
             class="bg-gradient-to-b from-[#2962FF] to-[#0039CB] py-4 px-6 flex items-center justify-between sticky top-0 z-50 lg:hidden">
 
-            <!-- Logo atau Teks -->
+            <!-- Kiri: Logo + Toggle -->
             <div class="flex items-center gap-3">
-                <img src="{{ asset('images/logo-diy.png') }}" class="h-14 ml-1" />
+                <!-- Logo -->
+                <img src="{{ asset('images/logo-diy.png') }}" class="h-14" />
                 <span class="text-lg font-semibold text-white">E-LAPOR DIY</span>
-            </div>
 
-            <!-- Toggle Button di Kanan -->
-            <div>
+                <!-- Toggle Sidebar -->
                 <button id="toggleSidebarMobile"
-                    class="bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white text-xl p-2 rounded-md shadow-md focus:outline-none">
+                    class="text-white text-xl p-2 ml-3 rounded-md shadow-md focus:outline-none bg-white/20 hover:bg-white/30">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
+
+            <!-- Kanan: Foto Profil + Dropdown -->
+            @auth
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button
+                                class="flex items-center bg-white/20 px-1 py-1 text-sm rounded-full border border-white/50 hover:bg-white/30 transition-all space-x-3 shadow-sm backdrop-blur-md">
+                                @if (Auth::user()->foto)
+                                    <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="User Avatar"
+                                        class="h-11 w-11 rounded-full object-cover border-2 border-white shadow-sm" />
+                                @else
+                                    <img src="{{ asset('images/avatar.jpg') }}" alt="Default Avatar"
+                                        class="h-11 w-11 rounded-full object-cover border-2 border-white shadow-sm" />
+                                @endif
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <!-- Header Profil -->
+                            <div class="px-4 pt-3 pb-2 text-sm text-gray-700">
+                                <div class="flex flex-col items-center text-center">
+                                    @if (Auth::user()->foto)
+                                        <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="Avatar"
+                                            class="h-14 w-14 rounded-full object-cover border border-gray-300 mb-2 bg-white" />
+                                    @else
+                                        <img src="{{ asset('images/avatar.jpg') }}" alt="Avatar"
+                                            class="h-14 w-14 rounded-full object-cover border border-gray-300 mb-2 bg-white" />
+                                    @endif
+
+                                    <div class="text-[#2962FF] font-semibold">{{ Auth::user()->name }}</div>
+                                    <div class="text-[#2962FF] text-xs capitalize">{{ Auth::user()->nik }}</div>
+                                </div>
+                            </div>
+
+                            <!-- Divider -->
+                            <div class="border-t border-gray-100 my-1"></div>
+
+                            <!-- Menu Profil -->
+                            <a href="{{ route('superadmin.profile.edit') }}" class="flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium
+                {{ request()->routeIs('superadmin.profile.edit')
+                ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
+                : 'text-gray-800 hover:bg-blue-100 hover:text-[#2962FF]' }}">
+                                <i class="fas fa-user text-[16px] w-5
+                    {{ request()->routeIs('superadmin.profile.edit')
+                ? 'text-white'
+                : 'text-gray-500 group-hover:text-[#2962FF]' }}"></i>
+                                <span>Profil</span>
+                            </a>
+
+                            <!-- Menu Logout -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium 
+                    text-gray-800 hover:bg-blue-100 hover:text-[#2962FF]">
+                                    <i class="fas fa-sign-out-alt text-[16px] w-5 text-gray-500 group-hover:text-[#2962FF]"></i>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
+            @endauth
 
         </nav>
 

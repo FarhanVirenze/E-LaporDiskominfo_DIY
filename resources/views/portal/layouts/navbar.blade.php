@@ -1,25 +1,27 @@
 <!-- Navbar -->
-<nav class="bg-gradient-to-r from-[#B5332A] to-[#8B1E1E] py-4 text-white shadow-md">
-    <div class="container mx-auto px-6 flex items-center justify-between">
-        <!-- Logo dan Judul -->
-        <a href="{{ url('/') }}" class="flex items-center space-x-3">
-            <img src="{{ asset('images/logo-diy.png') }}" alt="Logo" class="h-12 w-auto drop-shadow-md">
-            <span class="text-xl font-bold tracking-wide">E-LAPOR DIY</span>
-        </a>
+<nav class="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-[#2F855A]/95 to-[#22543D]/95 backdrop-blur-md shadow-md text-white">
+    <div class="container mx-auto px-6 py-4 flex items-center justify-between">
 
-        <!-- Tombol Toggle (Mobile) -->
-        <button class="md:hidden text-white" id="navbar-toggler">
-            <i class="fas fa-bars" id="navbar-toggler-icon"></i>
-        </button>
+        <!-- KIRI (Logo + Toggle Mobile) -->
+        <div class="flex items-center space-x-4">
+            <a href="{{ url('/') }}" class="flex items-center space-x-2">
+                <img src="{{ asset('images/logo-diy.png') }}" alt="Logo" class="h-12 w-auto drop-shadow-md">
+                <span class="text-xl font-bold tracking-wide">E-LAPOR DIY</span>
+            </a>
 
-        <!-- Menu Navigasi (Desktop) -->
-        <div class="hidden md:flex space-x-8 font-bold" id="navbar-menu">
-            <ul class="flex space-x-8">
+            <!-- Toggle Mobile -->
+            <button class="lg:hidden focus:outline-none" id="navbar-toggler">
+                <i class="fas fa-bars text-xl" id="navbar-toggler-icon"></i>
+            </button>
+        </div>
+
+        <!-- TENGAH (Menu Desktop) -->
+        <div class="hidden lg:flex flex-1 justify-center">
+            <ul class="flex space-x-8 font-bold items-center">
                 <li><a href="{{ route('daftar-aduan') }}" class="hover:underline">DAFTAR ADUAN</a></li>
                 <li><a href="{{ route('wbs.index') }}" class="hover:underline">WBS</a></li>
                 <li><a href="{{ route('tentang') }}" class="hover:underline">TENTANG KAMI</a></li>
 
-                <!-- Menampilkan menu Login hanya jika user belum login -->
                 @guest
                     <li><a href="{{ route('login') }}" class="hover:underline">LOGIN</a></li>
                 @endguest
@@ -28,9 +30,6 @@
                     @if (Auth::user()->role === 'admin')
                         <li><a href="{{ route('admin.dashboard') }}" class="hover:underline">KELOLA ADMIN</a></li>
                     @endif
-                @endauth
-
-                 @auth
                     @if (Auth::user()->role === 'superadmin')
                         <li><a href="{{ route('superadmin.dashboard') }}" class="hover:underline">KELOLA SUPERADMIN</a></li>
                     @endif
@@ -38,109 +37,129 @@
             </ul>
         </div>
 
-        <!-- Settings Dropdown (Auth) - Desktop -->
-        @auth
-            <div class="relative hidden md:flex items-center">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button
-                            class="inline-flex items-center px-3 py-2 border border-white text-sm font-medium rounded-md text-black bg-white hover:text-gray-700 focus:outline-none transition">
-                            <div>{{ Auth::user()->name }}</div>
-                            <div class="ml-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+        <!-- KANAN (Dropdown Profil Desktop + Avatar Mobile) -->
+        <div class="flex items-center space-x-3">
+            @auth
+                <!-- MOBILE DROPDOWN -->
+                <div class="block lg:hidden">
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button class="rounded-full border-2 border-white shadow">
+                                <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('images/avatar.jpg') }}"
+                                    alt="Avatar" class="h-10 w-10 rounded-full object-cover" />
+                            </button>
+                        </x-slot>
+                        <x-slot name="content">
+                            <div class="px-4 pt-3 pb-2 text-sm text-gray-700">
+                                <div class="flex flex-col items-center text-center">
+                                    <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('images/avatar.jpg') }}"
+                                        alt="Avatar" class="h-14 w-14 rounded-full object-cover border border-gray-300 mb-2 bg-white" />
+                                    <div class="text-[#1DB954] font-semibold">{{ Auth::user()->name }}</div>
+                                    <div class="text-[#1DB954] text-xs capitalize">{{ Auth::user()->nik }}</div>
+                                </div>
+                            </div>
+                            <div class="border-t border-gray-100 my-1"></div>
+
+                            <a href="{{ route('user.profile.edit') }}" class="flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium
+                                {{ request()->routeIs('user.profile.edit') ? 'bg-gradient-to-b from-[#1DB954] to-[#14833B] text-white' : 'text-gray-800 hover:bg-green-100 hover:text-[#1DB954]' }}">
+                                <i class="fas fa-user text-[16px] w-5"></i>
+                                <span>Profil</span>
+                            </a>
+
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium text-gray-800 hover:bg-green-100 hover:text-[#1DB954]">
+                                    <i class="fas fa-sign-out-alt text-[16px] w-5"></i>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
+                </div>
+
+                <!-- DESKTOP DROPDOWN -->
+                <div class="hidden lg:block">
+                    <x-dropdown align="right" width="56">
+                        <x-slot name="trigger">
+                            <button class="flex items-center bg-white px-4 py-1 text-sm rounded-md border border-white shadow hover:bg-gray-100 transition-all space-x-3">
+                                <div class="text-[#2F855A] text-sm font-medium whitespace-nowrap">
+                                    {{ Auth::user()->name }} <span class="mx-1 text-[#2F855A]">|</span>
+                                    {{ Auth::user()->nik }}
+                                </div>
+                                <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('images/avatar.jpg') }}"
+                                    alt="Avatar" class="h-8 w-8 object-cover rounded-full border-2 border-white shadow" />
+                                <svg class="w-4 h-4 text-[#2F855A]" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
                                         d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                                         clip-rule="evenodd" />
                                 </svg>
+                            </button>
+                        </x-slot>
+                        <x-slot name="content">
+                            <div class="px-4 pt-3 pb-2 text-sm text-gray-700">
+                                <div class="flex flex-col items-center text-center">
+                                    <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('images/avatar.jpg') }}"
+                                        alt="Avatar" class="h-14 w-14 rounded-full object-cover border border-gray-300 mb-2 bg-white" />
+                                    <div class="text-[#1DB954] font-semibold">{{ Auth::user()->name }}</div>
+                                    <div class="text-[#1DB954] text-xs capitalize">{{ Auth::user()->nik }}</div>
+                                </div>
                             </div>
-                        </button>
-                    </x-slot>
+                            <div class="border-t border-gray-100 my-1"></div>
 
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('user.profile.edit')" class="text-black">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                            <a href="{{ route('user.profile.edit') }}" class="flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium
+                                {{ request()->routeIs('user.profile.edit') ? 'bg-gradient-to-b from-[#1DB954] to-[#14833B] text-white' : 'text-gray-800 hover:bg-green-100 hover:text-[#1DB954]' }}">
+                                <i class="fas fa-user text-[16px] w-5"></i>
+                                <span>Profil</span>
+                            </a>
 
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault(); this.closest('form').submit();" class="text-black">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
-        @endauth
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium text-gray-800 hover:bg-green-100 hover:text-[#1DB954]">
+                                    <i class="fas fa-sign-out-alt text-[16px] w-5"></i>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
+                </div>
+            @endauth
+        </div>
     </div>
 
-    <!-- Sidebar Menu for Mobile -->
-    <div class="md:hidden hidden transition-all duration-300 ease-in-out" id="navbar-sidebar">
-        <ul class="bg-gradient-to-r from-[#B5332A] to-[#8B1E1E] p-4 space-y-2">
-            <li><a href="{{ route('daftar-aduan') }}" class="block py-2 px-4 text-white rounded-lg hover:bg-blue-700 transition-all">DAFTAR ADUAN</a></li>
-            <li><a href="{{ route('wbs.index') }}" class="block py-2 px-4 text-white rounded-lg hover:bg-blue-700 transition-all">WBS</a></li>
-            <li><a href="{{ route('tentang') }}" class="block py-2 px-4 text-white rounded-lg hover:bg-blue-700 transition-all">TENTANG KAMI</a></li>
+    <!-- MENU MOBILE -->
+    <div class="lg:hidden hidden transition-all duration-300 ease-in-out" id="navbar-sidebar">
+        <ul class="bg-gradient-to-r from-[#2F855A] to-[#22543D] px-6 py-4 space-y-2">
+            <li><a href="{{ route('daftar-aduan') }}" class="block py-2 px-4 text-white rounded-lg hover:bg-green-700 transition">DAFTAR ADUAN</a></li>
+            <li><a href="{{ route('wbs.index') }}" class="block py-2 px-4 text-white rounded-lg hover:bg-green-700 transition">WBS</a></li>
+            <li><a href="{{ route('tentang') }}" class="block py-2 px-4 text-white rounded-lg hover:bg-green-700 transition">TENTANG KAMI</a></li>
 
             @guest
-                <li><a href="{{ route('login') }}" class="block py-2 px-4 text-white rounded-lg hover:bg-blue-700 transition-all">LOGIN</a></li>
+                <li><a href="{{ route('login') }}" class="block py-2 px-4 text-white rounded-lg hover:bg-green-700 transition">LOGIN</a></li>
             @endguest
 
             @auth
                 @if (Auth::user()->role === 'admin')
-                    <li><a href="{{ route('admin.dashboard') }}" class="block py-2 px-4 text-white rounded-lg hover:bg-blue-700 transition-all">KELOLA ADMIN</a></li>
+                    <li><a href="{{ route('admin.dashboard') }}" class="block py-2 px-4 text-white rounded-lg hover:bg-green-700 transition">KELOLA ADMIN</a></li>
                 @endif
-            @endauth
-
-            <!-- Settings Dropdown (Auth) - Mobile -->
-            @auth
-                <li>
-                    <x-dropdown align="right" width="48">
-                        <x-slot name="trigger">
-                            <button
-                                class="ml-4 mt-1 inline-flex items-center px-3 py-2 border border-white text-sm font-medium rounded-md text-black bg-white hover:text-gray-700 focus:outline-none transition">
-                                <div>{{ Auth::user()->name }}</div>
-                                <div class="ml-1">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd"
-                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                            </button>
-                        </x-slot>
-
-                        <x-slot name="content">
-                            <x-dropdown-link :href="route('user.profile.edit')" class="text-black">
-                                {{ __('Profile') }}
-                            </x-dropdown-link>
-
-                            <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault(); this.closest('form').submit();" class="text-black">
-                                    {{ __('Log Out') }}
-                                </x-dropdown-link>
-                            </form>
-                        </x-slot>
-                    </x-dropdown>
-                </li>
+                @if (Auth::user()->role === 'superadmin')
+                    <li><a href="{{ route('superadmin.dashboard') }}" class="block py-2 px-4 text-white rounded-lg hover:bg-green-700 transition">KELOLA SUPERADMIN</a></li>
+                @endif
             @endauth
         </ul>
     </div>
 </nav>
 
-<!-- Script Toggle -->
+<!-- Spacer untuk menghindari overlap navbar -->
+<div class="h-[80px]"></div>
+
+<!-- Script Toggle Menu -->
 <script>
     document.getElementById("navbar-toggler").addEventListener("click", function () {
         const menu = document.getElementById("navbar-sidebar");
         const icon = document.getElementById("navbar-toggler-icon");
 
-        // Toggle the sidebar menu
         menu.classList.toggle("hidden");
 
-        // Toggle antara bars dan times icon
         if (menu.classList.contains("hidden")) {
             icon.classList.remove("fa-times");
             icon.classList.add("fa-bars");

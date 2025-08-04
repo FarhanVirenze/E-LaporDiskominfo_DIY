@@ -7,6 +7,7 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
@@ -29,11 +30,14 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-
-        // Get the current user
         $user = $request->user();
 
-        // Update user profile details (ignoring current email if unchanged)
+        // Upload foto
+        if ($request->hasFile('foto')) {
+            $fotoPath = $request->file('foto')->store('foto-profil', 'public');
+            $user->foto = $fotoPath;
+        }
+
         $user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -41,14 +45,28 @@ class ProfileController extends Controller
             'nomor_telepon' => $validated['nomor_telepon'] ?? null,
         ]);
 
-        // If the email was changed, reset the email verification timestamp
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
-            $user->save();
         }
+
+        $user->save();
 
         // Redirect back with a success message
         return Redirect::route('user.profile.edit')->with('status', 'profile-updated');
+    }
+
+    public function resetFoto(Request $request)
+    {
+        $user = auth()->user();
+
+        if ($user->foto && Storage::disk('public')->exists($user->foto)) {
+            Storage::disk('public')->delete($user->foto);
+        }
+
+        $user->foto = null;
+        $user->save();
+
+        return redirect()->route('user.profile.edit')->with('status', 'Foto berhasil direset.');
     }
 
     /**
