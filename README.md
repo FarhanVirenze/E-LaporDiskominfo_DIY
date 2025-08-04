@@ -23,9 +23,9 @@
 
 ---
 
-## 📄 Laporan Akhir
+## 📄 Draft Paper
 
-- 📝 [Laporan Tugas Akhir Kelompok 5](https://drive.google.com/file/d/1FmDBTItooNFUL2yKCo1g7CWGIdL-mPIL/view?usp=drive_link)
+- 📝 [Draft Paper Kelompok 5](https://drive.google.com/file/d/1FmDBTItooNFUL2yKCo1g7CWGIdL-mPIL/view?usp=drive_link)
 
 ---
 
@@ -70,3 +70,4 @@
 🗓️ *Tahun Akademik 2025*
 
 </div>
+
