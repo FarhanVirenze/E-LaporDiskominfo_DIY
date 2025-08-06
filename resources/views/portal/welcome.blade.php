@@ -55,7 +55,7 @@
 
     <!-- Hero Section -->
     <section class="relative text-white overflow-hidden">
-       <div class="lg:hidden relative h-[110vh]">
+        <div class="lg:hidden relative h-[110vh]">
             <!-- Swiper -->
             <div class="swiper mySwiper w-full h-full relative z-10 invisible transition-opacity duration-300">
                 <div class="swiper-wrapper">
@@ -88,7 +88,7 @@
 
             <!-- Konten Teks -->
             <div id="heroContent"
-                class="absolute inset-0 z-30 flex flex-col justify-center items-center text-center h-full px-6 py-10 opacity-0 transition-opacity duration-700 pointer-events-none">
+                class="absolute inset-0 z-30 flex flex-col justify-center items-center text-center h-full px-6 py-10 opacity-0 transition-opacity duration-700 ">
 
                 <h1 class="text-3xl font-extrabold mb-10 leading-tight" data-aos="fade-down" data-aos-delay="0">
                     <span class="block">Selamat Datang di</span>
@@ -100,17 +100,17 @@
                 </p>
 
                 <p class="text-lg font-semibold italic mb-6 text-white max-w-md" data-aos="fade-down" data-aos-delay="400">
-                    Laporkan sekarang, wujudkan DIY yang lebih baik!
+                    Adukan sekarang, wujudkan DIY yang lebih baik!
                 </p>
 
                 <div class="flex flex-wrap justify-center gap-3" data-aos="fade-up" data-aos-delay="600">
                     <a href="#aduanCepatBox"
                         class="bg-transparent border border-white hover:bg-white/10 text-white px-5 py-2.5 rounded-lg font-bold shadow-lg transition">
-                        Mulai Laporkan
+                        Mulai Aduan
                     </a>
-                    <a href="#pantau"
+                    <a href="#lacakContent"
                         class="bg-transparent border border-white hover:bg-white/10 text-white px-5 py-2.5 rounded-lg font-bold shadow-lg transition">
-                        Lacak Status
+                        Lacak Aduan
                     </a>
                 </div>
 
@@ -151,7 +151,7 @@
                         class="bg-transparent border border-white hover:bg-white/10 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition">
                         Mulai Laporkan
                     </a>
-                    <a href="#pantau"
+                    <a href="#lacakContent"
                         class="bg-transparent border border-white hover:bg-white/10 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition">
                         Lacak Status
                     </a>
@@ -300,7 +300,10 @@
 
         <!-- Konten Form -->
         <div class="relative z-10">
-            <h2 class="text-2xl font-semibold text-white mb-6 text-center pb-2">ADUAN CEPAT</h2>
+            <h2 class="text-2xl font-semibold text-white mb-6 text-center pb-2"
+                style="font-family:'Open Sans','Segoe UI',sans-serif;">
+                Aduan Cepat
+            </h2>
 
             {{-- Overlay jika belum login --}}
             @guest
@@ -325,12 +328,12 @@
                     <!-- Input Judul -->
                     <div class="flex flex-col leading-none">
                         <input type="text" name="judul" id="judulInput" maxlength="150" placeholder="Judul Aduan"
-                            class="w-full border rounded-lg px-4 pt-2 pb-1 bg-white/80 text-gray-900 placeholder-gray-500 @error('judul') border-red-500 @enderror"
+                            class="w-full border rounded-lg px-4 pt-2 pb-2 bg-white/80 text-gray-900 placeholder-gray-500 @error('judul') border-red-500 @enderror"
                             required>
                         <span id="judulCounter" class="text-sm text-white/90 mt-2">0/150</span>
                     </div>
                     @error('judul')
-                        <div class="text-red-500 text-sm mt-0">{{ $message }}</div>
+                        <div class="text-white text-sm mt-0">{{ $message }}</div>
                     @enderror
                     <!-- Textarea Isi -->
                     <div class="flex flex-col leading-none">
@@ -340,7 +343,7 @@
                         <span id="isiCounter" class="text-sm text-white/90 mt-2">0/1000</span>
                     </div>
                     @error('isi')
-                        <div class="text-red-500 text-sm mt-0">{{ $message }}</div>
+                        <div class="text-white text-sm mt-0">{{ $message }}</div>
                     @enderror
                     <!-- Dropdown Wilayah -->
                     <select name="wilayah_id"
@@ -354,7 +357,7 @@
                         @endforelse
                     </select>
                     @error('wilayah_id')
-                        <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+                        <div class="text-white text-sm mt-1">{{ $message }}</div>
                     @enderror
 
                     <div class="flex gap-2">
@@ -370,7 +373,7 @@
                             @endforelse
                         </select>
                         @error('kategori_id')
-                            <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+                            <div class="text-white text-sm mt-1">{{ $message }}</div>
                         @enderror
 
                         <!-- Tombol Trigger -->
@@ -552,7 +555,7 @@
 
                     <button type="submit"
                         class="w-full bg-transparent border border-white hover:bg-white/10 text-white py-4 rounded-lg font-bold text-lg shadow-lg transition">
-                        ADUKAN
+                        Adukan
                     </button>
                 </div>
             </form>
@@ -560,25 +563,23 @@
     </div>
 
     <!-- Lacak Aduanmu -->
-    <div class="container mx-auto text-center px-4 mt-14">
+    <div id="lacakContent" class="container mx-auto text-center px-4 mt-14">
         <div class="w-full max-w-4xl mx-auto text-center">
-            <h2 class="text-2xl md:text-3xl font-extrabold uppercase text-black mb-6">
-                LACAK ADUANMU DISINI
+            <h2 class="text-2xl md:text-3xl font-extrabold text-black mb-6">
+                Lacak Aduanmu 
             </h2>
 
             <form action="{{ route('report.lacak') }}" method="POST"
                 class="flex flex-col md:flex-row justify-center items-center gap-4">
                 @csrf
-                <input type="text" name="tracking_id" placeholder="Nomor Tiket Aduan"
-                    class="w-full md:flex-1 px-6 py-3 border border-blue-800 bg-white/90 rounded-full shadow 
-                                                                           focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 
-                                                                           text-lg text-center font-semibold uppercase tracking-wider transition duration-300" required>
+                <input type="text" name="tracking_id" placeholder="Nomor Tiket Aduan" class="w-full md:flex-1 px-6 py-3 border border-blue-800 bg-white/90 rounded-full shadow 
+                        focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 
+                        text-base text-center font-semibold tracking-wider transition duration-300" required>
 
-                <button type="submit"
-                    class="bg-gradient-to-br from-[#0D47A1] to-[#1976D2] hover:from-[#1565C0] hover:to-[#1E88E5] 
-                                                                           text-white font-bold px-8 py-3 rounded-full mt-4
-                                                                           uppercase tracking-wide shadow transition-all duration-200">
-                    LACAK
+                <button type="submit" class="bg-gradient-to-br from-[#0D47A1] to-[#1976D2] hover:from-[#1565C0] hover:to-[#1E88E5] 
+                        text-white font-bold px-8 py-3 rounded-full mt-4
+                        uppercase tracking-wide shadow transition-all duration-200">
+                    Lacak
                 </button>
             </form>
         </div>
@@ -614,7 +615,7 @@
     <!-- Aduan Terbaru -->
     <div
         class="relative bg-white border shadow-md rounded-lg p-8 w-full max-w-7xl mx-auto mt-16 animate__animated animate__fadeInUp">
-        <h2 class="text-2xl font-extrabold text-gray-800 mb-6 text-center border-b pb-2">ADUAN TERBARU</h2>
+        <h2 class="text-2xl font-extrabold text-gray-800 mb-6 text-center border-b pb-2">Aduan Terbaru</h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             @forelse ($reports as $report)
@@ -657,17 +658,17 @@
                             <span class="font-semibold">Status:</span>
                             <span
                                 class="rounded-full px-2 py-1 font-semibold text-xs
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @if($report->status === 'Diajukan')
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-blue-200 text-blue-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status === 'Dibaca')
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-teal-200 text-teal-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status === 'Direspon')
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-yellow-200 text-yellow-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status === 'Selesai')
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-green-200 text-green-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @else
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-gray-200 text-gray-700
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @endif">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @if($report->status === 'Diajukan')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        bg-blue-200 text-blue-800
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Dibaca')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        bg-teal-200 text-teal-800
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Direspon')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        bg-yellow-200 text-yellow-800
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Selesai')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        bg-green-200 text-green-800
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @else
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        bg-gray-200 text-gray-700
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @endif">
                                 {{ $report->status }}
                             </span>
                         </div>
@@ -891,13 +892,13 @@
                     const div = document.createElement('div');
                     div.className = 'flex items-center gap-3 mb-2';
                     div.innerHTML = `
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <input type="file" name="file[]" 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               class="file-input flex-1 border px-2 py-1 rounded text-sm">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="fas fa-trash-alt"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </button>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    `;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <input type="file" name="file[]" 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       class="file-input flex-1 border px-2 py-1 rounded text-sm">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="fas fa-trash-alt"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            `;
                     fileInputsContainer.appendChild(div);
                     updateAddFileButtonVisibility();
                 });
