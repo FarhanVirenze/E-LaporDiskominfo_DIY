@@ -56,35 +56,36 @@
     <!-- Hero Section -->
     <section class="relative text-white overflow-hidden">
         <div class="lg:hidden relative h-[95vh]">
-            <!-- Carousel Fullscreen Mobile -->
-            <div class="absolute inset-0 z-0">
-                <!-- Swiper (gambar) -->
-                <div class="swiper mySwiper w-full h-full z-10 relative">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <img src="{{ asset('images/carousel1.jpg') }}" class="w-full h-full object-cover"
-                                loading="eager" alt="E-Lapor">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="{{ asset('images/carousel2.jpg') }}" class="w-full h-full object-cover"
-                                loading="eager" alt="Pengaduan">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="{{ asset('images/carousel3.jpg') }}" class="w-full h-full object-cover"
-                                loading="eager" alt="Layanan Publik">
-                        </div>
+            <!-- Swiper -->
+            <div class="swiper mySwiper w-full h-full relative z-20">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide relative">
+                        <img src="{{ asset('images/carousel1.jpg') }}" class="w-full h-full object-cover" loading="eager"
+                            alt="E-Lapor">
+                        <div class="absolute inset-0 bg-gradient-to-r from-[#0039CB]/70 to-[#2962FF]/60"></div>
+                        <div class="absolute inset-0 bg-black/40"></div>
                     </div>
-                    <div class="swiper-pagination"></div>
+                    <div class="swiper-slide relative">
+                        <img src="{{ asset('images/carousel2.jpg') }}" class="w-full h-full object-cover" loading="eager"
+                            alt="Pengaduan">
+                        <div class="absolute inset-0 bg-gradient-to-r from-[#0039CB]/70 to-[#2962FF]/60"></div>
+                        <div class="absolute inset-0 bg-black/40"></div>
+                    </div>
+                    <div class="swiper-slide relative">
+                        <img src="{{ asset('images/carousel3.jpg') }}" class="w-full h-full object-cover" loading="eager"
+                            alt="Layanan Publik">
+                        <div class="absolute inset-0 bg-gradient-to-r from-[#0039CB]/70 to-[#2962FF]/60"></div>
+                        <div class="absolute inset-0 bg-black/40"></div>
+                    </div>
                 </div>
 
-                <!-- Overlay Gradient (di atas gambar) -->
-                <div class="absolute inset-0 bg-gradient-to-r from-[#0039CB]/70 to-[#2962FF]/60 z-20"></div>
-                <div class="absolute inset-0 bg-black/40 z-30"></div>
+                <!-- Pagination & Navigation -->
+                <div class="swiper-pagination z-20"></div>
             </div>
 
             <!-- Konten Teks -->
             <div id="heroContent"
-                class="relative z-30 flex flex-col justify-center items-center text-center h-full px-6 py-10 opacity-0 transition-opacity duration-700">
+                class="absolute inset-0 z-50 flex flex-col justify-center items-center text-center h-full px-6 py-10 opacity-0 transition-opacity duration-700">
 
                 <h1 class="text-3xl font-extrabold mb-10 leading-tight" data-aos="fade-down" data-aos-delay="0">
                     <span class="block">Selamat Datang di</span>
@@ -190,7 +191,6 @@
             </div>
         </div>
 
-
         <!-- Wave Divider -->
         <div class="absolute bottom-0 w-full overflow-hidden leading-[0] rotate-180 z-30">
             <svg class="relative block w-[calc(150%+1.3px)] h-[100px]" xmlns="http://www.w3.org/2000/svg"
@@ -210,7 +210,7 @@
     </section>
 
     <!-- Alur Layanan E-Lapor -->
-    <section class="py-10 relative bg-white text-[#37474F] overflow-hidden shadow-inner">
+    <section class="py-10 relative bg-white text-[#37474F] overflow-hidden">
         <!-- Layer Partikel -->
         <div id="particles-js" class="absolute inset-0 z-0"></div>
 
@@ -561,13 +561,13 @@
                 @csrf
                 <input type="text" name="tracking_id" placeholder="Nomor Tiket Aduan"
                     class="w-full md:flex-1 px-6 py-3 border border-gray-300 rounded-full shadow 
-                                                                                                                                                                                                                                           focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 
-                                                                                                                                                                                                                                           text-lg text-center font-semibold uppercase tracking-wider transition duration-300"
+                                                                                                                                                                                                                                                                   focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 
+                                                                                                                                                                                                                                                                   text-lg text-center font-semibold uppercase tracking-wider transition duration-300"
                     required>
 
                 <button type="submit"
                     class="bg-[#c0392b] hover:bg-[#922b21] text-white font-bold px-8 py-3 rounded-full 
-                                                                                                                                                                                                                                                uppercase tracking-wide shadow transition-all duration-200">
+                                                                                                                                                                                                                                                                        uppercase tracking-wide shadow transition-all duration-200">
                     LACAK
                 </button>
             </form>
@@ -647,17 +647,17 @@
                             <span class="font-semibold">Status:</span>
                             <span
                                 class="rounded-full px-2 py-1 font-semibold text-xs
-                                                                                                                                                                                                                                                                                                                                                                                                                                @if($report->status === 'Diajukan')
-                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-blue-200 text-blue-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status === 'Dibaca')
-                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-teal-200 text-teal-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status === 'Direspon')
-                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-yellow-200 text-yellow-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status === 'Selesai')
-                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-green-200 text-green-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                @else
-                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-gray-200 text-gray-700
-                                                                                                                                                                                                                                                                                                                                                                                                                                @endif">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @if($report->status === 'Diajukan')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-blue-200 text-blue-800
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status === 'Dibaca')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-teal-200 text-teal-800
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status === 'Direspon')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-yellow-200 text-yellow-800
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status === 'Selesai')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-green-200 text-green-800
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @else
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-gray-200 text-gray-700
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @endif">
                                 {{ $report->status }}
                             </span>
                         </div>
@@ -677,7 +677,7 @@
     <!-- Leaflet CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -806,7 +806,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             AOS.init();
 
-            // Swiper Init
             const swiper = new Swiper('.mySwiper', {
                 loop: true,
                 pagination: {
@@ -819,11 +818,10 @@
                 },
                 on: {
                     init: () => {
-                        // Tampilkan konten teks setelah carousel siap
                         const content = document.getElementById('heroContent');
                         content.classList.remove('opacity-0');
                         content.classList.add('opacity-100');
-                        AOS.refresh(); // pastikan AOS aktif setelah elemen terlihat
+                        AOS.refresh();
                     }
                 }
             });
@@ -874,13 +872,13 @@
                     const div = document.createElement('div');
                     div.className = 'flex items-center gap-3 mb-2';
                     div.innerHTML = `
-                                                                                                                                                                                                                                                                                                                                                                                                        <input type="file" name="file[]" 
-                                                                                                                                                                                                                                                                                                                                                                                                               accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
-                                                                                                                                                                                                                                                                                                                                                                                                               class="file-input flex-1 border px-2 py-1 rounded text-sm">
-                                                                                                                                                                                                                                                                                                                                                                                                        <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
-                                                                                                                                                                                                                                                                                                                                                                                                            <i class="fas fa-trash-alt"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                        </button>
-                                                                                                                                                                                                                                                                                                                                                                                                    `;
+                                                                                                                                                                                                                                                                                                                                                                                                                                <input type="file" name="file[]" 
+                                                                                                                                                                                                                                                                                                                                                                                                                                       accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
+                                                                                                                                                                                                                                                                                                                                                                                                                                       class="file-input flex-1 border px-2 py-1 rounded text-sm">
+                                                                                                                                                                                                                                                                                                                                                                                                                                <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
+                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="fas fa-trash-alt"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                </button>
+                                                                                                                                                                                                                                                                                                                                                                                                                            `;
                     fileInputsContainer.appendChild(div);
                     updateAddFileButtonVisibility();
                 });

@@ -23,7 +23,7 @@
                 <li><a href="{{ route('tentang') }}" class="hover:text-blue-700 transition">TENTANG KAMI</a></li>
 
                 @guest
-                    <li><a href=" {{ route('login') }}" class="hover:text-[#FFD700] transition">LOGIN</a></li>
+                    <li><a href=" {{ route('login') }}" class="hover:text-blue-700 transition">LOGIN</a></li>
                 @endguest
 
                 @auth
@@ -65,7 +65,7 @@
 
                             <a href="{{ route('user.profile.edit') }}"
                                 class="flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium
-                                                                                                    {{ request()->routeIs('user.profile.edit') ? 'bg-gradient-to-b from-[#FFD700] to-[#E6C200] text-white' : 'text-gray-800 hover:bg-yellow-100 hover:text-[#0F3D3E]' }}">
+                                                                                                            {{ request()->routeIs('user.profile.edit') ? 'bg-gradient-to-b from-[#FFD700] to-[#E6C200] text-white' : 'text-gray-800 hover:bg-yellow-100 hover:text-[#0F3D3E]' }}">
                                 <i class="fas fa-user text-[16px] w-5"></i>
                                 <span>Profil</span>
                             </a>
@@ -117,7 +117,7 @@
 
                             <a href="{{ route('user.profile.edit') }}"
                                 class="flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium
-                                                                                                    {{ request()->routeIs('user.profile.edit') ? 'bg-gradient-to-b from-[#FFD700] to-[#E6C200] text-white' : 'text-gray-800 hover:bg-yellow-100 hover:text-[#0F3D3E]' }}">
+                                                                                                            {{ request()->routeIs('user.profile.edit') ? 'bg-gradient-to-b from-[#FFD700] to-[#E6C200] text-white' : 'text-gray-800 hover:bg-yellow-100 hover:text-[#0F3D3E]' }}">
                                 <i class="fas fa-user text-[16px] w-5"></i>
                                 <span>Profil</span>
                             </a>
@@ -140,26 +140,69 @@
     <!-- MENU MOBILE -->
     <div class="lg:hidden hidden transition-all duration-300 ease-in-out" id="navbar-sidebar">
         <ul class="bg-white px-2 py-2 space-y-2">
-            <li><a href="{{ route('daftar-aduan') }}"
-                    class="block py-2 px-4 text-gray-700 hover:text-blue-500 transition">DAFTAR ADUAN</a></li>
-            <li><a href="{{ route('wbs.index') }}"
-                    class="block py-2 px-4 text-gray-700 hover:text-blue-500 transition">WBS</a></li>
-            <li><a href="{{ route('tentang') }}"
-                    class="block py-2 px-4 text-gray-700 hover:text-blue-500 transition">TENTANG KAMI</a></li>
+            <li>
+                <a href="{{ route('daftar-aduan') }}"
+                    class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+        {{ request()->routeIs('daftar-aduan') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                    <i
+                        class="fas fa-list text-[17px] w-5 {{ request()->routeIs('daftar-aduan') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                    <span>DAFTAR ADUAN</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('wbs.index') }}"
+                    class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+        {{ request()->routeIs('wbs.index') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                    <i
+                        class="fas fa-user-secret text-[17px] w-5 {{ request()->routeIs('wbs.index') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                    <span>WBS</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('tentang') }}"
+                    class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+        {{ request()->routeIs('tentang') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                    <i
+                        class="fas fa-info-circle text-[17px] w-5 {{ request()->routeIs('tentang') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                    <span>TENTANG KAMI</span>
+                </a>
+            </li>
+
 
             @guest
-                <li><a href="{{ route('login') }}"
-                        class="block py-2 px-4 text-white rounded-lg hover:bg-[#14B8A6] transition">LOGIN</a></li>
+                <li>
+                    <a href="{{ route('login') }}"
+                        class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                {{ request()->routeIs('login') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                        <i
+                            class="fas fa-sign-in-alt text-[17px] w-5 {{ request()->routeIs('login') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                        <span>LOGIN</span>
+                    </a>
+                </li>
             @endguest
 
             @auth
                 @if (Auth::user()->role === 'admin')
-                    <li><a href="{{ route('admin.dashboard') }}"
-                            class="block py-2 px-4 text-gray-700 hover:text-blue-500 transition">KELOLA ADMIN</a></li>
+                    <li>
+                        <a href="{{ route('admin.dashboard') }}"
+                            class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                        {{ request()->routeIs('admin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                            <i
+                                class="fas fa-tools text-[17px] w-5 {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                            <span>KELOLA ADMIN</span>
+                        </a>
+                    </li>
                 @endif
+
                 @if (Auth::user()->role === 'superadmin')
-                    <li><a href="{{ route('superadmin.dashboard') }}"
-                            class="block py-2 px-4 text-gray-700 hover:text-blue-500 transition">KELOLA SUPERADMIN</a>
+                    <li>
+                        <a href="{{ route('superadmin.dashboard') }}"
+                            class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                        {{ request()->routeIs('superadmin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                            <i
+                                class="fas fa-user-cog text-[17px] w-5 {{ request()->routeIs('superadmin.dashboard') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                            <span>KELOLA SUPERADMIN</span>
+                        </a>
                     </li>
                 @endif
             @endauth
