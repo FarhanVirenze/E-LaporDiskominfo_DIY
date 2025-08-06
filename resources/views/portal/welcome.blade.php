@@ -566,19 +566,19 @@
     <div id="lacakContent" class="container mx-auto text-center px-4 mt-14">
         <div class="w-full max-w-4xl mx-auto text-center">
             <h2 class="text-2xl md:text-3xl font-extrabold text-black mb-6">
-                Lacak Aduanmu 
+                Lacak Aduanmu
             </h2>
 
             <form action="{{ route('report.lacak') }}" method="POST"
                 class="flex flex-col md:flex-row justify-center items-center gap-4">
                 @csrf
                 <input type="text" name="tracking_id" placeholder="Nomor Tiket Aduan" class="w-full md:flex-1 px-6 py-3 border border-blue-800 bg-white/90 rounded-full shadow 
-                        focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 
-                        text-base text-center font-semibold tracking-wider transition duration-300" required>
+                            focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 
+                            text-base text-center font-semibold tracking-wider transition duration-300" required>
 
                 <button type="submit" class="bg-gradient-to-br from-[#0D47A1] to-[#1976D2] hover:from-[#1565C0] hover:to-[#1E88E5] 
-                        text-white font-bold px-8 py-3 rounded-full mt-4
-                        uppercase tracking-wide shadow transition-all duration-200">
+                            text-white font-bold px-8 py-3 rounded-full mt-4
+                            uppercase tracking-wide shadow transition-all duration-200">
                     Lacak
                 </button>
             </form>
@@ -591,97 +591,131 @@
         $user = Auth::user();
 
         if ($user && $user->role === 'admin') {
-            // Ambil ID kategori yang ditugaskan ke admin
             $kategoriIds = $user->kategori->pluck('id')->toArray();
-
-            // Ambil hanya laporan sesuai kategori admin
             $reports = \App\Models\Report::whereIn('kategori_id', $kategoriIds)
                 ->latest()
                 ->take(9)
                 ->get();
         } elseif ($user && $user->role === 'superadmin') {
-            // Superadmin bisa melihat semua
             $reports = \App\Models\Report::latest()
                 ->take(9)
                 ->get();
         } else {
-            // Pengguna biasa atau belum login
             $reports = \App\Models\Report::latest()
                 ->take(9)
                 ->get();
         }
     @endphp
 
-    <!-- Aduan Terbaru -->
     <div
         class="relative bg-white border shadow-md rounded-lg p-8 w-full max-w-7xl mx-auto mt-16 animate__animated animate__fadeInUp">
         <h2 class="text-2xl font-extrabold text-gray-800 mb-6 text-center border-b pb-2">Aduan Terbaru</h2>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            @forelse ($reports as $report)
-                <div
-                    class="bg-white border-2 border-gray-300 p-4 shadow-lg rounded-lg hover:shadow-xl transition duration-300 w-full mx-auto">
-                    <h3 class="font-semibold text-lg text-gray-800 text-left truncate">
-                        <a href="{{ route('reports.show', ['id' => $report->id]) }}" class="hover:text-blue-600 transition-all">
-                            {{ Str::limit($report->judul, 27) }}
-                        </a>
-                    </h3>
+        <div class="relative">
+            <!-- Tombol Kiri -->
+            <button id="prevBtn"
+                class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white text-gray-800 shadow-md rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-200 z-10">
+                <i class="fas fa-chevron-left"></i>
+            </button>
 
-                    <p class="text-sm text-gray-600 mt-2 text-left line-clamp-2">
-                        <a href="{{ route('reports.show', ['id' => $report->id]) }}" class="hover:text-blue-600 transition-all">
-                            {{ Str::limit($report->isi, 100) }}
-                        </a>
-                    </p>
+            <!-- Container Slide -->
+            <div id="carouselContainer" class="overflow-hidden">
+                <div id="carouselItems" class="flex transition-transform duration-500 ease-in-out">
+                    @foreach ($reports as $report)
+                        @php
+                            $defaultImage = asset('images/default-thumbnail.jpg');
+                            $thumbnail = $defaultImage;
 
-                    <div class="mt-4 space-y-2 text-xs text-gray-500">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-user text-blue-500"></i>
-                            <span class="font-semibold">{{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}</span>
+                            if (!empty($report->file)) {
+                                $files = is_array($report->file) ? $report->file : json_decode($report->file, true);
+
+                                if (is_array($files)) {
+                                    foreach ($files as $f) {
+                                        $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
+                                        if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                                            $thumbnail = asset('storage/' . $f);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        @endphp
+
+                        <div
+                            class="min-w-[280px] max-w-[280px] mx-2 bg-white border rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                            <!-- Thumbnail -->
+                            <a href="{{ route('reports.show', ['id' => $report->id]) }}">
+                                <img src="{{ $thumbnail }}" alt="Thumbnail Aduan" class="w-full h-40 object-cover rounded-t-lg">
+                            </a>
+
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg text-gray-800 truncate">
+                                    <a href="{{ route('reports.show', ['id' => $report->id]) }}"
+                                        class="hover:text-blue-600 transition-all">
+                                        {{ Str::limit($report->judul, 27) }}
+                                    </a>
+                                </h3>
+
+                                <p class="text-sm text-gray-600 mt-2 line-clamp-2">
+                                    <a href="{{ route('reports.show', ['id' => $report->id]) }}"
+                                        class="hover:text-blue-600 transition-all">
+                                        {{ Str::limit($report->isi, 100) }}
+                                    </a>
+                                </p>
+
+                                <div class="mt-4 space-y-2 text-xs text-gray-500">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-user text-blue-500"></i>
+                                        <span
+                                            class="font-semibold">{{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}</span>
+                                    </div>
+
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-clock text-gray-500"></i>
+                                        <span>
+                                            Dikirim pada:
+                                            {{ $report->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }}
+                                            WIB
+                                        </span>
+                                    </div>
+
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-list-alt text-green-500"></i>
+                                        <span>{{ $report->kategori->nama }}</span>
+                                    </div>
+
+                                    <div class="flex items-center gap-2">
+                                        <i class="fas fa-tasks text-yellow-500"></i>
+                                        <span class="font-semibold">Status:</span>
+                                        <span class="rounded-full px-2 py-1 font-semibold text-xs
+                                                    @if($report->status === 'Diajukan')
+                                                        bg-blue-200 text-blue-800
+                                                    @elseif($report->status === 'Dibaca')
+                                                        bg-teal-200 text-teal-800
+                                                    @elseif($report->status === 'Direspon')
+                                                        bg-yellow-200 text-yellow-800
+                                                    @elseif($report->status === 'Selesai')
+                                                        bg-green-200 text-green-800
+                                                    @else
+                                                        bg-gray-200 text-gray-700
+                                                    @endif">
+                                            {{ $report->status }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                    @endforeach
+                </div> <!-- Tutup carouselItems -->
+            </div> <!-- Tutup carouselContainer -->
 
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-clock text-gray-500"></i>
-                            <span>
-                                Dikirim pada:
-                                {{ $report->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }}
-                                WIB
-                            </span>
-                        </div>
-
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-list-alt text-green-500"></i>
-                            <span>{{ $report->kategori->nama }}</span>
-                        </div>
-
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-tasks text-yellow-500"></i>
-                            <span class="font-semibold">Status:</span>
-                            <span
-                                class="rounded-full px-2 py-1 font-semibold text-xs
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @if($report->status === 'Diajukan')
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        bg-blue-200 text-blue-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Dibaca')
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        bg-teal-200 text-teal-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Direspon')
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        bg-yellow-200 text-yellow-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Selesai')
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        bg-green-200 text-green-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @else
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        bg-gray-200 text-gray-700
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @endif">
-                                {{ $report->status }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <div class="col-span-full text-center text-sm text-gray-600 bg-blue-100 border border-blue-300 rounded p-4">
-                    Tidak ada aduan terbaru saat ini.
-                </div>
-            @endforelse
-        </div>
-    </div>
-    </div>
+            <!-- Tombol Kanan -->
+            <button id="nextBtn"
+                class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white text-gray-800 shadow-md rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-200 z-10">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div> <!-- Tutup .relative -->
+    </div> <!-- Tutup container utama -->
 @endsection
 
 @push('scripts')
@@ -862,6 +896,29 @@
             const judulCounter = document.getElementById('judulCounter');
             const isiInput = document.getElementById('isiInput');
             const isiCounter = document.getElementById('isiCounter');
+            const carouselItems = document.getElementById('carouselItems');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            let scrollAmount = 0;
+            const itemWidth = 270; // lebar card + margin
+
+            nextBtn.addEventListener('click', () => {
+                scrollAmount += itemWidth;
+                carouselItems.style.transform = `translateX(-${scrollAmount}px)`;
+                checkBoundary();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                scrollAmount -= itemWidth;
+                if (scrollAmount < 0) scrollAmount = 0;
+                carouselItems.style.transform = `translateX(-${scrollAmount}px)`;
+                checkBoundary();
+            });
+
+            function checkBoundary() {
+                const maxScroll = carouselItems.scrollWidth - document.getElementById('carouselContainer').clientWidth;
+                if (scrollAmount >= maxScroll) scrollAmount = maxScroll;
+            }
 
             judulInput.addEventListener('input', () => {
                 judulCounter.textContent = `${judulInput.value.length}/150`;
@@ -892,13 +949,13 @@
                     const div = document.createElement('div');
                     div.className = 'flex items-center gap-3 mb-2';
                     div.innerHTML = `
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <input type="file" name="file[]" 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       class="file-input flex-1 border px-2 py-1 rounded text-sm">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="fas fa-trash-alt"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </button>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            `;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <input type="file" name="file[]" 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           class="file-input flex-1 border px-2 py-1 rounded text-sm">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="fas fa-trash-alt"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                `;
                     fileInputsContainer.appendChild(div);
                     updateAddFileButtonVisibility();
                 });

@@ -24,27 +24,22 @@ class ReportController extends Controller
             $user = auth()->user();
 
             if ($user->role === 'admin') {
-                // Ambil ID kategori yang ditugaskan ke admin
                 $kategoriIds = $user->kategori->pluck('id')->toArray();
 
-                // Ambil hanya laporan sesuai kategori admin
                 $reports = Report::whereIn('kategori_id', $kategoriIds)
                     ->latest()
-                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'created_at']);
+                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
             } elseif ($user->role === 'superadmin') {
-                // Superadmin bisa melihat semua aduan
                 $reports = Report::latest()
-                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'created_at']);
+                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
             } else {
-                // User biasa, hanya lihat aduan sendiri
                 $reports = Report::where('user_id', $user->id_user)
                     ->latest()
-                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'created_at']);
+                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
             }
         } else {
-            // Pengunjung (belum login), tampilkan semua
             $reports = Report::latest()
-                ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'created_at']);
+                ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
         }
 
         return view('portal.welcome', compact('reports'));
