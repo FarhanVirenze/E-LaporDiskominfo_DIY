@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
 <head>
     <meta charset="utf-8">
@@ -25,44 +25,45 @@
     <link rel="preload" as="image" href="{{ asset('images/carousel2.jpg') }}">
     <link rel="preload" as="image" href="{{ asset('images/carousel3.jpg') }}">
 
-
     {{-- Styles & Scripts --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     {{-- Tambahan CSS dari halaman --}}
     @yield('include-css')
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 
-<body class="font-sans antialiased bg-white text-gray-800">
+<body class="font-sans antialiased bg-white text-gray-800 h-full flex flex-col">
 
-    <div class="min-h-screen flex flex-col justify-between main-wrapper">
-        {{-- Navbar --}}
-        @include('portal.layouts.navbar')
+    {{-- Navbar --}}
+    @include('portal.layouts.navbar')
 
-        {{-- Page Header (opsional) --}}
-        @isset($header)
-            <header class="bg-white shadow">
+    {{-- Page Header (opsional) --}}
+    @isset($header)
+        <header class="bg-white shadow">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                {{ $header }}
+            </div>
+        </header>
+    @endisset
 
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endisset
+    {{-- Main Content --}}
+    <main class="flex-grow">
+        @yield('content')
+    </main>
 
-        {{-- Main Content --}}
-        <main class="flex-grow">
-            @yield('content')
-        </main>
-
-        {{-- Footer --}}
-        @include('portal.layouts.footer')
-    </div>
+    {{-- Footer --}}
+    @include('portal.layouts.footer')
 
     {{-- Tambahan JS dari halaman --}}
     @yield('include-js')
-
     @stack('scripts')
 
 </body>
-
 </html>

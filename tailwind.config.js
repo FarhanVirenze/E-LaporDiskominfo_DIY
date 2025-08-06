@@ -27,15 +27,23 @@ export default {
     },
     plugins: [forms],
     extend: {
-        animation: {
-            "spin-slow": "spin 2s linear infinite",
-            "fade-in": "fadeIn 0.8s ease-in-out forwards",
-        },
-        keyframes: {
-            fadeIn: {
-                "0%": { opacity: 0 },
-                "100%": { opacity: 1 },
+        utilities: {
+            "will-change-transform": {
+                willChange: "transform",
             },
+            "backface-hidden": {
+                backfaceVisibility: "hidden",
+            },
+        },
+    },
+    animation: {
+        "spin-slow": "spin 2s linear infinite",
+        "fade-in": "fadeIn 0.8s ease-in-out forwards",
+    },
+    keyframes: {
+        fadeIn: {
+            "0%": { opacity: 0 },
+            "100%": { opacity: 1 },
         },
     },
 };
