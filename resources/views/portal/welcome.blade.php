@@ -85,7 +85,7 @@
 
             <!-- Konten Teks -->
             <div id="heroContent"
-                class="absolute inset-0 z-50 flex flex-col justify-center items-center text-center h-full px-6 py-10 opacity-0 transition-opacity duration-700">
+                class="absolute inset-0 z-30 flex flex-col justify-center items-center text-center h-full px-6 py-10 opacity-0 transition-opacity duration-700">
 
                 <h1 class="text-3xl font-extrabold mb-10 leading-tight" data-aos="fade-down" data-aos-delay="0">
                     <span class="block">Selamat Datang di</span>
@@ -288,286 +288,292 @@
         </div>
     </section>
 
-    <!-- Form Aduan Cepat -->
-    <div class="relative bg-white border shadow-md rounded-lg p-8 w-full max-w-7xl mx-auto animate__animated animate__fadeInUp"
-        id="aduanCepatBox">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center border-b pb-2">ADUAN CEPAT</h2>
+    <!-- Form Aduan Cepat dengan Overlay -->
+    <div id="aduanCepatBox"
+        class="relative bg-gradient-to-br from-[#1e3a8a]/95 to-[#2563eb]/90 shadow-lg backdrop-blur-md rounded-2xl px-5 py-6 w-full max-w-md mx-auto animate__animated animate__fadeInUp overflow-hidden">
 
-        {{-- Overlay jika belum login --}}
-        @guest
-            <div id="form-overlay"
-                class="absolute inset-0 z-10 bg-white bg-opacity-80 flex items-center justify-center rounded-lg animate__animated animate__fadeIn hidden">
-                <div class="text-red-700 text-center font-semibold animate__animated animate__fadeIn px-4">
-                    <i class="fas fa-exclamation-triangle text-3xl mb-2"></i><br>
-                    Untuk dapat mengisi formulir <strong>Aduan Cepat</strong>, silakan terlebih dahulu melakukan
-                    <a href="{{ route('login') }}" class="text-blue-600 underline hover:text-blue-800 font-semibold">
-                        Login
-                    </a> ke akun Anda.
+        <!-- Overlay Gelap 30% -->
+        <div class="absolute inset-0 bg-black/30 rounded-2xl z-0"></div>
+
+        <!-- Konten Form -->
+        <div class="relative z-10">
+            <h2 class="text-2xl font-semibold text-white mb-6 text-center pb-2">ADUAN CEPAT</h2>
+
+            {{-- Overlay jika belum login --}}
+            @guest
+                <div id="form-overlay"
+                    class="absolute inset-0 z-10 bg-white bg-opacity-80 flex items-center justify-center rounded-2xl animate__animated animate__fadeIn hidden">
+                    <div class="text-red-700 text-center font-semibold animate__animated animate__fadeIn px-4">
+                        <i class="fas fa-exclamation-triangle text-3xl mb-2"></i><br>
+                        Untuk dapat mengisi formulir <strong>Aduan Cepat</strong>, silakan terlebih dahulu melakukan
+                        <a href="{{ route('login') }}"
+                            class="text-blue-800 underline hover:text-blue-900 font-semibold">Login</a>
+                        ke akun Anda.
+                    </div>
                 </div>
-            </div>
-        @endguest
+            @endguest
 
-        <form method="POST" action="{{ route('user.aduan.store') }}" enctype="multipart/form-data"
-            class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            @csrf
+            <form method="POST" action="{{ route('user.aduan.store') }}" enctype="multipart/form-data"
+                class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                @csrf
 
-            <!-- Kolom Kiri -->
-            <div class="space-y-4">
-                <!-- Input Judul -->
-                <div class="flex flex-col leading-none">
-                    <input type="text" name="judul" id="judulInput" maxlength="150" placeholder="Judul Aduan"
-                        class="w-full border rounded-t px-4 pt-2 pb-1 bg-gray-100 @error('judul') border-red-500 @enderror"
+                <!-- Kolom Kiri -->
+                <div class="space-y-4">
+                    <!-- Input Judul -->
+                    <div class="flex flex-col leading-none">
+                        <input type="text" name="judul" id="judulInput" maxlength="150" placeholder="Judul Aduan"
+                            class="w-full border rounded-lg px-4 pt-2 pb-1 bg-white/80 text-gray-900 placeholder-gray-500 @error('judul') border-red-500 @enderror"
+                            required>
+                        <span id="judulCounter" class="text-sm text-white/90 mt-2">0/150</span>
+                    </div>
+                    @error('judul')
+                        <div class="text-red-500 text-sm mt-0">{{ $message }}</div>
+                    @enderror
+                    <!-- Textarea Isi -->
+                    <div class="flex flex-col leading-none">
+                        <textarea name="isi" id="isiInput" placeholder="Aduan Anda" rows="2" maxlength="1000"
+                            class="w-full border rounded-lg px-4 pt-2 pb-1 bg-white/80 text-gray-900 placeholder-gray-500 @error('isi') border-red-500 @enderror"
+                            required></textarea>
+                        <span id="isiCounter" class="text-sm text-white/90 mt-2">0/1000</span>
+                    </div>
+                    @error('isi')
+                        <div class="text-red-500 text-sm mt-0">{{ $message }}</div>
+                    @enderror
+                    <!-- Dropdown Wilayah -->
+                    <select name="wilayah_id"
+                        class="w-full border rounded-lg px-4 py-2 bg-white/80 text-gray-900 @error('wilayah_id') border-red-500 @enderror"
                         required>
-                    <span id="judulCounter" class="text-sm text-gray-500 text-left leading-none mt-2">0/150</span>
-                </div>
-                @error('judul')
-                    <div class="text-red-500 text-sm mt-0">{{ $message }}</div>
-                @enderror
-                <!-- Textarea Isi -->
-                <div class="flex flex-col leading-none">
-                    <textarea name="isi" id="isiInput" placeholder="Aduan Anda" rows="2" maxlength="1000"
-                        class="w-full border rounded-t px-4 pt-2 pb-1 bg-gray-100 @error('isi') border-red-500 @enderror"
-                        required></textarea>
-                    <span id="isiCounter" class="text-sm text-gray-500 text-left leading-none mt-2">0/1000</span>
-                </div>
-                @error('isi')
-                    <div class="text-red-500 text-sm mt-0">{{ $message }}</div>
-                @enderror
-                <!-- Dropdown Wilayah -->
-                <select name="wilayah_id"
-                    class="w-full border rounded px-4 py-2 bg-gray-100 @error('wilayah_id') border-red-500 @enderror"
-                    required>
-                    <option value="">- Pilih Wilayah -</option>
-                    @forelse(App\Models\WilayahUmum::all() as $wilayah)
-                        <option value="{{ $wilayah->id }}">{{ $wilayah->nama }}</option>
-                    @empty
-                        <option value="" disabled>Tidak ada wilayah tersedia</option>
-                    @endforelse
-                </select>
-                @error('wilayah_id')
-                    <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
-                @enderror
-                <div class="flex gap-2">
-                    <!-- Dropdown Kategori -->
-                    <select id="kategoriSelect" name="kategori_id"
-                        class="w-full border rounded px-4 py-2 bg-gray-100 @error('kategori_id') border-red-500 @enderror"
-                        required>
-                        <option value="">- Pilih Kategori -</option>
-                        @forelse(App\Models\KategoriUmum::all() as $kategori)
-                            <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
+                        <option value="">- Pilih Wilayah -</option>
+                        @forelse(App\Models\WilayahUmum::all() as $wilayah)
+                            <option value="{{ $wilayah->id }}">{{ $wilayah->nama }}</option>
                         @empty
-                            <option value="" disabled>Tidak ada kategori tersedia</option>
+                            <option value="" disabled>Tidak ada wilayah tersedia</option>
                         @endforelse
                     </select>
-                    @error('kategori_id')
+                    @error('wilayah_id')
                         <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
                     @enderror
 
-                    <!-- Tombol Trigger -->
-                    <div>
-                        <label id="openFileModalBtn"
-                            class="bg-[#c0392b] hover:bg-[#922b21] text-white px-4 py-4 rounded cursor-pointer flex items-center">
-                            <i class="fas fa-image mr-1"></i> File
-                        </label>
-                    </div>
+                    <div class="flex gap-2">
+                        <!-- Dropdown Kategori -->
+                        <select id="kategoriSelect" name="kategori_id"
+                            class="w-full border rounded-lg px-4 py-2 bg-white/80 text-gray-900 @error('kategori_id') border-red-500 @enderror"
+                            required>
+                            <option value="">- Pilih Kategori -</option>
+                            @forelse(App\Models\KategoriUmum::all() as $kategori)
+                                <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
+                            @empty
+                                <option value="" disabled>Tidak ada kategori tersedia</option>
+                            @endforelse
+                        </select>
+                        @error('kategori_id')
+                            <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+                        @enderror
 
-                    <!-- Modal File -->
-                    <div id="fileModal"
-                        class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-                        <div class="bg-white rounded-lg w-full max-w-xl p-6 shadow-lg relative">
-                            <h2 class="text-lg font-semibold mb-3 text-gray-800">Lampirkan File</h2>
+                        <!-- Tombol Trigger -->
+                        <div>
+                            <label id="openFileModalBtn"
+                                class="bg-transparent border border-white hover:bg-white/10 text-white px-5 py-4 rounded-lg font-bold shadow-lg transition cursor-pointer flex items-center">
+                                <i class="fas fa-image mr-2"></i> File
+                            </label>
+                        </div>
 
-                            <!-- Keterangan -->
-                            <p class="text-sm mb-2 text-gray-600 leading-relaxed">
-                                Jenis file yang dapat dilampirkan: <strong>.jpg</strong>,
-                                <strong>.jpeg</strong>,
-                                <strong>.png</strong>,
-                                <strong>.pdf</strong>, <strong>.doc</strong>, <strong>.docx</strong>,
-                                <strong>.xls</strong>, <strong>.xlsx</strong>, <strong>.zip</strong>.<br>
-                                Maksimal <strong>3 file</strong>, masing-masing <strong>tidak melebihi 10MB
-                                    (10.240KB)</strong>.
-                            </p>
+                        <!-- Modal File -->
+                        <div id="fileModal"
+                            class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                            <div class="bg-white rounded-lg w-full max-w-xl p-6 shadow-lg relative">
+                                <h2 class="text-lg font-semibold mb-3 text-gray-800">Lampirkan File</h2>
 
-                            <!-- Daftar Input -->
-                            <div id="fileInputs" class="space-y-2 mb-4">
+                                <!-- Keterangan -->
+                                <p class="text-sm mb-2 text-gray-600 leading-relaxed">
+                                    Jenis file yang dapat dilampirkan: <strong>.jpg</strong>,
+                                    <strong>.jpeg</strong>,
+                                    <strong>.png</strong>,
+                                    <strong>.pdf</strong>, <strong>.doc</strong>, <strong>.docx</strong>,
+                                    <strong>.xls</strong>, <strong>.xlsx</strong>, <strong>.zip</strong>.<br>
+                                    Maksimal <strong>3 file</strong>, masing-masing <strong>tidak melebihi 10MB
+                                        (10.240KB)</strong>.
+                                </p>
+
+                                <!-- Daftar Input -->
+                                <div id="fileInputs" class="space-y-2 mb-4">
+                                </div>
+
+                                <!-- Hidden File Inputs (dipindahkan dari modal saat tekan OK) -->
+                                <div id="fileInputHiddenContainer" class="hidden"></div>
+
+                                <!-- Tombol Tambah -->
+                                <button type="button" id="addFileBtn"
+                                    class="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded w-full mb-4 text-sm font-semibold transition">
+                                    + Tambah file
+                                </button>
+
+                                <!-- Tombol Aksi -->
+                                <div class="flex justify-end space-x-2">
+                                    <button onclick="closeFileModal()" type="button"
+                                        class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded transition">
+                                        Batal
+                                    </button>
+                                    <button type="button" id="confirmFileBtn"
+                                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition">
+                                        Ok
+                                    </button>
+                                </div>
                             </div>
+                        </div>
 
-                            <!-- Hidden File Inputs (dipindahkan dari modal saat tekan OK) -->
-                            <div id="fileInputHiddenContainer" class="hidden"></div>
+                        <!-- Modal Konfirmasi Hapus -->
+                        <div id="deleteConfirmModal"
+                            class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                            <div class="bg-white rounded-lg p-6 w-96 text-center shadow-lg">
+                                <p class="text-lg mb-4 text-gray-800">Yakin ingin menghapus file ini?</p>
+                                <div class="flex justify-center space-x-4">
+                                    <button id="confirmDeleteBtn"
+                                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition">
+                                        Hapus
+                                    </button>
+                                    <button onclick="closeDeleteModal()"
+                                        class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded transition">
+                                        Batal
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-                            <!-- Tombol Tambah -->
-                            <button type="button" id="addFileBtn"
-                                class="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded w-full mb-4 text-sm font-semibold transition">
-                                + Tambah file
+                        <div>
+                            <label onclick="openLocationModal()"
+                                class="bg-transparent border border-white hover:bg-white/10 text-white px-5 py-4 rounded-lg font-bold shadow-lg transition cursor-pointer flex items-center">
+                                <i class="fas fa-map-marker-alt mr-2"></i> Lokasi
+                            </label>
+                        </div>
+
+                        <!-- Hidden Inputs -->
+                        <input type="hidden" name="lokasi" id="lokasiInput">
+                        <input type="hidden" name="latitude" id="latitudeInput">
+                        <input type="hidden" name="longitude" id="longitudeInput">
+                    </div>
+                </div>
+
+                <!-- Modal Lokasi -->
+                <div id="locationModal"
+                    class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center transition-opacity duration-300 ease-in-out hidden">
+                    <div
+                        class="bg-gradient-to-r from-[#B5332A] to-[#8B1E1E] rounded-2xl shadow-2xl w-full max-w-2xl p-6 relative animate-fade-in border border-red-900/40">
+
+                        <!-- Header -->
+                        <div class="flex items-center justify-between mb-5">
+                            <h2 class="text-2xl font-semibold text-white flex items-center gap-2">
+                                <i class="fas fa-map-marker-alt text-white/90"></i> Pilih Lokasi Terkait
+                            </h2>
+                            <!-- Tombol Reset -->
+                            <button onclick="resetMapToDefault()" class="text-white/90 hover:text-white transition"
+                                title="Reset lokasi">
+                                <i class="fas fa-sync-alt text-lg"></i>
                             </button>
-
-                            <!-- Tombol Aksi -->
-                            <div class="flex justify-end space-x-2">
-                                <button onclick="closeFileModal()" type="button"
-                                    class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded transition">
-                                    Batal
-                                </button>
-                                <button type="button" id="confirmFileBtn"
-                                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition">
-                                    Ok
-                                </button>
-                            </div>
                         </div>
-                    </div>
 
-                    <!-- Modal Konfirmasi Hapus -->
-                    <div id="deleteConfirmModal"
-                        class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-                        <div class="bg-white rounded-lg p-6 w-96 text-center shadow-lg">
-                            <p class="text-lg mb-4 text-gray-800">Yakin ingin menghapus file ini?</p>
-                            <div class="flex justify-center space-x-4">
-                                <button id="confirmDeleteBtn"
-                                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition">
-                                    Hapus
-                                </button>
-                                <button onclick="closeDeleteModal()"
-                                    class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded transition">
-                                    Batal
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label onclick="openLocationModal()"
-                            class="bg-[#c0392b] hover:bg-[#922b21] text-white px-4 py-4 rounded cursor-pointer flex items-center">
-                            <i class="fas fa-map-marker-alt mr-1"></i> Lokasi
-                        </label>
-                    </div>
-
-                    <!-- Hidden Inputs -->
-                    <input type="hidden" name="lokasi" id="lokasiInput">
-                    <input type="hidden" name="latitude" id="latitudeInput">
-                    <input type="hidden" name="longitude" id="longitudeInput">
-                </div>
-            </div>
-
-            <!-- Modal Lokasi -->
-            <div id="locationModal"
-                class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center transition-opacity duration-300 ease-in-out hidden">
-                <div
-                    class="bg-gradient-to-r from-[#B5332A] to-[#8B1E1E] rounded-2xl shadow-2xl w-full max-w-2xl p-6 relative animate-fade-in border border-red-900/40">
-
-                    <!-- Header -->
-                    <div class="flex items-center justify-between mb-5">
-                        <h2 class="text-2xl font-semibold text-white flex items-center gap-2">
-                            <i class="fas fa-map-marker-alt text-white/90"></i> Pilih Lokasi Terkait
-                        </h2>
-                        <!-- Tombol Reset -->
-                        <button onclick="resetMapToDefault()" class="text-white/90 hover:text-white transition"
-                            title="Reset lokasi">
-                            <i class="fas fa-sync-alt text-lg"></i>
-                        </button>
-                    </div>
-
-                    <!-- Alamat -->
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-white mb-1">Alamat</label>
-                        <input type="text" id="alamatField"
-                            class="w-full border border-white/20 rounded-lg px-4 py-2 bg-white text-[#8B1E1E] font-semibold focus:outline-none focus:ring-2 focus:ring-white/40"
-                            readonly>
-                    </div>
-
-                    <!-- Koordinat -->
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block text-sm font-medium text-white mb-1">Lintang</label>
-                            <input type="text" id="latitudeField"
+                        <!-- Alamat -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-white mb-1">Alamat</label>
+                            <input type="text" id="alamatField"
                                 class="w-full border border-white/20 rounded-lg px-4 py-2 bg-white text-[#8B1E1E] font-semibold focus:outline-none focus:ring-2 focus:ring-white/40"
                                 readonly>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-white mb-1">Bujur</label>
-                            <input type="text" id="longitudeField"
-                                class="w-full border border-white/20 rounded-lg px-4 py-2 bg-white text-[#8B1E1E] font-semibold focus:outline-none focus:ring-2 focus:ring-white/40"
-                                readonly>
+
+                        <!-- Koordinat -->
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-white mb-1">Lintang</label>
+                                <input type="text" id="latitudeField"
+                                    class="w-full border border-white/20 rounded-lg px-4 py-2 bg-white text-[#8B1E1E] font-semibold focus:outline-none focus:ring-2 focus:ring-white/40"
+                                    readonly>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-white mb-1">Bujur</label>
+                                <input type="text" id="longitudeField"
+                                    class="w-full border border-white/20 rounded-lg px-4 py-2 bg-white text-[#8B1E1E] font-semibold focus:outline-none focus:ring-2 focus:ring-white/40"
+                                    readonly>
+                            </div>
+                        </div>
+
+                        <!-- Petunjuk -->
+                        <div class="text-white/90 text-sm mb-3 flex items-center gap-2">
+                            <i class="fas fa-info-circle"></i>
+                            Klik pada peta untuk memilih lokasi.
+                        </div>
+
+                        <!-- Peta -->
+                        <div id="map"
+                            class="w-full h-64 rounded-lg border border-white/30 shadow-inner mb-6 overflow-hidden">
+                        </div>
+
+                        <!-- Tombol Aksi -->
+                        <div class="flex justify-end gap-3">
+                            <button onclick="closeLocationModal()"
+                                class="px-4 py-2 bg-white text-[#8B1E1E] font-semibold rounded-lg hover:bg-gray-100 transition duration-150">
+                                Batal
+                            </button>
+                            <button onclick="saveLocation()"
+                                class="px-4 py-2 bg-white text-[#8B1E1E] font-semibold rounded-lg hover:bg-gray-100 transition duration-150">
+                                Simpan Lokasi
+                            </button>
                         </div>
                     </div>
-
-                    <!-- Petunjuk -->
-                    <div class="text-white/90 text-sm mb-3 flex items-center gap-2">
-                        <i class="fas fa-info-circle"></i>
-                        Klik pada peta untuk memilih lokasi.
-                    </div>
-
-                    <!-- Peta -->
-                    <div id="map" class="w-full h-64 rounded-lg border border-white/30 shadow-inner mb-6 overflow-hidden">
-                    </div>
-
-                    <!-- Tombol Aksi -->
-                    <div class="flex justify-end gap-3">
-                        <button onclick="closeLocationModal()"
-                            class="px-4 py-2 bg-white text-[#8B1E1E] font-semibold rounded-lg hover:bg-gray-100 transition duration-150">
-                            Batal
-                        </button>
-                        <button onclick="saveLocation()"
-                            class="px-4 py-2 bg-white text-[#8B1E1E] font-semibold rounded-lg hover:bg-gray-100 transition duration-150">
-                            Simpan Lokasi
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Kolom Kanan -->
-            <div class="space-y-4">
-                <label class="flex items-center space-x-2">
-                    <input type="checkbox" name="is_anonim" id="anonimCheckbox" class="form-checkbox" value="1">
-                    <span class="text-sm">Anonim</span>
-                </label>
-
-                <div class="identitas-group space-y-4">
-                    <input type="text" name="nama_pengadu" placeholder="Nama Anda" value="{{ $user?->name }}"
-                        class="w-full border rounded px-4 py-2 bg-gray-100" readonly>
-
-                    <input type="email" name="email_pengadu" placeholder="Alamat email Anda" value="{{ $user?->email }}"
-                        class="w-full border rounded px-4 py-2 bg-gray-100" readonly>
-
-                    <input type="text" name="telepon_pengadu" placeholder="Nomor telepon"
-                        value="{{ $user?->nomor_telepon }}" class="w-full border rounded px-4 py-2 bg-gray-100" readonly>
-
-                    <input type="text" name="nik" placeholder="NIK" value="{{ $user?->nik }}"
-                        class="w-full border rounded px-4 py-2 bg-gray-100" readonly>
                 </div>
 
-                <label class="text-sm text-gray-500 mt-4 block">
-                    <input type="checkbox" required>
-                    Dengan mengisi form ini Anda menyetujui
-                    <a href="#" class="text-blue-600 hover:underline">Ketentuan Layanan</a> dan
-                    <a href="#" class="text-blue-600 hover:underline">Kebijakan Privasi</a> .
-                </label>
+                <!-- Kolom Kanan -->
+                <div class="space-y-4">
+                    <label class="flex items-center space-x-2 text-white">
+                        <input type="checkbox" name="is_anonim" id="anonimCheckbox" class="form-checkbox" value="1">
+                        <span class="text-sm">Anonim</span>
+                    </label>
 
-                <button type="submit"
-                    class="w-full bg-[#c0392b] hover:bg-[#922b21] text-white py-3 rounded font-bold text-lg">
-                    ADUKAN
-                </button>
-            </div>
-        </form>
+                    <div class="identitas-group space-y-4">
+                        <input type="text" name="nama_pengadu" placeholder="Nama Anda" value="{{ $user?->name }}"
+                            class="w-full border rounded-lg px-4 py-2 bg-white/80 text-gray-900" readonly>
+                        <input type="email" name="email_pengadu" placeholder="Alamat email Anda" value="{{ $user?->email }}"
+                            class="w-full border rounded-lg px-4 py-2 bg-white/80 text-gray-900" readonly>
+                        <input type="text" name="telepon_pengadu" placeholder="Nomor telepon"
+                            value="{{ $user?->nomor_telepon }}"
+                            class="w-full border rounded-lg px-4 py-2 bg-white/80 text-gray-900" readonly>
+                        <input type="text" name="nik" placeholder="NIK" value="{{ $user?->nik }}"
+                            class="w-full border rounded-lg px-4 py-2 bg-white/80 text-gray-900" readonly>
+                    </div>
+
+                    <label class="text-sm text-white mt-4 block">
+                        <input type="checkbox" required>
+                        Dengan mengisi form ini Anda menyetujui
+                        <a href="#" class="text-blue-200 underline hover:text-white">Ketentuan Layanan</a> dan
+                        <a href="#" class="text-blue-200 underline hover:text-white">Kebijakan Privasi</a>.
+                    </label>
+
+                    <button type="submit"
+                        class="w-full bg-transparent border border-white hover:bg-white/10 text-white py-4 rounded-lg font-bold text-lg shadow-lg transition">
+                        ADUKAN
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Lacak Aduanmu -->
     <div class="container mx-auto text-center px-4 mt-14">
         <div class="w-full max-w-4xl mx-auto text-center">
-            <h2 class="text-2xl md:text-3xl font-extrabold uppercase text-gray-800 mb-6">
-                CARI DAN LACAK ADUANMU DISINI
+            <h2 class="text-2xl md:text-3xl font-extrabold uppercase text-black mb-6">
+                LACAK ADUANMU DISINI
             </h2>
 
             <form action="{{ route('report.lacak') }}" method="POST"
                 class="flex flex-col md:flex-row justify-center items-center gap-4">
                 @csrf
-                <input type="text" name="tracking_id" placeholder="Nomor Tiket Aduan"
-                    class="w-full md:flex-1 px-6 py-3 border border-gray-300 rounded-full shadow 
-                                                                                                                                                                                                                                                                   focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 
-                                                                                                                                                                                                                                                                   text-lg text-center font-semibold uppercase tracking-wider transition duration-300"
+                <input type="text" name="tracking_id" placeholder="Nomor Tiket Aduan" class="w-full md:flex-1 px-6 py-3 border border-blue-800 bg-white/90 rounded-full shadow 
+                                       focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 
+                                       text-lg text-center font-semibold uppercase tracking-wider transition duration-300"
                     required>
 
-                <button type="submit"
-                    class="bg-[#c0392b] hover:bg-[#922b21] text-white font-bold px-8 py-3 rounded-full 
-                                                                                                                                                                                                                                                                        uppercase tracking-wide shadow transition-all duration-200">
+                <button type="submit" class="bg-gradient-to-br from-[#0D47A1] to-[#1976D2] hover:from-[#1565C0] hover:to-[#1E88E5] 
+                                       text-white font-bold px-8 py-3 rounded-full mt-4
+                                       uppercase tracking-wide shadow transition-all duration-200">
                     LACAK
                 </button>
             </form>
@@ -647,17 +653,17 @@
                             <span class="font-semibold">Status:</span>
                             <span
                                 class="rounded-full px-2 py-1 font-semibold text-xs
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @if($report->status === 'Diajukan')
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-blue-200 text-blue-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status === 'Dibaca')
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-teal-200 text-teal-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status === 'Direspon')
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-yellow-200 text-yellow-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @elseif($report->status === 'Selesai')
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-green-200 text-green-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @else
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    bg-gray-200 text-gray-700
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @endif">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @if($report->status === 'Diajukan')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            bg-blue-200 text-blue-800
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @elseif($report->status === 'Dibaca')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            bg-teal-200 text-teal-800
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @elseif($report->status === 'Direspon')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            bg-yellow-200 text-yellow-800
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @elseif($report->status === 'Selesai')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            bg-green-200 text-green-800
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @else
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            bg-gray-200 text-gray-700
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @endif">
                                 {{ $report->status }}
                             </span>
                         </div>
@@ -872,13 +878,13 @@
                     const div = document.createElement('div');
                     div.className = 'flex items-center gap-3 mb-2';
                     div.innerHTML = `
-                                                                                                                                                                                                                                                                                                                                                                                                                                <input type="file" name="file[]" 
-                                                                                                                                                                                                                                                                                                                                                                                                                                       accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
-                                                                                                                                                                                                                                                                                                                                                                                                                                       class="file-input flex-1 border px-2 py-1 rounded text-sm">
-                                                                                                                                                                                                                                                                                                                                                                                                                                <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
-                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="fas fa-trash-alt"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                                                </button>
-                                                                                                                                                                                                                                                                                                                                                                                                                            `;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <input type="file" name="file[]" 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           class="file-input flex-1 border px-2 py-1 rounded text-sm">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="fas fa-trash-alt"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                `;
                     fileInputsContainer.appendChild(div);
                     updateAddFileButtonVisibility();
                 });
