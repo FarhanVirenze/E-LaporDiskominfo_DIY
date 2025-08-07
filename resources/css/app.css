@@ -156,3 +156,51 @@ canvas:hover {
     background-color: #1e293b; /* fallback background dark grey */
 }
 
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.95) translateY(4px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+@keyframes fadeOutScale {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.95) translateY(4px);
+    }
+}
+
+/* Saat hover - animasi masuk */
+.group:hover #form-overlay {
+    animation: fadeInScale 0.4s ease forwards;
+}
+
+/* Saat tidak hover - animasi keluar */
+.group:not(:hover) #form-overlay {
+    animation: fadeOutScale 0.4s ease forwards;
+}
+
+/* Tambahkan ini di file CSS kamu atau langsung di Blade */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.cursor-grabbing {
+    cursor: grabbing !important;
+    user-select: none;
+}
+
+#carouselContainer {
+    touch-action: pan-y;
+}

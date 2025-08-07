@@ -20,9 +20,6 @@
 
     <div class="min-h-screen flex flex-col justify-between main-wrapper">
 
-        {{-- Navbar --}}
-        @include('portal.layouts.navbar') {{-- Navbar selalu tampil di halaman login juga --}}
-
         <!-- Notifikasi Sukses -->
         @if (session('success'))
             <div id="alert-success"
@@ -66,9 +63,6 @@
                 {{ $slot }}
             </div>
         </main>
-
-        {{-- Footer --}}
-        @include('portal.layouts.footer')
 
     </div>
 

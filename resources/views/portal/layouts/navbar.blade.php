@@ -39,7 +39,7 @@
             </ul>
         </div>
 
-        <!-- KANAN (Dropdown Profil Desktop + Avatar Mobile) -->
+        <!-- KANAN (Dropdown Avatar Mobile) -->
         <div class="flex items-center space-x-3">
             @auth
                 <!-- MOBILE DROPDOWN -->
