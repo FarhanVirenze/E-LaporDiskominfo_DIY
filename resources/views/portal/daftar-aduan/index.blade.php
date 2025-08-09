@@ -6,7 +6,7 @@
 @endsection
 
 @section('content')
-    <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-24 text-center">Daftar Aduan</h2>
+    <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-28 text-center">Daftar Aduan</h2>
 
     {{-- Filter Form --}}
     <div class="relative overflow-hidden w-full mt-6 mb-8"
@@ -14,7 +14,7 @@
         {{-- Overlay Gelap 30% --}}
         <div class="absolute inset-0 bg-black/50 z-20"></div>
         {{-- Overlay Gradasi Biru --}}
-        <div class="absolute inset-0 bg-gradient-to-br from-blue-700/20 to-blue-500/10 z-10"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#0039CB]/20 to-[#2962FF]/10 z-10"></div>
 
         {{-- Konten Form --}}
         <form method="GET" action="{{ route('daftar-aduan') }}"
