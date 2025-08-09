@@ -18,32 +18,65 @@ class ReportController extends Controller
     /**
      * Menampilkan semua laporan milik user (atau semua jika tidak login).
      */
-    public function index()
-    {
-        if (auth()->check()) {
-            $user = auth()->user();
+    public function index(Request $request)
+{
+    $kategoriList = Kategori::select('id', 'nama')->get();
+    $wilayahList = Wilayah::select('id', 'nama')->get();
 
-            if ($user->role === 'admin') {
-                $kategoriIds = $user->kategori->pluck('id')->toArray();
+    $reportsQuery = Report::query();
 
-                $reports = Report::whereIn('kategori_id', $kategoriIds)
-                    ->latest()
-                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
-            } elseif ($user->role === 'superadmin') {
-                $reports = Report::latest()
-                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
-            } else {
-                $reports = Report::where('user_id', $user->id_user)
-                    ->latest()
-                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
-            }
-        } else {
-            $reports = Report::latest()
-                ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
+    // Filter berdasarkan role
+    if (auth()->check()) {
+        $user = auth()->user();
+
+        if ($user->role === 'admin') {
+            $kategoriIds = $user->kategori->pluck('id')->toArray();
+            $reportsQuery->whereIn('kategori_id', $kategoriIds);
+        } elseif ($user->role === 'user') {
+            $reportsQuery->where('user_id', $user->id_user);
         }
-
-        return view('portal.welcome', compact('reports'));
     }
+
+    // Filter berdasarkan input user
+    if ($request->filled('status')) {
+        $reportsQuery->where('status', $request->status);
+    }
+
+    if ($request->filled('kategori')) {
+        $reportsQuery->where('kategori_id', $request->kategori);
+    }
+
+    if ($request->filled('wilayah')) {
+        $reportsQuery->where('wilayah_id', $request->wilayah);
+    }
+
+    if ($request->filled('tanggal')) {
+        $reportsQuery->whereDate('created_at', $request->tanggal);
+    }
+
+    // Sorting
+    switch ($request->sort) {
+        case 'terlama':
+            $reportsQuery->oldest();
+            break;
+        case 'likes':
+            $reportsQuery->orderBy('likes', 'desc');
+            break;
+        case 'views':
+            $reportsQuery->orderBy('views', 'desc'); // Pastikan field views ada di tabel
+            break;
+        default:
+            $reportsQuery->latest();
+            break;
+    }
+
+    $reports = $reportsQuery->get([
+        'id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'is_anonim', 'created_at', 'likes', 'views'
+    ]);
+
+    return view('portal.welcome', compact('reports', 'kategoriList', 'wilayahList'));
+}
+
 
     /**
      * Tampilkan form pembuatan laporan.

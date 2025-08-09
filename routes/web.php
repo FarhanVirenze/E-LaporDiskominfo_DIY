@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\User\ReportController;
+use App\Http\Controllers\User\DaftarAduanController;
 use App\Http\Controllers\Admin\ReportAdminController;
 use App\Http\Controllers\Superadmin\ReportSuperadminController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -18,11 +19,8 @@ Route::get('/', function () {
     ]);
 })->name('beranda');
 
-Route::get('/daftar-aduan', function () {
-    return view('portal.daftar-aduan.index', [
-        'page_title' => 'Daftar Aduan | E-Lapor DIY'
-    ]);
-})->name('daftar-aduan');
+Route::get('/daftar-aduan', [DaftarAduanController::class, 'index'])
+    ->name('daftar-aduan');
 
 Route::get('/wbs', function () {
     return view('portal.wbs');

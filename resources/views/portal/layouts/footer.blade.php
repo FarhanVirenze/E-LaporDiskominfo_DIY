@@ -6,7 +6,7 @@
         </div>
 
         <!-- Overlay Gelap Transparan -->
-        <div class="absolute inset-0 bg-black/60 z-30"></div>
+        <div class="absolute inset-0 bg-black/70 z-30"></div>
 
         <div class="absolute inset-0 bg-gradient-to-r from-[#0039CB]/30 to-[#2962FF]/20 z-20"></div>
 
