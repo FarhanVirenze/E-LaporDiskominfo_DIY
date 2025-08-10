@@ -33,10 +33,10 @@
                     <span class="font-medium">Status Aduan</span>
                     <span
                         class="ml-1 inline-block px-2 py-0.5 rounded-full text-xs font-semibold
-                                                                                            @if($report->status == 'Diajukan') bg-blue-100 text-blue-700
-                                                                                            @elseif($report->status == 'Dibaca') bg-teal-100 text-teal-700
-                                                                                            @elseif($report->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                                            @elseif($report->status == 'Selesai') bg-green-100 text-green-700 @endif">
+                                                                                                @if($report->status == 'Diajukan') bg-blue-100 text-blue-700
+                                                                                                @elseif($report->status == 'Dibaca') bg-teal-100 text-teal-700
+                                                                                                @elseif($report->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                                                                @elseif($report->status == 'Selesai') bg-green-100 text-green-700 @endif">
                         Aduan {{ strtolower($report->status) }}
                     </span>
                 </p>
@@ -100,7 +100,7 @@
                             @csrf
                             <button type="submit"
                                 class="flex items-center text-sm transition-all duration-200 
-                                                                {{ session('vote_report_' . $report->id) === 'like' ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
+                                                                        {{ session('vote_report_' . $report->id) === 'like' ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
                                 <i class="fas fa-thumbs-up mr-1"></i> {{ $report->likes }}
                             </button>
                         </form>
@@ -110,7 +110,7 @@
                             @csrf
                             <button type="submit"
                                 class="flex items-center text-sm transition-all duration-200 
-                                                                {{ session('vote_report_' . $report->id) === 'dislike' ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
+                                                                        {{ session('vote_report_' . $report->id) === 'dislike' ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
                                 <i class="fas fa-thumbs-down mr-1"></i> {{ $report->dislikes }}
                             </button>
                         </form>
@@ -316,7 +316,7 @@
                                     <!-- Tampilkan Gambar -->
                                     <img src="{{ $filePath }}"
                                         class="w-32 h-auto rounded shadow cursor-pointer hover:opacity-80 transition-opacity"
-                                        onclick="openModal('{{ $filePath }}')" alt="Lampiran Komentar">
+                                        onclick="openModal(@json($filePath))" alt="Lampiran Komentar">
                                 @elseif ($fileExtension === 'pdf')
                                     <!-- Tampilkan PDF -->
                                     <a href="{{ $filePath }}"

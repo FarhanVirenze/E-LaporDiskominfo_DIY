@@ -6,10 +6,13 @@
 @endsection
 
 @section('content')
-    <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-28 text-center">Daftar Aduan</h2>
+
+   <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-28 text-left pl-8 md:pl-10">
+    Filter Aduan
+</h2>
 
     {{-- Filter Form --}}
-    <div class="relative overflow-hidden w-full mt-6 mb-8"
+    <div class="relative overflow-hidden w-full mt-6 mb-6"
         style="background-image: url('/images/footer3.jpg'); background-size: cover; background-position: center;">
         {{-- Overlay Gelap 30% --}}
         <div class="absolute inset-0 bg-black/50 z-20"></div>
@@ -121,6 +124,11 @@
             </div>
         </form>
     </div>
+    
+{{-- Judul Semua Pengaduan --}}
+<h2 class="text-2xl font-bold text-gray-800 mb-6 mt-2 text-left pl-8 md:pl-10">
+    Semua Aduan
+</h2>
 
     {{-- Daftar Aduan --}}
     <div class="container mx-auto px-4 space-y-4 mb-10">
