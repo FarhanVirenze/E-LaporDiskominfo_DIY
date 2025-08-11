@@ -150,7 +150,7 @@
                     <div>
                         <div class="text-gray-600 text-sm font-semibold">Pelapor</div>
                         <div class="flex items-center flex-wrap gap-2">
-                            <span class="text-gray-500 text-sm">
+                            <span class="text-gray-600 text-sm">
                                 {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}
                             </span>
                             <!-- Status -->
@@ -178,7 +178,7 @@
                     </div>
                     <div>
                         <div class="text-gray-600 text-sm font-semibold">Tanggal</div>
-                        <div class="text-gray-500 text-sm">
+                        <div class="text-gray-600 text-sm">
                             {{ $report->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('DD MMMM YYYY, HH:mm') }}
                             WIB
                         </div>
@@ -192,7 +192,7 @@
                     </div>
                     <div>
                         <div class="text-gray-600 text-sm font-semibold">Wilayah</div>
-                        <div class="text-gray-500 text-sm">{{ $report->wilayah->nama }}</div>
+                        <div class="text-gray-600 text-sm">{{ $report->wilayah->nama }}</div>
                     </div>
                 </div>
 
@@ -264,7 +264,7 @@
 
                                     {{-- Konten timeline --}}
                                     <div class="p-4 ml-1 bg-white rounded-xl shadow-md">
-                                        <span class="text-sm text-gray-500">
+                                        <span class="text-sm text-gray-600">
                                             {{ \Carbon\Carbon::parse($item['time'])->format('d M Y H:i') }}
                                         </span>
                                         <h3 class="text-base font-semibold mt-1">{{ $item['title'] }}</h3>
