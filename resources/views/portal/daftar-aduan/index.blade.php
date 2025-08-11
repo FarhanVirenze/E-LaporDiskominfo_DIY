@@ -7,128 +7,136 @@
 
 @section('content')
 
-   <h2 class="text-2xl font-bold text-gray-800 mb-4 mt-28 text-left pl-8 md:pl-10">
-    Filter Aduan
-</h2>
+    <div class="font-bold text-gray-800 mb-5 mt-20">
+        {{-- Accordion Header --}}
+        <button type="button" class="flex justify-between items-center w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold text-xl shadow-lg hover:from-blue-700 hover:to-cyan-600
+                   lg:cursor-default lg:pointer-events-none" onclick="toggleFilterAccordion()" aria-expanded="false"
+            aria-controls="filterAccordionContent" id="filterAccordionButton">
+            <span class="flex items-center gap-3">
+                <i class="fas fa-sliders-h"></i>
+                Filter Aduan
+            </span>
+            <svg id="accordion-icon" class="w-5 h-5 transition-transform duration-300 lg:hidden" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
 
-    {{-- Filter Form --}}
-    <div class="relative overflow-hidden w-full mt-6 mb-6"
-        style="background-image: url('/images/footer3.jpg'); background-size: cover; background-position: center;">
-        {{-- Overlay Gelap 30% --}}
-        <div class="absolute inset-0 bg-black/50 z-20"></div>
-        {{-- Overlay Gradasi Biru --}}
-        <div class="absolute inset-0 bg-gradient-to-r from-[#0039CB]/20 to-[#2962FF]/10 z-10"></div>
+        {{-- Accordion Content --}}
+        <div id="filterAccordionContent" class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out
+               lg:max-h-[1000px] lg:overflow-visible">
+            <div class="relative overflow-hidden w-full"
+                style="background-image: url('/images/footer3.jpg'); background-size: cover; background-position: center;">
+                {{-- Overlay Gelap 30% --}}
+                <div class="absolute inset-0 bg-black/50 z-20"></div>
+                {{-- Overlay Gradasi Biru --}}
+                <div class="absolute inset-0 bg-gradient-to-r from-[#0039CB]/20 to-[#2962FF]/10 z-10"></div>
 
-        {{-- Konten Form --}}
-        <form method="GET" action="{{ route('daftar-aduan') }}"
-            class="relative z-30 p-8 md:p-10 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4 items-center shadow-lg">
+                {{-- Konten Form --}}
+                <form method="GET" action="{{ route('daftar-aduan') }}"
+                    class="relative z-30 p-8 md:p-10 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4 items-center shadow-lg">
 
-            {{-- Status --}}
-            <div class="relative flex items-center">
-                <span class="absolute left-3 text-white text-sm sm:text-xs flex items-center h-full">
-                    <i class="fas fa-tasks"></i>
-                </span>
-                <select name="status" class="w-full pl-10 pr-10 py-3 rounded-xl border border-white text-white bg-transparent font-semibold text-sm sm:text-xs
-                               shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition appearance-none
-                               bg-no-repeat bg-[length:1rem] bg-[right_0.75rem_center]"
-                    style="background-image: url('data:image/svg+xml;utf8,<svg fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' width=\'20\' height=\'20\'><path d=\'M7 10l5 5 5-5z\'/></svg>');">
-                    <option value="" class="text-gray-800">Status</option>
-                    <option value="Diajukan" class="text-gray-800">Diajukan</option>
-                    <option value="Dibaca" class="text-gray-800">Dibaca</option>
-                    <option value="Direspon" class="text-gray-800">Direspon</option>
-                    <option value="Selesai" class="text-gray-800">Selesai</option>
-                </select>
+                    {{-- Status --}}
+                    <div class="relative flex items-center">
+                        <span class="absolute left-3 text-white text-sm sm:text-xs flex items-center h-full">
+                            <i class="fas fa-tasks"></i>
+                        </span>
+                        <select name="status" class="w-full pl-10 pr-10 py-3 rounded-xl border border-white text-white bg-transparent font-semibold text-sm sm:text-xs
+                                                           shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition appearance-none
+                                                           bg-no-repeat bg-[length:1rem] bg-[right_0.75rem_center]"
+                            style="background-image: url('data:image/svg+xml;utf8,<svg fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' width=\'20\' height=\'20\'><path d=\'M7 10l5 5 5-5z\'/></svg>');">
+                            <option value="" class="text-gray-800">Status</option>
+                            <option value="Diajukan" class="text-gray-800">Diajukan</option>
+                            <option value="Dibaca" class="text-gray-800">Dibaca</option>
+                            <option value="Direspon" class="text-gray-800">Direspon</option>
+                            <option value="Selesai" class="text-gray-800">Selesai</option>
+                        </select>
+                    </div>
+
+                    {{-- Kategori --}}
+                    <div class="relative flex items-center">
+                        <span class="absolute left-3 text-white text-sm sm:text-xs flex items-center h-full">
+                            <i class="fas fa-tags"></i>
+                        </span>
+                        <select name="kategori" class="w-full pl-10 pr-10 py-3 rounded-xl border border-white text-white bg-transparent font-semibold text-sm sm:text-xs
+                                                       placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition appearance-none
+                                                       bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem]"
+                            style="background-image: url('data:image/svg+xml;utf8,<svg fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' width=\'20\' height=\'20\'><path d=\'M7 10l5 5 5-5z\'/></svg>');">
+                            <option value="" class="bg-white text-gray-800">Kategori</option>
+                            @foreach ($kategoriList as $kategori)
+                                <option value="{{ $kategori->id }}" class="bg-white text-gray-800" {{ request('kategori') == $kategori->id ? 'selected' : '' }}>
+                                    {{ $kategori->nama }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Wilayah --}}
+                    <div class="relative flex items-center">
+                        <span class="absolute left-3 text-white text-sm sm:text-xs flex items-center h-full">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </span>
+                        <select name="wilayah" class="w-full pl-10 pr-10 py-3 rounded-xl border border-white text-white bg-transparent font-semibold text-sm sm:text-xs
+                                                   placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition appearance-none
+                                                   bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem]"
+                            style="background-image: url('data:image/svg+xml;utf8,<svg fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' width=\'20\' height=\'20\'><path d=\'M7 10l5 5 5-5z\'/></svg>');">
+                            <option value="" class="bg-white text-gray-800">Wilayah</option>
+                            @foreach ($wilayahList as $wilayah)
+                                <option value="{{ $wilayah->id }}" class="bg-white text-gray-800" {{ request('wilayah') == $wilayah->id ? 'selected' : '' }}>
+                                    {{ $wilayah->nama }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Urutkan --}}
+                    <div class="relative flex items-center">
+                        <span class="absolute left-3 text-white text-sm sm:text-xs flex items-center h-full">
+                            <i class="fas fa-sort"></i>
+                        </span>
+                        <select name="sort" class="w-full pl-10 pr-10 py-3 rounded-xl border border-white text-white bg-transparent font-semibold text-sm sm:text-xs
+                                               placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition appearance-none
+                                               bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem]"
+                            style="background-image: url('data:image/svg+xml;utf8,<svg fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' width=\'20\' height=\'20\'><path d=\'M7 10l5 5 5-5z\'/></svg>');">
+                            <option value="" class="bg-white text-gray-800">Urutkan</option>
+                            <option value="terbaru" class="bg-white text-gray-800" {{ request('sort') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                            <option value="terlama" class="bg-white text-gray-800" {{ request('sort') == 'terlama' ? 'selected' : '' }}>Terlama</option>
+                            <option value="likes" class="bg-white text-gray-800" {{ request('sort') == 'likes' ? 'selected' : '' }}>Paling Disukai</option>
+                            <option value="views" class="bg-white text-gray-800" {{ request('sort') == 'views' ? 'selected' : '' }}>Paling Banyak Dilihat</option>
+                        </select>
+                    </div>
+
+                    {{-- Tanggal --}}
+                    <div class="relative flex items-center">
+                        <span class="absolute left-3 text-white text-sm sm:text-xs flex items-center h-full">
+                            <i class="fas fa-calendar-alt"></i>
+                        </span>
+                        <input type="text" id="tanggal" name="tanggal" placeholder="Tanggal"
+                            value="{{ request('tanggal') }}"
+                            class="w-full pl-10 pr-3 py-3 rounded-xl border border-white text-white bg-transparent font-semibold text-sm sm:text-xs
+                                                                       placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition">
+                    </div>
+
+                    {{-- Tombol --}}
+                    <div class="flex mt-4 mb-3 gap-3 justify-center lg:justify-start col-span-full">
+                        <button type="submit"
+                            class="flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <a href="{{ route('daftar-aduan') }}"
+                            class="flex items-center gap-2 px-6 py-3 rounded-full bg-white/10 border border-white/30 text-white font-semibold shadow-lg hover:bg-white/20 transition">
+                            <i class="fas fa-undo"></i> Reset
+                        </a>
+                    </div>
+                </form>
             </div>
-
-            {{-- Kategori --}}
-            <div class="relative flex items-center">
-                <span class="absolute left-3 text-white text-sm sm:text-xs flex items-center h-full">
-                    <i class="fas fa-tags"></i>
-                </span>
-                <select name="kategori" class="w-full pl-10 pr-10 py-3 rounded-xl border border-white text-white bg-transparent font-semibold text-sm sm:text-xs
-                           placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition appearance-none
-                           bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem]"
-                    style="background-image: url('data:image/svg+xml;utf8,<svg fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' width=\'20\' height=\'20\'><path d=\'M7 10l5 5 5-5z\'/></svg>');">
-                    <option value="" class="bg-white text-gray-800">Kategori</option>
-                    @foreach ($kategoriList as $kategori)
-                        <option value="{{ $kategori->id }}" class="bg-white text-gray-800" {{ request('kategori') == $kategori->id ? 'selected' : '' }}>
-                            {{ $kategori->nama }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            {{-- Wilayah --}}
-            <div class="relative flex items-center">
-                <span class="absolute left-3 text-white text-sm sm:text-xs flex items-center h-full">
-                    <i class="fas fa-map-marker-alt"></i>
-                </span>
-                <select name="wilayah" class="w-full pl-10 pr-10 py-3 rounded-xl border border-white text-white bg-transparent font-semibold text-sm sm:text-xs
-                       placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition appearance-none
-                       bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem]"
-                    style="background-image: url('data:image/svg+xml;utf8,<svg fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' width=\'20\' height=\'20\'><path d=\'M7 10l5 5 5-5z\'/></svg>');">
-                    <option value="" class="bg-white text-gray-800">Wilayah</option>
-                    @foreach ($wilayahList as $wilayah)
-                        <option value="{{ $wilayah->id }}" class="bg-white text-gray-800" {{ request('wilayah') == $wilayah->id ? 'selected' : '' }}>
-                            {{ $wilayah->nama }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            {{-- Urutkan --}}
-            <div class="relative flex items-center">
-                <span class="absolute left-3 text-white text-sm sm:text-xs flex items-center h-full">
-                    <i class="fas fa-sort"></i>
-                </span>
-                <select name="sort" class="w-full pl-10 pr-10 py-3 rounded-xl border border-white text-white bg-transparent font-semibold text-sm sm:text-xs
-                   placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition appearance-none
-                   bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem]"
-                    style="background-image: url('data:image/svg+xml;utf8,<svg fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' width=\'20\' height=\'20\'><path d=\'M7 10l5 5 5-5z\'/></svg>');">
-                    <option value="" class="bg-white text-gray-800">Urutkan</option>
-                    <option value="terbaru" class="bg-white text-gray-800" {{ request('sort') == 'terbaru' ? 'selected' : '' }}>
-                        Terbaru
-                    </option>
-                    <option value="terlama" class="bg-white text-gray-800" {{ request('sort') == 'terlama' ? 'selected' : '' }}>
-                        Terlama
-                    </option>
-                    <option value="likes" class="bg-white text-gray-800" {{ request('sort') == 'likes' ? 'selected' : '' }}>
-                        Paling Disukai
-                    </option>
-                    <option value="views" class="bg-white text-gray-800" {{ request('sort') == 'views' ? 'selected' : '' }}>
-                        Paling Banyak Dilihat
-                    </option>
-                </select>
-            </div>
-
-            {{-- Tanggal --}}
-            <div class="relative flex items-center">
-                <span class="absolute left-3 text-white text-sm sm:text-xs flex items-center h-full">
-                    <i class="fas fa-calendar-alt"></i>
-                </span>
-                <input type="text" id="tanggal" name="tanggal" placeholder="Tanggal" value="{{ request('tanggal') }}"
-                    class="w-full pl-10 pr-3 py-3 rounded-xl border border-white text-white bg-transparent font-semibold text-sm sm:text-xs
-                                           placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition">
-            </div>
-
-            {{-- Tombol --}}
-            <div class="flex mt-4 mb-3 gap-3 justify-center lg:justify-start col-span-full">
-                <button type="submit"
-                    class="flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition">
-                    <i class="fas fa-filter"></i> Filter
-                </button>
-                <a href="{{ route('daftar-aduan') }}"
-                    class="flex items-center gap-2 px-6 py-3 rounded-full bg-white/10 border border-white/30 text-white font-semibold shadow-lg hover:bg-white/20 transition">
-                    <i class="fas fa-undo"></i> Reset
-                </a>
-            </div>
-        </form>
+        </div>
     </div>
-    
-{{-- Judul Semua Pengaduan --}}
-<h2 class="text-2xl font-bold text-gray-800 mb-6 mt-2 text-left pl-8 md:pl-10">
-    Semua Aduan
-</h2>
+
+    {{-- Judul Semua Pengaduan --}}
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 mt-2 text-left pl-6 md:pl-10">
+        Semua Aduan
+    </h2>
 
     {{-- Daftar Aduan --}}
     <div class="container mx-auto px-4 space-y-4 mb-10">
@@ -159,19 +167,19 @@
                     {{-- Status --}}
                     <span
                         class="absolute top-2 left-2 px-4 py-1.5 rounded-full text-sm font-semibold shadow-lg
-                                                                                                                        @if($report->status === 'Diajukan') bg-blue-200 text-blue-800
-                                                                                                                        @elseif($report->status === 'Dibaca') bg-teal-200 text-teal-800
-                                                                                                                        @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
-                                                                                                                        @elseif($report->status === 'Selesai') bg-green-200 text-green-800
-                                                                                                                        @else bg-gray-200 text-gray-700 @endif">
+                                                                                                                                                                        @if($report->status === 'Diajukan') bg-blue-200 text-blue-800
+                                                                                                                                                                        @elseif($report->status === 'Dibaca') bg-teal-200 text-teal-800
+                                                                                                                                                                        @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
+                                                                                                                                                                        @elseif($report->status === 'Selesai') bg-green-200 text-green-800
+                                                                                                                                                                        @else bg-gray-200 text-gray-700 @endif">
                         {{ $report->status }}
                     </span>
 
                     {{-- Nama Pengadu / Anonim --}}
                     <span
                         class="absolute bottom-3 left-1/2 transform -translate-x-1/2
-                                                                                                                                 bg-zinc-900/60 text-white text-xs px-3 py-[2px] rounded-full backdrop-blur-sm
-                                                                                                                                 tracking-wider italic font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
+                                                                                                                                                                                 bg-zinc-900/60 text-white text-xs px-3 py-[2px] rounded-full backdrop-blur-sm
+                                                                                                                                                                                 tracking-wider italic font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
                         {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}
                     </span>
                 </div>
@@ -223,6 +231,16 @@
             </div>
         </div>
     @endif
+
+    {{-- Script Accordion --}}
+    <script>
+        function toggleFilterAccordion() {
+            const content = document.getElementById('filterAccordionContent');
+            const icon = document.getElementById('accordion-icon');
+            content.style.maxHeight = content.style.maxHeight ? null : content.scrollHeight + 'px';
+            icon.classList.toggle('rotate-180');
+        }
+    </script>
 
     {{-- Flatpickr --}}
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="max-w-6xl mx-auto py-16 px-6 text-gray-800">
-        <h1 class="text-4xl font-bold text-center mb-8 text-gray-900 uppercase">Tentang Kami</h1>
+        <h1 class="text-2xl font-bold text-center mt-14 mb-8 text-gray-900 uppercase">Tentang Kami</h1>
 
         <p class="text-lg leading-[1.6rem] text-justify indent-8 mb-4">
             Kami adalah Tim yang menampung aspirasi Anda agar bisa kita wujudkan bersama untuk Indonesia yang maju dan
