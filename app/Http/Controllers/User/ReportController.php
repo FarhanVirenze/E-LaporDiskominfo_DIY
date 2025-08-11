@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use App\Models\Vote;
 use App\Models\Report;
 use App\Models\FollowUp;
@@ -18,65 +19,32 @@ class ReportController extends Controller
     /**
      * Menampilkan semua laporan milik user (atau semua jika tidak login).
      */
-    public function index(Request $request)
-{
-    $kategoriList = Kategori::select('id', 'nama')->get();
-    $wilayahList = Wilayah::select('id', 'nama')->get();
+    public function index()
+    {
+        if (auth()->check()) {
+            $user = auth()->user();
 
-    $reportsQuery = Report::query();
+            if ($user->role === 'admin') {
+                $kategoriIds = $user->kategori->pluck('id')->toArray();
 
-    // Filter berdasarkan role
-    if (auth()->check()) {
-        $user = auth()->user();
-
-        if ($user->role === 'admin') {
-            $kategoriIds = $user->kategori->pluck('id')->toArray();
-            $reportsQuery->whereIn('kategori_id', $kategoriIds);
-        } elseif ($user->role === 'user') {
-            $reportsQuery->where('user_id', $user->id_user);
+                $reports = Report::whereIn('kategori_id', $kategoriIds)
+                    ->latest()
+                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
+            } elseif ($user->role === 'superadmin') {
+                $reports = Report::latest()
+                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
+            } else {
+                $reports = Report::where('user_id', $user->id_user)
+                    ->latest()
+                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
+            }
+        } else {
+            $reports = Report::latest()
+                ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
         }
+
+        return view('portal.welcome', compact('reports'));
     }
-
-    // Filter berdasarkan input user
-    if ($request->filled('status')) {
-        $reportsQuery->where('status', $request->status);
-    }
-
-    if ($request->filled('kategori')) {
-        $reportsQuery->where('kategori_id', $request->kategori);
-    }
-
-    if ($request->filled('wilayah')) {
-        $reportsQuery->where('wilayah_id', $request->wilayah);
-    }
-
-    if ($request->filled('tanggal')) {
-        $reportsQuery->whereDate('created_at', $request->tanggal);
-    }
-
-    // Sorting
-    switch ($request->sort) {
-        case 'terlama':
-            $reportsQuery->oldest();
-            break;
-        case 'likes':
-            $reportsQuery->orderBy('likes', 'desc');
-            break;
-        case 'views':
-            $reportsQuery->orderBy('views', 'desc'); // Pastikan field views ada di tabel
-            break;
-        default:
-            $reportsQuery->latest();
-            break;
-    }
-
-    $reports = $reportsQuery->get([
-        'id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'is_anonim', 'created_at', 'likes', 'views'
-    ]);
-
-    return view('portal.welcome', compact('reports', 'kategoriList', 'wilayahList'));
-}
-
 
     /**
      * Tampilkan form pembuatan laporan.
@@ -156,11 +124,12 @@ class ReportController extends Controller
     public function show($id)
     {
         $report = Report::with([
-            'kategori',
+            'kategori.admin',
             'wilayah',
             'user',
             'followUps.user',
-            'comments.user'
+            'comments.user',
+            'admin'
         ])->findOrFail($id);
 
         // Validasi: Admin hanya bisa melihat laporan yang sesuai dengan kategori yang ia tangani
@@ -184,10 +153,79 @@ class ReportController extends Controller
             session()->flash('success', 'Status laporan diperbarui menjadi Dibaca');
         }
 
-        $followUps = $report->followUps->filter(fn($item) => $item->user && $item->user->role === 'admin');
+        $followUps = $report->followUps->filter(function ($item) {
+            return $item->user && in_array($item->user->role, ['admin', 'superadmin']);
+        });
+
         $comments = $report->comments;
 
-        return view('portal.daftar-aduan.detail.index', compact('report', 'followUps', 'comments'));
+        // --- BUAT TIMELINE ---
+        $timeline = [];
+
+        // Aduan dibuat
+        $timeline[] = [
+            'time' => $report->created_at,
+            'type' => 'created',
+            'title' => ' Aduan dengan Nomor ' . $report->tracking_id . ' dibuat oleh ' . ($report->is_anonim ? 'Anonim' : $report->nama_pengadu)
+        ];
+
+        // Disposisikan ke admin kategori
+        if ($report->kategori && $report->kategori->admin) {
+            $timeline[] = [
+                'time' => $report->created_at,
+                'type' => 'assigned',
+                'title' => 'Aduan disposisikan ke Admin ' . $report->kategori->admin->name
+            ];
+        }
+
+        // Ambil waktu dibaca
+        $firstAdminActionTime = optional(
+            $report->followUps
+                ->filter(fn($fu) => in_array($fu->user->role, ['admin', 'superadmin']))
+                ->sortBy('created_at')
+                ->first()
+        )->created_at;
+
+        // Dibaca oleh admin
+        if ($report->status !== Report::STATUS_DIAJUKAN) {
+            $timeline[] = [
+                'time' => $firstAdminActionTime ?? $report->updated_at,
+                'type' => 'read',
+                'title' => 'Admin ' . ($report->admin->name ?? '-') . ' telah membaca aduan'
+            ];
+        }
+
+        // Follow up
+        foreach ($followUps as $fu) {
+            $timeline[] = [
+                'time' => $fu->created_at,
+                'type' => 'followup',
+                'title' => 'Tindak Lanjut oleh ' . ($fu->user->name ?? 'Admin')
+            ];
+        }
+
+        // Komentar
+        foreach ($comments as $c) {
+            $timeline[] = [
+                'time' => $c->created_at,
+                'type' => 'comment',
+                'title' => 'Komentar dari ' . ($c->user->name ?? 'Anonim')
+            ];
+        }
+
+        // Status selesai
+        if ($report->status === Report::STATUS_SELESAI) {
+            $timeline[] = [
+                'time' => $report->updated_at,
+                'type' => 'done',
+                'title' => 'Aduan telah dinyatakan Selesai oleh ' . ($report->admin->name ?? 'Admin')
+            ];
+        }
+
+        // Urutkan dari terbaru ke terlama
+        $timeline = collect($timeline)->sortBy('time')->values()->all();
+
+        return view('portal.daftar-aduan.detail.index', compact('report', 'followUps', 'comments', 'timeline'));
     }
 
     public function like($id)
@@ -269,8 +307,8 @@ class ReportController extends Controller
             'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip|max:10240',
         ]);
 
-        if (Auth::user()->role !== 'admin') {
-            abort(403, 'Hanya admin yang dapat memberikan tindak lanjut.');
+        if (!in_array(Auth::user()->role, ['admin', 'superadmin'])) {
+            abort(403, 'Hanya admin atau superadmin yang dapat memberikan tindak lanjut.');
         }
 
         $followUp = new FollowUp([
@@ -287,7 +325,8 @@ class ReportController extends Controller
 
         // Update status laporan menjadi 'Direspon' hanya jika status sebelumnya 'Dibaca'
         $report = Report::findOrFail($reportId);
-        if ($report->status === Report::STATUS_DIBACA) {
+
+        if (in_array($report->status, [Report::STATUS_DIAJUKAN, Report::STATUS_DIBACA])) {
             $report->status = Report::STATUS_DIRESPON;
             $report->save();
         }
@@ -306,8 +345,8 @@ class ReportController extends Controller
             'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip|max:10240',
         ]);
 
-        if (Auth::user()->role !== 'user' && Auth::user()->role !== 'admin') {
-            abort(403, 'Hanya user dan admin yang dapat mengirim komentar.');
+        if (!in_array(Auth::user()->role, ['user', 'admin', 'superadmin'])) {
+            abort(403, 'Hanya user, admin, dan superadmin yang dapat mengirim komentar.');
         }
 
         $comment = new Comment([
@@ -343,8 +382,8 @@ class ReportController extends Controller
     {
         $comment = Comment::findOrFail($id);
 
-        // Cek apakah user adalah pemilik komentar atau admin
-        if (Auth::id() !== $comment->user_id && Auth::user()->role !== 'admin') {
+        // Cek apakah user adalah pemilik komentar, admin, atau superadmin
+        if (Auth::id() !== $comment->user_id && !in_array(Auth::user()->role, ['admin', 'superadmin'])) {
             abort(403, 'Anda tidak diizinkan menghapus komentar ini.');
         }
 
@@ -365,10 +404,12 @@ class ReportController extends Controller
     {
         $followUp = FollowUp::findOrFail($followUpId);
 
-        // Cek apakah user adalah admin
-        if (Auth::user()->role !== 'admin') {
+        // Cek apakah user adalah admin atau superadmin
+        if (!in_array(Auth::user()->role, ['admin', 'superadmin'])) {
             abort(403, 'Anda tidak diizinkan menghapus tindak lanjut ini.');
         }
+
+        $userRole = Auth::user()->role;
 
         // Hapus file jika ada
         if ($followUp->file && \Storage::disk('public')->exists($followUp->file)) {
@@ -378,13 +419,27 @@ class ReportController extends Controller
         // Hapus tindak lanjut
         $followUp->delete();
 
-        // Jika tidak ada tindak lanjut lagi dan status sebelumnya adalah Direspon, ubah jadi Dibaca
+        // Ambil ulang report dan cek tindak lanjut tersisa
         $report = Report::findOrFail($reportId);
-        if ($report->followUps->isEmpty() && $report->status === Report::STATUS_DIRESPON) {
-            $report->status = Report::STATUS_DIBACA;
-            $report->save();
+        $hasFollowUps = $report->followUps()->exists();
 
-            return back()->with('success', 'Tindak lanjut berhasil dihapus, Status Aduan menjadi Dibaca');
+        // Jika tidak ada tindak lanjut lagi dan statusnya DIRESPON, atur ulang status sesuai role
+        if (!$hasFollowUps && $report->status === Report::STATUS_DIRESPON) {
+            // Cek apakah status selesai (misal kamu punya constant STATUS_SELESAI)
+            $statusSelesai = Report::STATUS_SELESAI; // contoh
+
+            if ($report->status !== $statusSelesai) {
+                if ($userRole === 'superadmin') {
+                    $report->status = Report::STATUS_DIAJUKAN; // ubah ke diajukan jika dihapus oleh superadmin
+                } else {
+                    $report->status = Report::STATUS_DIBACA; // kalau admin tetap ke dibaca
+                }
+                $report->save();
+
+                $pesanStatus = $userRole === 'superadmin' ? 'Status Aduan menjadi Diajukan' : 'Status Aduan menjadi Dibaca';
+
+                return back()->with('success', 'Tindak lanjut berhasil dihapus, ' . $pesanStatus);
+            }
         }
 
         return back()->with('success', 'Tindak lanjut berhasil dihapus');

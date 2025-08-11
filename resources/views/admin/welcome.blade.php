@@ -443,9 +443,9 @@
                                     <span class="font-semibold">Status:</span>
                                     <span class="rounded-full px-2 py-1 font-semibold text-xs
                                             @if($report->status === 'Diajukan')
-                                                bg-blue-200 text-blue-800
+                                                bg-red-200 text-red-800
                                             @elseif($report->status === 'Dibaca')
-                                                bg-teal-200 text-teal-800
+                                                bg-blue-200 text-blue-800
                                             @elseif($report->status === 'Direspon')
                                                 bg-yellow-200 text-yellow-800
                                             @elseif($report->status === 'Selesai')

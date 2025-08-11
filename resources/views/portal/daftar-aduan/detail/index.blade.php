@@ -52,7 +52,7 @@
                                 @csrf
                                 <button type="submit"
                                     class="flex items-center text-sm transition-all duration-200
-                                                                                                                                                                                                                                                                                                                                            {{ session('vote_report_' . $report->id) === 'like' ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
+                                                                                                                                                                                                                                                                                                                                                                                                    {{ session('vote_report_' . $report->id) === 'like' ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
                                     <i class="fas fa-thumbs-up mr-1"></i> {{ $report->likes }}
                                 </button>
                             </form>
@@ -60,7 +60,7 @@
                                 @csrf
                                 <button type="submit"
                                     class="flex items-center text-sm transition-all duration-200
-                                                                                                                                                                                                                                                                                                                                            {{ session('vote_report_' . $report->id) === 'dislike' ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
+                                                                                                                                                                                                                                                                                                                                                                                                    {{ session('vote_report_' . $report->id) === 'dislike' ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
                                     <i class="fas fa-thumbs-down mr-1"></i> {{ $report->dislikes }}
                                 </button>
                             </form>
@@ -123,7 +123,7 @@
                 <!-- Overlay Gelap + Icon (z-20) -->
                 <div
                     class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 
-                                                                                            transition duration-300 bg-black/20 z-20">
+                                                                                                                        transition duration-300 bg-black/20 z-20">
                     <i class="fas fa-search-plus text-white text-3xl"></i>
                 </div>
             </div>
@@ -156,11 +156,11 @@
                             <!-- Status -->
                             <span
                                 class="px-2 py-0.5 rounded-full text-xs font-medium
-                                                                            @if($report->status === 'Diajukan') border border-blue-500 text-blue-500
-                                                                            @elseif($report->status === 'Dibaca') border border-teal-500 text-teal-500
-                                                                            @elseif($report->status === 'Direspon') border border-yellow-500 text-yellow-600
-                                                                            @elseif($report->status === 'Selesai') border border-green-500 text-green-500
-                                                                            @else border border-gray-400 text-gray-600 @endif">
+                                                                                                        @if($report->status === 'Diajukan') border border-red-500 text-red-500
+                                                                                                        @elseif($report->status === 'Dibaca') border border-blue-500 text-blue-500
+                                                                                                        @elseif($report->status === 'Direspon') border border-yellow-500 text-yellow-600
+                                                                                                        @elseif($report->status === 'Selesai') border border-green-500 text-green-500
+                                                                                                        @else border border-gray-400 text-gray-600 @endif">
                                 {{ $report->status }}
                             </span>
                             <!-- Kategori -->
@@ -207,8 +207,8 @@
                             @if($report->admin)
                                 <span
                                     class="inline-block px-3 py-1 rounded-full text-xs font-semibold 
-                                                                                                                                                border border-transparent bg-gradient-to-r from-blue-500 to-cyan-500 
-                                                                                                                                                text-white shadow-md hover:shadow-lg">
+                                                                                                                                                                                                        border border-transparent bg-gradient-to-r from-blue-500 to-cyan-500 
+                                                                                                                                                                                                        text-white shadow-md hover:shadow-lg">
                                     {{ $report->admin->name }}
                                 </span>
                             @else
@@ -227,6 +227,56 @@
                         {{ $report->isi }}
                     </p>
                 </div>
+
+                {{-- Timeline Aduan --}}
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900 mb-5 mt-5">Timeline Aduan</h2>
+
+                    <div class="relative border-l-4 border-blue-400 ml-3">
+                        @foreach($timeline as $item)
+                                <div class="mb-4 ml-6">
+                                    {{-- Bulatan status --}}
+                                    <div class="absolute -left-5 flex items-center justify-center w-8 h-8 rounded-full
+                            @if($item['type'] === 'created') bg-red-500 text-white
+                            @elseif($item['type'] === 'assigned') bg-orange-500 text-white
+                            @elseif($item['type'] === 'read') bg-blue-500 text-white
+                            @elseif($item['type'] === 'followup') bg-purple-500 text-white
+                            @elseif($item['type'] === 'comment') bg-yellow-500 text-white
+                            @elseif($item['type'] === 'done') bg-green-500 text-white
+                            @else bg-gray-400 text-white @endif">
+
+                                        @if($item['type'] === 'created')
+                                            <i class="fas fa-edit"></i>
+                                        @elseif($item['type'] === 'assigned')
+                                            <i class="fas fa-share-square"></i>
+                                        @elseif($item['type'] === 'read')
+                                            <i class="fas fa-eye"></i>
+                                        @elseif($item['type'] === 'followup')
+                                            <i class="fas fa-tasks"></i>
+                                        @elseif($item['type'] === 'comment')
+                                            <i class="fas fa-comments"></i>
+                                        @elseif($item['type'] === 'done')
+                                            <i class="fas fa-check-circle"></i>
+                                        @else
+                                            <i class="fas fa-info-circle"></i>
+                                        @endif
+                                    </div>
+
+                                    {{-- Konten timeline --}}
+                                    <div class="p-4 ml-1 bg-white rounded-xl shadow-md">
+                                        <span class="text-sm text-gray-500">
+                                            {{ \Carbon\Carbon::parse($item['time'])->format('d M Y H:i') }}
+                                        </span>
+                                        <h3 class="text-base font-semibold mt-1">{{ $item['title'] }}</h3>
+                                        @if(!empty($item['description']))
+                                            <p class="text-gray-600 mt-1">{{ $item['description'] }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                        @endforeach
+                    </div>
+                </div>
+
                 {{-- Tabs --}}
                 @php
                     $badges = [
@@ -242,7 +292,7 @@
                     ];
                 @endphp
 
-                <div class="border-b px-1 pt-4 flex space-x-8 text-sm font-semibold text-gray-600">
+                <div class="border-b px-1 pt-5 flex space-x-8 text-sm font-semibold text-gray-600">
                     @foreach ($tabs as $key => $tab)
                         <button onclick="showTab('{{ $key }}')" id="tab-{{ $key }}"
                             class="tab-button py-2 border-b-2 border-transparent text-gray-600 hover:text-blue-600 relative transition duration-300">
@@ -282,7 +332,7 @@
                         <div class="max-h-96 overflow-y-auto pr-2">
                             @forelse ($followUps as $item)
                                 <div class="mb-6 relative group bg-gray-50 rounded-md p-3 border shadow-sm">
-                                    <p class="text-sm text-gray-600">
+                                    <p class="text-xs text-gray-600">
                                         <strong>{{ $item->user->name }}</strong>
                                         <span class="text-gray-500">
                                             ({{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }})</span>
@@ -339,7 +389,7 @@
                                     @endif
 
                                     {{-- Tombol hapus tindak lanjut --}}
-                                    @if (auth()->check() && auth()->user()->role === 'admin')
+                                    @if (auth()->check() && in_array(auth()->user()->role, ['admin', 'superadmin']))
                                         <button
                                             onclick="openDeleteModal('{{ route('reports.followup.delete', [$report->id, $item->id]) }}')"
                                             class="absolute top-2 right-2 text-red-600 text-xs hover:text-red-800 border border-red-600 rounded-full p-1 z-10">
@@ -352,7 +402,7 @@
                             @endforelse
                         </div>
 
-                        @if (auth()->check() && in_array(auth()->user()->role, ['admin']))
+                        @if (auth()->check() && in_array(auth()->user()->role, ['admin', 'superadmin']))
                             <form action="{{ route('reports.followup', ['id' => $report->id]) }}" method="POST"
                                 enctype="multipart/form-data" class="mt-2 space-y-4">
                                 @csrf
@@ -361,8 +411,7 @@
                                 <input type="file" name="file" class="block w-full border rounded p-1">
                                 <button type="submit"
                                     class="flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition group">
-                                    <i
-                                        class="fas fa-paper-plane text-white"></i>
+                                    <i class="fas fa-paper-plane text-white"></i>
                                     <span>Kirim Tindak Lanjut</span>
                                 </button>
                             </form>
@@ -374,7 +423,7 @@
                         <div class="max-h-96 overflow-y-auto pr-2">
                             @forelse ($comments as $item)
                                 <div class="relative group mb-6 bg-gray-50 rounded-md p-3 border shadow-sm">
-                                    <p class="text-sm text-gray-600">
+                                    <p class="text-xs text-gray-600">
                                         <strong>{{ $item->user->name }}</strong>
                                         <span
                                             class="text-gray-500">({{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }})</span>
@@ -431,7 +480,7 @@
                                     @endif
 
                                     {{-- Tombol hapus komentar --}}
-                                    @if (auth()->check() && (auth()->id() === $item->user_id || auth()->user()->role === 'admin'))
+                                    @if (auth()->check() && (auth()->id() === $item->user_id || in_array(auth()->user()->role, ['admin', 'superadmin'])))
                                         <button onclick="openDeleteModal('{{ route('reports.comment.delete', $item->id) }}')"
                                             class="absolute top-2 right-2 text-red-600 text-xs hover:text-red-800 border border-red-600 rounded-full p-1 z-10">
                                             <i class="fas fa-trash-alt"></i> Hapus
@@ -443,7 +492,7 @@
                             @endforelse
                         </div>
 
-                        @if (auth()->check() && in_array(auth()->user()->role, ['user', 'admin']))
+                        @if (auth()->check() && in_array(auth()->user()->role, ['user', 'admin', 'superadmin']))
                             <form action="{{ route('reports.comment', ['id' => $report->id]) }}" method="POST"
                                 enctype="multipart/form-data" class="mt-2 space-y-4">
                                 @csrf
@@ -568,6 +617,7 @@
 @endsection
 
 @section('include-js')
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {

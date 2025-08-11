@@ -59,8 +59,8 @@
                             <td>{{ $report->kategori->nama ?? '-' }}</td>
                             <td>
                                 <span class="rounded-full px-2 py-1 text-xs font-semibold
-                                    @if($report->status == 'Diajukan') bg-blue-200 text-blue-800
-                                    @elseif($report->status == 'Dibaca') bg-teal-200 text-teal-800
+                                    @if($report->status == 'Diajukan') bg-red-200 text-red-800
+                                    @elseif($report->status == 'Dibaca') bg-blue-200 text-blue-800
                                     @elseif($report->status == 'Direspon') bg-yellow-200 text-yellow-800
                                     @elseif($report->status == 'Selesai') bg-green-200 text-green-800
                                     @endif">
