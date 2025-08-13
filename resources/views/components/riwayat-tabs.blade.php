@@ -1,4 +1,4 @@
-<div class="flex flex-col lg:flex-row gap-4">
+<div class="flex flex-col mt-16 lg:flex-row gap-4">
     <!-- Sidebar Navigasi -->
     <div class="w-full lg:w-1/4">
         <div class="space-y-2">
