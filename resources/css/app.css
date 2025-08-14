@@ -68,37 +68,6 @@ a:hover {
     animation: smoothFadeOut 0.25s ease-in forwards;
 }
 
-#map {
-    width: 100%;
-    height: 400px; /* Sesuaikan tinggi peta */
-}
-
-@media (max-width: 768px) {
-    #map {
-        height: 300px; /* Ukuran lebih kecil di layar mobile */
-    }
-}
-
-@media (max-width: 480px) {
-    #map {
-        height: 250px; /* Ukuran lebih kecil di layar lebih kecil */
-    }
-}
-
-/* Modal container */
-#locationModal .modal-content {
-    max-width: 90%; /* Adjusts for smaller screens */
-    width: 100%;
-    padding: 20px;
-}
-
-/* Map container inside the modal */
-#locationModal #map {
-    height: 30vh;
-    max-height: 350px;
-    min-height: 250px;
-}
-
 /* Modal konfirmasi penghapusan */
 #deleteModal {
     transition: opacity 0.3s ease-in-out;
