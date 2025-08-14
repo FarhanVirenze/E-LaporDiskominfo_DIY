@@ -7,7 +7,7 @@
 @endsection
 
 @section('content')
-    <div class="max-w-xl mx-auto px-5 py-6 mb-5 mt-20">
+   <div class="max-w-full md:max-w-3xl lg:max-w-5xl xl:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 mt-20 mb-5">
 
         @if (session('success'))
             <div id="successMessage" class="bg-green-100 border border-green-400 text-green-800 px-4 py-2 rounded mb-4">
@@ -24,7 +24,7 @@
         </div>
 
         {{-- Card Utama --}}
-        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mt-4 p-4">
+       <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mt-4 p-4 sm:p-6 md:p-8">
 
             {{-- Judul + Nomor Aduan --}}
             <div class="bg-white px-2 pt-2 flex items-start justify-between">
@@ -113,7 +113,7 @@
             <div class="relative group cursor-pointer overflow-hidden rounded-t-xl mt-4"
                 onclick="openImageModal('{{ $thumbnail }}')">
                 <img src="{{ $thumbnail }}" alt="Foto Aduan"
-                    class="w-full h-64 object-cover transition duration-300 group-hover:brightness-75 rounded-t-2xl">
+                   class="w-full h-64 md:h-80 lg:h-96 object-cover transition duration-300 group-hover:brightness-75 rounded-t-2xl">
 
                 <!-- Overlay Biru (z-10) -->
                 <div

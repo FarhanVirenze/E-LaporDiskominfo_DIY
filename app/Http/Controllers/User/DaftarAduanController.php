@@ -76,7 +76,8 @@ class DaftarAduanController extends Controller
             'views'
         ]);
 
-        $reports = $reportsQuery->paginate(10)->withQueryString();
+        $perPage = $request->query('perPage'); // Ambil langsung dari query string
+        $reports = $reportsQuery->paginate($perPage)->withQueryString();
 
         return view('portal.daftar-aduan.index', [
             'page_title' => 'Daftar Aduan | E-Lapor DIY',
