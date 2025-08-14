@@ -20,6 +20,10 @@ export default {
     ],
     theme: {
         extend: {
+            spacing: {
+        '25': '6.25rem', // 25 x 0.25rem = 6.25rem
+        '26': '6.5rem',  // 26 x 0.25rem = 6.5rem
+      },
             fontFamily: {
                 sans: ["Figtree", ...defaultTheme.fontFamily.sans],
             },

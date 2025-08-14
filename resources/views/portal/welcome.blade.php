@@ -317,548 +317,536 @@
         </script>
 
         <!-- Lacak Aduanmu -->
-        <div id="lacakContent" class="mt-14 relative overflow-hidden" data-aos="fade-up">
-            <!-- Background Gambar -->
-            <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('/images/footer2.jpg');">
-            </div>
-            <div class="absolute inset-0 bg-black/50 z-20"></div>
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-700/20 to-blue-500/10 z-10"></div>
+    <div id="lacakContent" 
+        class="mt-14 relative overflow-hidden rounded-none md:rounded-2xl md:max-w-[67rem] mx-auto"
+        data-aos="fade-up">
 
-            <!-- Konten -->
-            <div class="relative z-30 p-8 md:p-10 md:mx-0 md:w-full shadow-lg rounded-2xl md:rounded-none">
-                <div class="flex flex-col md:flex-row md:items-center md:gap-6 w-full">
+        <!-- Background -->
+        <div class="absolute inset-0 bg-cover bg-center z-0 rounded-none md:rounded-2xl"
+            style="background-image: url('/images/footer2.jpg');"></div>
+        <div class="absolute inset-0 bg-black/50 z-20 rounded-none md:rounded-2xl"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-700/20 to-blue-500/10 z-10 rounded-none md:rounded-2xl"></div>
 
-                    <!-- Judul -->
-                    <h3
-                        class="text-2xl md:text-3xl font-semibold text-white mb-6 md:mb-0 md:w-auto text-center md:text-left whitespace-nowrap">
-                        Lacak Aduanmu
-                    </h3>
+        <!-- Konten -->
+        <div class="relative z-30 p-8 md:p-10 md:px-16 md:py-8 shadow-lg rounded-none md:rounded-2xl">
+            <h3 class="text-2xl md:text-3xl font-semibold text-white mb-6 text-center">Lacak Aduanmu</h3>
 
-                    <!-- Form -->
-                    <form action="{{ route('report.lacak') }}" method="POST"
-                        class="flex flex-row items-center gap-4 flex-1 w-full">
-                        @csrf
-
-                        <!-- Input Tracking ID -->
-                        <input type="text" name="tracking_id" placeholder="Nomor Tiket Aduan"
-                            class="flex-1 border rounded-full px-6 py-3 bg-white/80 text-gray-900 placeholder-gray-500
-                                                                                               text-base font-semibold tracking-wide shadow text-center
-                                                                                               focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition duration-300"
-                            required>
-
-                        <!-- Tombol Lacak -->
-                        <button type="submit"
-                            class="whitespace-nowrap bg-transparent border border-white hover:bg-white/10 text-white px-6 py-3 rounded-full font-bold shadow-lg transition cursor-pointer flex items-center">
-                            <i class="fas fa-search mr-2"></i> Lacak
-                        </button>
-                    </form>
-                </div>
-            </div>
+            <!-- Form -->
+            <form action="{{ route('report.lacak') }}" method="POST"
+                  class="flex items-center gap-3 max-w-lg mx-auto">
+                @csrf
+                <input type="text" name="tracking_id" placeholder="Nomor Tiket Aduan"
+                       class="flex-1 border rounded-full px-6 py-3 bg-white/80 text-gray-900 placeholder-gray-500
+                       text-base font-semibold tracking-wide shadow text-center
+                       focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition duration-300"
+                       required>
+                <button type="submit"
+                        class="whitespace-nowrap bg-transparent border border-white hover:bg-white/10 text-white px-6 py-3 rounded-full font-bold shadow-lg transition cursor-pointer flex items-center">
+                    <i class="fas fa-search mr-2"></i> Lacak
+                </button>
+            </form>
         </div>
+    </div>
 
-        <!-- Form Aduan Cepat dengan Overlay -->
-        <div id="aduanCepatBox" class="group relative bg-gradient-to-br from-[#1e3a8a]/95 to-[#2563eb]/90 shadow-lg backdrop-blur-md
-                               px-5 py-6 mt-14 w-full mx-0 overflow-visible z-30" data-aos="fade-up">
+    <!-- Aduan Cepat -->
+    <div id="aduanCepatBox"
+        class="group relative bg-gradient-to-br from-[#1e3a8a]/95 to-[#2563eb]/90 shadow-lg backdrop-blur-md
+        px-5 py-6 mt-14 w-full md:max-w-[67rem] mx-auto rounded-none md:rounded-2xl overflow-hidden z-30"
+        data-aos="fade-up">
 
-            <!-- Gambar Background Full -->
-            <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('/images/form2.jpg');">
-            </div>
+        <!-- Background -->
+        <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('/images/form2.jpg');"></div>
+        <div class="absolute inset-0 bg-black/50 z-20"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-700/20 to-blue-500/10 z-10"></div>
 
-            <!-- Overlay Gelap 30% -->
-            <div class="absolute inset-0 bg-black/50 z-20"></div>
+        <!-- Konten -->
+        <div class="relative z-30">
+            <h2 class="text-2xl md:text-3xl font-semibold text-white mb-6 text-center pb-2"
+                style="font-family:'Open Sans','Segoe UI',sans-serif;">
+                Aduan Cepat
+            </h2>
+                                {{-- Overlay jika belum login --}}
+                                @guest
+                                    <div id="form-overlay"
+                                        class="absolute inset-0 z-10 bg-white bg-opacity-80  backdrop-blur-sm flex items-center justify-center rounded-2xl
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           opacity-0 scale-95 pointer-events-none transition-all duration-500 ease-out
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto">
+                                        <div
+                                            class="text-red-700 text-center font-semibold px-4 transform transition duration-500 ease-out translate-y-4 group-hover:translate-y-0">
+                                            <i class="fas fa-exclamation-triangle text-3xl mb-2 animate-pulse"></i><br>
+                                            Untuk dapat mengisi formulir <strong>Aduan Cepat</strong>, silakan terlebih dahulu melakukan
+                                            <a href="{{ route('login') }}"
+                                                class="text-blue-700 hover:text-blue-800 underline font-semibold">Login</a>
+                                            ke akun Anda.
+                                        </div>
+                                    </div>
+                                @endguest
 
-            <!-- Overlay Gradasi Biru -->
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-700/20 to-blue-500/10 z-10"></div>
+                                <form method="POST" action="{{ route('user.aduan.store') }}" enctype="multipart/form-data"
+                                    class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+                                    @csrf
 
-            <!-- Konten Form -->
-            <div class="relative z-30">
-                <h2 class="text-2xl md:text-3xl font-semibold text-white mb-6 text-center pb-2"
-                    style="font-family:'Open Sans','Segoe UI',sans-serif;">
-                    Aduan Cepat
-                </h2>
+                                    <!-- Kolom Kiri -->
+                                    <div class="space-y-4">
+                                        <!-- Input Judul -->
+                                        <div class="flex flex-col leading-none">
+                                            <input type="text" name="judul" maxlength="150" placeholder="Judul Aduan"
+                                                class="w-full border rounded-lg px-4 py-3 md:py-4 bg-white/80 text-gray-900" required>
+                                            <span class="text-sm text-white/90 mt-2 block">0/150</span>
+                                        </div>
+                                        @error('judul')
+                                            <div class="text-white text-sm mt-0">{{ $message }}</div>
+                                        @enderror
+                                        <!-- Textarea Isi -->
+                                        <div class="flex flex-col leading-none">
+                                            <textarea name="isi" placeholder="Aduan Anda" rows="1" maxlength="1000"
+                                                class="w-full border rounded-lg px-4 py-3 md:py-4 bg-white/80 text-gray-900"
+                                                required></textarea>
+                                            <span class="text-sm text-white/90 mt-2 block">0/1000</span>
+                                        </div>
+                                        @error('isi')
+                                            <div class="text-white text-sm mt-0">{{ $message }}</div>
+                                        @enderror
 
-                {{-- Overlay jika belum login --}}
-                @guest
-                    <div id="form-overlay"
-                        class="absolute inset-0 z-10 bg-white bg-opacity-80  backdrop-blur-sm flex items-center justify-center rounded-2xl
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               opacity-0 scale-95 pointer-events-none transition-all duration-500 ease-out
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto">
-                        <div
-                            class="text-red-700 text-center font-semibold px-4 transform transition duration-500 ease-out translate-y-4 group-hover:translate-y-0">
-                            <i class="fas fa-exclamation-triangle text-3xl mb-2 animate-pulse"></i><br>
-                            Untuk dapat mengisi formulir <strong>Aduan Cepat</strong>, silakan terlebih dahulu melakukan
-                            <a href="{{ route('login') }}"
-                                class="text-blue-700 hover:text-blue-800 underline font-semibold">Login</a>
-                            ke akun Anda.
-                        </div>
-                    </div>
-                @endguest
+                                         <!-- Dropdown Kategori -->
+                                            <select id="kategoriSelect" name="kategori_id"
+                                                class="flex-1 border rounded-lg px-4 py-3 bg-white/80 text-gray-900 relative z-[10]"
+                                                required>
+                                                <option value="">- Pilih Kategori -</option>
+                                                @forelse(App\Models\KategoriUmum::all() as $kategori)
+                                                    <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
+                                                @empty
+                                                    <option value="" disabled>Tidak ada kategori tersedia</option>
+                                                @endforelse
+                                            </select>
+                                            @error('kategori_id')
+                                                <div class="text-white text-sm mt-1">{{ $message }}</div>
+                                            @enderror
+                                       
+                                        <div class="flex gap-2 relative overflow-visible">
+                                           
+                                         <!-- Dropdown Wilayah -->
+                                        <select name="wilayah_id" class="w-full border rounded-lg px-4 py-3 bg-white/80 text-gray-900"
+                                            required>
+                                            <option value="">- Pilih Wilayah -</option>
+                                            @forelse(App\Models\WilayahUmum::all() as $wilayah)
+                                                <option value="{{ $wilayah->id }}">{{ $wilayah->nama }}</option>
+                                            @empty
+                                                <option value="" disabled>Tidak ada wilayah tersedia</option>
+                                            @endforelse
+                                        </select>
+                                        @error('wilayah_id')
+                                            <div class="text-white text-sm mt-1">{{ $message }}</div>
+                                        @enderror
 
-                <form method="POST" action="{{ route('user.aduan.store') }}" enctype="multipart/form-data"
-                    class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
-                    @csrf
+                                            <!-- Tombol Trigger -->
+                                            <div>
+                                                <label id="openFileModalBtn"
+                                                    class="bg-transparent border border-white hover:bg-white/10 text-white px-4 md:px-5 py-5 md:py-5 rounded-lg font-bold shadow-lg cursor-pointer flex items-center">
+                                                    <i class="fas fa-image mr-2"></i> File
+                                                </label>
+                                            </div>
 
-                    <!-- Kolom Kiri -->
-                    <div class="space-y-4">
-                        <!-- Input Judul -->
-                        <div class="flex flex-col leading-none">
-                            <input type="text" name="judul" maxlength="150" placeholder="Judul Aduan"
-                                class="w-full border rounded-lg px-4 py-3 md:py-4 bg-white/80 text-gray-900" required>
-                            <span class="text-sm text-white/90 mt-2 block">0/150</span>
-                        </div>
-                        @error('judul')
-                            <div class="text-white text-sm mt-0">{{ $message }}</div>
-                        @enderror
-                        <!-- Textarea Isi -->
-                        <div class="flex flex-col leading-none">
-                            <textarea name="isi" placeholder="Aduan Anda" rows="2" maxlength="1000"
-                                class="w-full border rounded-lg px-4 py-3 md:py-4 bg-white/80 text-gray-900"
-                                required></textarea>
-                            <span class="text-sm text-white/90 mt-2 block">0/1000</span>
-                        </div>
-                        @error('isi')
-                            <div class="text-white text-sm mt-0">{{ $message }}</div>
-                        @enderror
-                        <!-- Dropdown Wilayah -->
-                        <select name="wilayah_id" class="w-full border rounded-lg px-4 py-3 bg-white/80 text-gray-900"
-                            required>
-                            <option value="">- Pilih Wilayah -</option>
-                            @forelse(App\Models\WilayahUmum::all() as $wilayah)
-                                <option value="{{ $wilayah->id }}">{{ $wilayah->nama }}</option>
-                            @empty
-                                <option value="" disabled>Tidak ada wilayah tersedia</option>
-                            @endforelse
-                        </select>
-                        @error('wilayah_id')
-                            <div class="text-white text-sm mt-1">{{ $message }}</div>
-                        @enderror
+                                            <!-- Modal File -->
+                                            <div id="fileModal"
+                                                class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                                                <div class="bg-white rounded-lg w-full max-w-xl p-6 shadow-lg relative">
+                                                    <h2 class="text-lg font-semibold mb-3 text-gray-800">Lampirkan File</h2>
 
-                        <div class="flex gap-2 relative overflow-visible">
-                            <!-- Dropdown Kategori -->
-                            <select id="kategoriSelect" name="kategori_id"
-                                class="flex-1 border rounded-lg px-4 py-3 bg-white/80 text-gray-900 relative z-[10]"
-                                required>
-                                <option value="">- Pilih Kategori -</option>
-                                @forelse(App\Models\KategoriUmum::all() as $kategori)
-                                    <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
-                                @empty
-                                    <option value="" disabled>Tidak ada kategori tersedia</option>
-                                @endforelse
-                            </select>
-                            @error('kategori_id')
-                                <div class="text-white text-sm mt-1">{{ $message }}</div>
-                            @enderror
+                                                    <!-- Keterangan -->
+                                                    <p class="text-sm mb-2 text-gray-600 leading-relaxed">
+                                                        Jenis file yang dapat dilampirkan: <strong>.jpg</strong>,
+                                                        <strong>.jpeg</strong>,
+                                                        <strong>.png</strong>,
+                                                        <strong>.pdf</strong>, <strong>.doc</strong>, <strong>.docx</strong>,
+                                                        <strong>.xls</strong>, <strong>.xlsx</strong>, <strong>.zip</strong>.<br>
+                                                        Maksimal <strong>3 file</strong>, masing-masing <strong>tidak melebihi 10MB
+                                                            (10.240KB)</strong>.
+                                                    </p>
 
-                            <!-- Tombol Trigger -->
-                            <div>
-                                <label id="openFileModalBtn"
-                                    class="bg-transparent border border-white hover:bg-white/10 text-white px-4 md:px-5 py-5 md:py-5 rounded-lg font-bold shadow-lg cursor-pointer flex items-center">
-                                    <i class="fas fa-image mr-2"></i> File
-                                </label>
-                            </div>
+                                                    <!-- Daftar Input -->
+                                                    <div id="fileInputs" class="space-y-2 mb-4">
+                                                    </div>
 
-                            <!-- Modal File -->
-                            <div id="fileModal"
-                                class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-                                <div class="bg-white rounded-lg w-full max-w-xl p-6 shadow-lg relative">
-                                    <h2 class="text-lg font-semibold mb-3 text-gray-800">Lampirkan File</h2>
+                                                    <!-- Hidden File Inputs (dipindahkan dari modal saat tekan OK) -->
+                                                    <div id="fileInputHiddenContainer" class="hidden"></div>
 
-                                    <!-- Keterangan -->
-                                    <p class="text-sm mb-2 text-gray-600 leading-relaxed">
-                                        Jenis file yang dapat dilampirkan: <strong>.jpg</strong>,
-                                        <strong>.jpeg</strong>,
-                                        <strong>.png</strong>,
-                                        <strong>.pdf</strong>, <strong>.doc</strong>, <strong>.docx</strong>,
-                                        <strong>.xls</strong>, <strong>.xlsx</strong>, <strong>.zip</strong>.<br>
-                                        Maksimal <strong>3 file</strong>, masing-masing <strong>tidak melebihi 10MB
-                                            (10.240KB)</strong>.
-                                    </p>
+                                                    <!-- Tombol Tambah -->
+                                                    <button type="button" id="addFileBtn"
+                                                        class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-4 py-2 rounded-full w-full mb-6 text-md font-semibold transition shadow-lg
+                                                                                                                                                                                                                                        hover:from-blue-700 hover:to-cyan-600">
+                                                        + Tambah file
+                                                    </button>
 
-                                    <!-- Daftar Input -->
-                                    <div id="fileInputs" class="space-y-2 mb-4">
+                                                    <!-- Tombol Aksi -->
+                                                    <div class="flex justify-end mb-2 space-x-2">
+                                                        <button type="button" id="confirmFileBtn"
+                                                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full transition">
+                                                            Simpan
+                                                        </button>
+
+                                                        <button onclick="closeFileModal()" type="button"
+                                                            class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-full transition">
+                                                            Batal
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Modal Konfirmasi Hapus -->
+                                            <div id="deleteConfirmModal"
+                                                class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                                                <div class="bg-white rounded-lg p-6 w-96 text-center shadow-lg">
+                                                    <p class="text-lg mb-4 text-gray-800">Yakin ingin menghapus file ini?</p>
+                                                    <div class="flex justify-center space-x-4">
+                                                        <button id="confirmDeleteBtn"
+                                                            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full transition">
+                                                            Hapus
+                                                        </button>
+                                                        <button onclick="closeDeleteModal()"
+                                                            class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-full transition">
+                                                            Batal
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label onclick="openLocationModal()"
+                                                    class="bg-transparent border border-white hover:bg-white/10 text-white px-4 md:px-5 py-5 md:py-5 rounded-lg font-bold shadow-lg cursor-pointer flex items-center">
+                                                    <i class="fas fa-map-marker-alt mr-2"></i> Lokasi
+                                                </label>
+                                            </div>
+
+                                            <!-- Hidden Inputs -->
+                                            <input type="hidden" name="lokasi" id="lokasiInput">
+                                            <input type="hidden" name="latitude" id="latitudeInput">
+                                            <input type="hidden" name="longitude" id="longitudeInput">
+                                        </div>
                                     </div>
 
-                                    <!-- Hidden File Inputs (dipindahkan dari modal saat tekan OK) -->
-                                    <div id="fileInputHiddenContainer" class="hidden"></div>
+                                    <!-- Kolom Kanan -->
+                                    <div class="space-y-4">
+                                        <label class="flex items-center space-x-2 text-white">
+                                            <input type="checkbox" name="is_anonim" id="anonimCheckbox" class="form-checkbox" value="1">
+                                            <span class="text-sm">Anonim</span>
+                                        </label>
 
-                                    <!-- Tombol Tambah -->
-                                    <button type="button" id="addFileBtn"
-                                        class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-4 py-2 rounded-full w-full mb-6 text-md font-semibold transition shadow-lg
-                                                                                                                                                                                                    hover:from-blue-700 hover:to-cyan-600">
-                                        + Tambah file
+                                        <div class="identitas-group space-y-4">
+                                            <input type="text" name="nama_pengadu" placeholder="Nama Anda" value="{{ $user?->name }}"
+                                                class="w-full border rounded-lg px-4 py-2 bg-white/80 text-gray-900" readonly>
+                                            <input type="email" name="email_pengadu" placeholder="Alamat email Anda"
+                                                value="{{ $user?->email }}"
+                                                class="w-full border rounded-lg px-4 py-2 bg-white/80 text-gray-900" readonly>
+                                            <input type="text" name="telepon_pengadu" placeholder="Nomor telepon"
+                                                value="{{ $user?->nomor_telepon }}"
+                                                class="w-full border rounded-lg px-4 py-2 bg-white/80 text-gray-900" readonly>
+                                            <input type="text" name="nik" placeholder="NIK" value="{{ $user?->nik }}"
+                                                class="w-full border rounded-lg px-4 py-2 bg-white/80 text-gray-900" readonly>
+                                        </div>
+
+                                        <label class="text-sm text-white mt-4 block">
+                                            <input type="checkbox" required>
+                                            Dengan mengisi form ini Anda menyetujui
+                                            <a href="#" class="text-blue-200 underline hover:text-white">Ketentuan Layanan</a> dan
+                                            <a href="#" class="text-blue-200 underline hover:text-white">Kebijakan Privasi</a>.
+                                        </label>
+
+                                        <button type="submit"
+                                            class="w-full bg-transparent border border-white hover:bg-white/10 text-white py-4 rounded-lg font-bold text-lg shadow-lg transition">
+                                            Adukan
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Modal Lokasi -->
+                        <div id="locationModal"
+                            class="fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ease-in-out hidden
+                                                                                                                                                                                                                    bg-black/30">
+
+                            <!-- Background gambar full, posisi absolute di belakang -->
+                            <div class="absolute inset-0 bg-cover bg-center opacity-70" style="background-image: url('/images/peta.jpg');">
+                            </div>
+
+                            <!-- Overlay gelap transparan -->
+                            <div class="absolute inset-0 bg-black/60 z-20"></div>
+
+                            <!-- Overlay biru -->
+                            <div class="absolute inset-0 bg-gradient-to-br from-blue-700/50 to-blue-500/40 z-10"></div>
+
+                            <!-- Konten modal -->
+                            <div class="relative z-30 w-full max-w-2xl p-6 rounded-2xl border border-white/30 bg-white/10 shadow-lg">
+                                <!-- Header -->
+                                <div class="flex items-center justify-between mb-5">
+                                    <h2 class="text-2xl font-semibold text-white flex items-center gap-4">
+                                        <i class="fas fa-map-marker-alt text-white/90"></i>
+                                        <span>Pilih Lokasi Terkait</span>
+                                    </h2>
+                                    <button onclick="resetMapToDefault()" title="Reset lokasi"
+                                        class="text-white/90 hover:text-white transition">
+                                        <i class="fas fa-sync-alt text-lg"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Input Pencarian Lokasi -->
+                                <div class="mb-4 relative">
+                                    <label for="searchLocation" class="block text-sm font-medium text-white mb-1">Cari
+                                        Alamat</label>
+                                    <input type="text" id="searchLocation" placeholder="Ketik alamat atau tempat..."
+                                        class="w-full bg-transparent border border-white/40 rounded-lg px-4 py-2 text-white font-semibold                                                                                                                                                                                                placeholder-white focus:outline-none focus:ring-2 focus:ring-white/70 hover:bg-white/10 transition" />
+
+                                    <ul id="searchSuggestions"
+                                        class="absolute z-50 bg-white text-gray-700 w-full mt-1 rounded-lg shadow-lg overflow-hidden hidden max-h-48 overflow-y-auto">
+                                    </ul>
+                                </div>
+
+                                <!-- Alamat -->
+                                <div class="mb-4">
+                                    <label for="alamatField" class="block text-sm font-medium text-white mb-1">Alamat</label>
+                                    <input type="text" id="alamatField" readonly
+                                        class="w-full bg-transparent border border-white/40 rounded-lg px-4 py-2 text-white font-semibold
+                                                                                                                                                                                                                                                                                   focus:outline-none focus:ring-2 focus:ring-white/70" />
+                                </div>
+
+                                <!-- Koordinat -->
+                                <div class="grid grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label for="latitudeField" class="block text-sm font-medium text-white mb-1">Lintang</label>
+                                        <input type="text" id="latitudeField" readonly
+                                            class="w-full bg-transparent border border-white/40 rounded-lg px-4 py-2 text-white font-semibold                                                                                                                                                                                                            focus:outline-none focus:ring-2 focus:ring-white/70" />
+                                    </div>
+                                    <div>
+                                        <label for="longitudeField" class="block text-sm font-medium text-white mb-1">Bujur</label>
+                                        <input type="text" id="longitudeField" readonly
+                                            class="w-full bg-transparent border border-white/40 rounded-lg px-4 py-2 text-white font-semibold                                                                                                                                                                                                    focus:outline-none focus:ring-2 focus:ring-white/70" />
+                                    </div>
+                                </div>
+
+                                <!-- Petunjuk -->
+                                <div class="text-white/90 text-sm mb-3 flex items-center gap-2">
+                                    <i class="fas fa-info-circle"></i>
+                                    Klik pada peta untuk memilih lokasi.
+                                </div>
+
+                                <!-- Peta -->
+                                <div id="map" class="w-full h-64 rounded-lg border border-white/40 shadow-inner mb-6 overflow-hidden">
+                                </div>
+
+                                <!-- Tombol Aksi -->
+                                <div class="flex justify-end gap-3">
+                                    <button onclick="saveLocation()"
+                                        class="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-cyan-600 transition duration-150">
+                                        Simpan Lokasi
                                     </button>
 
-                                    <!-- Tombol Aksi -->
-                                    <div class="flex justify-end mb-2 space-x-2">
-                                        <button type="button" id="confirmFileBtn"
-                                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full transition">
-                                            Simpan
-                                        </button>
-
-                                        <button onclick="closeFileModal()" type="button"
-                                            class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-full transition">
-                                            Batal
-                                        </button>
-                                    </div>
+                                    <button onclick="closeLocationModal()"
+                                        class="px-4 py-2 rounded-full bg-white/10 border border-white/30 text-white font-semibold shadow-lg hover:bg-white/20 transition duration-150">
+                                        Batal
+                                    </button>
                                 </div>
                             </div>
+                        </div>
+                        @php
+                            use Illuminate\Support\Facades\Auth;
 
-                            <!-- Modal Konfirmasi Hapus -->
-                            <div id="deleteConfirmModal"
-                                class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-                                <div class="bg-white rounded-lg p-6 w-96 text-center shadow-lg">
-                                    <p class="text-lg mb-4 text-gray-800">Yakin ingin menghapus file ini?</p>
-                                    <div class="flex justify-center space-x-4">
-                                        <button id="confirmDeleteBtn"
-                                            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full transition">
-                                            Hapus
-                                        </button>
-                                        <button onclick="closeDeleteModal()"
-                                            class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-full transition">
-                                            Batal
-                                        </button>
+                            $user = Auth::user();
+
+                            if ($user && $user->role === 'admin') {
+                                $kategoriIds = $user->kategori ? $user->kategori->pluck('id')->toArray() : [];
+                                $reports = \App\Models\Report::whereIn('kategori_id', $kategoriIds)
+                                    ->latest()
+                                    ->take(9)
+                                    ->get();
+                            } elseif ($user && $user->role === 'superadmin') {
+                                $reports = \App\Models\Report::latest()->take(9)->get();
+                            } else {
+                                $reports = \App\Models\Report::latest()->take(9)->get();
+                            }
+                        @endphp
+
+                        <div class="relative max-w-7xl mx-auto mt-6 p-6 md:px-25 md:py-6" data-aos="fade-up">
+                            <div class="flex items-center justify-between mb-4 md:mb-8">
+                                <h2 class="text-gray-900 text-2xl font-bold">Aduan Terbaru</h2>
+                                <a href="{{ route('daftar-aduan') }}"
+                                    class="flex items-center gap-1 text-red-500 text-sm mt-1 font-semibold hover:text-red-700 group">
+                                    Lihat Semua
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 group-hover:translate-x-1"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                    </svg>
+                                </a>
+                            </div>
+
+                            {{-- Mobile: Carousel --}}
+                            <div class="relative md:hidden">
+                                <!-- Prev -->
+                                <button id="prevBtn"
+                                    class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow rounded-full w-10 h-10 flex items-center justify-center disabled:opacity-40">
+                                    <i class="fas fa-chevron-left text-blue-700 text-sm"></i>
+                                </button>
+
+                                <!-- Carousel Container -->
+                                <div id="carouselContainer" class="overflow-x-auto overflow-y-hidden scroll-smooth scrollbar-hide mt-6">
+                                    <div id="carouselItems" class="flex">
+                                        @foreach ($reports as $report)
+                                            @php
+                                                $defaultImage = asset('images/image.jpg');
+                                                $thumbnail = $defaultImage;
+
+                                                if (!empty($report->file)) {
+                                                    $files = is_array($report->file) ? $report->file : json_decode($report->file, true);
+                                                    if (is_array($files)) {
+                                                        foreach ($files as $f) {
+                                                            $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
+                                                            if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                                                                $thumbnail = asset('storage/' . $f);
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            @endphp
+
+                                            <div class="min-w-[calc(50%-0.75rem)] max-w-[calc(50%-0.75rem)] mx-1 bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden"
+                                                data-aos="fade-up">
+                                                <a href="{{ route('reports.show', ['id' => $report->id]) }}" class="relative block">
+                                                    <img src="{{ $thumbnail }}" alt="Thumbnail Aduan"
+                                                        class="w-full h-40 object-cover rounded-t-xl">
+
+                                                    <span class="absolute top-2 left-2 px-3 py-1 rounded-full text-xs font-semibold shadow-lg
+                                                                                        @if($report->status === 'Diajukan') bg-red-200 text-red-800
+                                                                                        @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
+                                                                                        @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
+                                                                                        @elseif($report->status === 'Selesai') bg-green-200 text-green-800
+                                                                                        @else bg-gray-200 text-gray-700
+                                                                                        @endif">
+                                                        {{ $report->status }}
+                                                    </span>
+
+                                                    <span
+                                                        class="absolute bottom-2 left-1/2 transform -translate-x-1/2 
+                                                                                        bg-zinc-900/60 text-white text-[8.5px] px-2 py-[1px] 
+                                                                                        rounded-full backdrop-blur-sm tracking-wider italic 
+                                                                                        font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
+                                                        {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}
+                                                    </span>
+                                                </a>
+
+                                                <div class="p-3">
+                                                    <h3 class="font-semibold text-lg text-gray-800 truncate">
+                                                        <a href="{{ route('reports.show', ['id' => $report->id]) }}"
+                                                            class="hover:text-blue-600">
+                                                            {{ Str::limit($report->judul, 27) }}
+                                                        </a>
+                                                    </h3>
+
+                                                    <div class="flex items-center gap-1 text-[10px] text-gray-600 mt-1">
+                                                        <i class="fa-solid fa-calendar-alt text-[11px] text-zinc-500 relative top-[0.5px]"></i>
+                                                        <span class="truncate">
+                                                            {{ $report->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }}
+                                                            WIB
+                                                        </span>
+                                                    </div>
+
+                                                    <p class="text-sm text-gray-700 mt-2 line-clamp-2">
+                                                        <a href="{{ route('reports.show', ['id' => $report->id]) }}"
+                                                            class="hover:text-blue-600">
+                                                            {{ Str::limit($report->isi, 100) }}
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
+
+                                <!-- Next -->
+                                <button id="nextBtn"
+                                    class="absolute right-0 top-1/2 -translate-y-1/2 bg-white shadow rounded-full w-10 h-10 flex items-center justify-center disabled:opacity-40">
+                                    <i class="fas fa-chevron-right text-blue-700"></i>
+                                </button>
                             </div>
 
-                            <div>
-                                <label onclick="openLocationModal()"
-                                    class="bg-transparent border border-white hover:bg-white/10 text-white px-4 md:px-5 py-5 md:py-5 rounded-lg font-bold shadow-lg cursor-pointer flex items-center">
-                                    <i class="fas fa-map-marker-alt mr-2"></i> Lokasi
-                                </label>
-                            </div>
+                            {{-- Desktop: Grid --}}
+                            <div class="hidden md:grid grid-cols-3 gap-8">
+                                @foreach ($reports as $report)
+                                    @php
+                                        $defaultImage = asset('images/image.jpg');
+                                        $thumbnail = $defaultImage;
 
-                            <!-- Hidden Inputs -->
-                            <input type="hidden" name="lokasi" id="lokasiInput">
-                            <input type="hidden" name="latitude" id="latitudeInput">
-                            <input type="hidden" name="longitude" id="longitudeInput">
-                        </div>
-                    </div>
-
-                    <!-- Kolom Kanan -->
-                    <div class="space-y-4">
-                        <label class="flex items-center space-x-2 text-white">
-                            <input type="checkbox" name="is_anonim" id="anonimCheckbox" class="form-checkbox" value="1">
-                            <span class="text-sm">Anonim</span>
-                        </label>
-
-                        <div class="identitas-group space-y-4">
-                            <input type="text" name="nama_pengadu" placeholder="Nama Anda" value="{{ $user?->name }}"
-                                class="w-full border rounded-lg px-4 py-2 bg-white/80 text-gray-900" readonly>
-                            <input type="email" name="email_pengadu" placeholder="Alamat email Anda"
-                                value="{{ $user?->email }}"
-                                class="w-full border rounded-lg px-4 py-2 bg-white/80 text-gray-900" readonly>
-                            <input type="text" name="telepon_pengadu" placeholder="Nomor telepon"
-                                value="{{ $user?->nomor_telepon }}"
-                                class="w-full border rounded-lg px-4 py-2 bg-white/80 text-gray-900" readonly>
-                            <input type="text" name="nik" placeholder="NIK" value="{{ $user?->nik }}"
-                                class="w-full border rounded-lg px-4 py-2 bg-white/80 text-gray-900" readonly>
-                        </div>
-
-                        <label class="text-sm text-white mt-4 block">
-                            <input type="checkbox" required>
-                            Dengan mengisi form ini Anda menyetujui
-                            <a href="#" class="text-blue-200 underline hover:text-white">Ketentuan Layanan</a> dan
-                            <a href="#" class="text-blue-200 underline hover:text-white">Kebijakan Privasi</a>.
-                        </label>
-
-                        <button type="submit"
-                            class="w-full bg-transparent border border-white hover:bg-white/10 text-white py-4 rounded-lg font-bold text-lg shadow-lg transition">
-                            Adukan
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Modal Lokasi -->
-        <div id="locationModal"
-            class="fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ease-in-out hidden
-                                                                                                                                                                                bg-black/30">
-
-            <!-- Background gambar full, posisi absolute di belakang -->
-            <div class="absolute inset-0 bg-cover bg-center opacity-70" style="background-image: url('/images/peta.jpg');">
-            </div>
-
-            <!-- Overlay gelap transparan -->
-            <div class="absolute inset-0 bg-black/60 z-20"></div>
-
-            <!-- Overlay biru -->
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-700/50 to-blue-500/40 z-10"></div>
-
-            <!-- Konten modal -->
-            <div class="relative z-30 w-full max-w-2xl p-6 rounded-2xl border border-white/30 bg-white/10 shadow-lg">
-                <!-- Header -->
-                <div class="flex items-center justify-between mb-5">
-                    <h2 class="text-2xl font-semibold text-white flex items-center gap-4">
-                        <i class="fas fa-map-marker-alt text-white/90"></i>
-                        <span>Pilih Lokasi Terkait</span>
-                    </h2>
-                    <button onclick="resetMapToDefault()" title="Reset lokasi"
-                        class="text-white/90 hover:text-white transition">
-                        <i class="fas fa-sync-alt text-lg"></i>
-                    </button>
-                </div>
-
-                <!-- Input Pencarian Lokasi -->
-                <div class="mb-4 relative">
-                    <label for="searchLocation" class="block text-sm font-medium text-white mb-1">Cari
-                        Alamat</label>
-                    <input type="text" id="searchLocation" placeholder="Ketik alamat atau tempat..."
-                        class="w-full bg-transparent border border-white/40 rounded-lg px-4 py-2 text-white font-semibold                                                                                                                                                                                                placeholder-white focus:outline-none focus:ring-2 focus:ring-white/70 hover:bg-white/10 transition" />
-
-                    <ul id="searchSuggestions"
-                        class="absolute z-50 bg-white text-gray-700 w-full mt-1 rounded-lg shadow-lg overflow-hidden hidden max-h-48 overflow-y-auto">
-                    </ul>
-                </div>
-
-                <!-- Alamat -->
-                <div class="mb-4">
-                    <label for="alamatField" class="block text-sm font-medium text-white mb-1">Alamat</label>
-                    <input type="text" id="alamatField" readonly
-                        class="w-full bg-transparent border border-white/40 rounded-lg px-4 py-2 text-white font-semibold
-                                                                                                                                                                                                                                               focus:outline-none focus:ring-2 focus:ring-white/70" />
-                </div>
-
-                <!-- Koordinat -->
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label for="latitudeField" class="block text-sm font-medium text-white mb-1">Lintang</label>
-                        <input type="text" id="latitudeField" readonly
-                            class="w-full bg-transparent border border-white/40 rounded-lg px-4 py-2 text-white font-semibold                                                                                                                                                                                                            focus:outline-none focus:ring-2 focus:ring-white/70" />
-                    </div>
-                    <div>
-                        <label for="longitudeField" class="block text-sm font-medium text-white mb-1">Bujur</label>
-                        <input type="text" id="longitudeField" readonly
-                            class="w-full bg-transparent border border-white/40 rounded-lg px-4 py-2 text-white font-semibold                                                                                                                                                                                                    focus:outline-none focus:ring-2 focus:ring-white/70" />
-                    </div>
-                </div>
-
-                <!-- Petunjuk -->
-                <div class="text-white/90 text-sm mb-3 flex items-center gap-2">
-                    <i class="fas fa-info-circle"></i>
-                    Klik pada peta untuk memilih lokasi.
-                </div>
-
-                <!-- Peta -->
-                <div id="map" class="w-full h-64 rounded-lg border border-white/40 shadow-inner mb-6 overflow-hidden">
-                </div>
-
-                <!-- Tombol Aksi -->
-                <div class="flex justify-end gap-3">
-                    <button onclick="saveLocation()"
-                        class="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-cyan-600 transition duration-150">
-                        Simpan Lokasi
-                    </button>
-
-                    <button onclick="closeLocationModal()"
-                        class="px-4 py-2 rounded-full bg-white/10 border border-white/30 text-white font-semibold shadow-lg hover:bg-white/20 transition duration-150">
-                        Batal
-                    </button>
-                </div>
-            </div>
-        </div>
-        @php
-            use Illuminate\Support\Facades\Auth;
-
-            $user = Auth::user();
-
-            if ($user && $user->role === 'admin') {
-                $kategoriIds = $user->kategori ? $user->kategori->pluck('id')->toArray() : [];
-                $reports = \App\Models\Report::whereIn('kategori_id', $kategoriIds)
-                    ->latest()
-                    ->take(9)
-                    ->get();
-            } elseif ($user && $user->role === 'superadmin') {
-                $reports = \App\Models\Report::latest()->take(9)->get();
-            } else {
-                $reports = \App\Models\Report::latest()->take(9)->get();
-            }
-        @endphp
-
-        <div class="relative max-w-7xl mx-auto mt-6 p-6 md:px-24 md:py-6" data-aos="fade-up">
-            <div class="flex items-center justify-between mb-4 md:mb-8">
-                <h2 class="text-gray-900 text-2xl font-bold">Aduan Terbaru</h2>
-                <a href="{{ route('daftar-aduan') }}"
-        class="flex items-center gap-1 text-red-500 text-sm mt-1 font-semibold hover:text-red-700 group">
-        Lihat Semua
-        <svg xmlns="http://www.w3.org/2000/svg" 
-            class="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 group-hover:translate-x-1" 
-            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-    </a>
-                </div>
-
-                {{-- Mobile: Carousel --}}
-                <div class="relative md:hidden">
-                    <!-- Prev -->
-                    <button id="prevBtn"
-                        class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow rounded-full w-10 h-10 flex items-center justify-center disabled:opacity-40">
-                        <i class="fas fa-chevron-left text-blue-700 text-sm"></i>
-                    </button>
-
-                    <!-- Carousel Container -->
-                    <div id="carouselContainer"
-                        class="overflow-x-auto overflow-y-hidden scroll-smooth scrollbar-hide mt-6">
-                        <div id="carouselItems" class="flex">
-                            @foreach ($reports as $report)
-                                @php
-                                    $defaultImage = asset('images/image.jpg');
-                                    $thumbnail = $defaultImage;
-
-                                    if (!empty($report->file)) {
-                                        $files = is_array($report->file) ? $report->file : json_decode($report->file, true);
-                                        if (is_array($files)) {
-                                            foreach ($files as $f) {
-                                                $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
-                                                if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                                                    $thumbnail = asset('storage/' . $f);
-                                                    break;
+                                        if (!empty($report->file)) {
+                                            $files = is_array($report->file) ? $report->file : json_decode($report->file, true);
+                                            if (is_array($files)) {
+                                                foreach ($files as $f) {
+                                                    $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
+                                                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                                                        $thumbnail = asset('storage/' . $f);
+                                                        break;
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                @endphp
+                                    @endphp
 
-                                <div class="min-w-[calc(50%-0.75rem)] max-w-[calc(50%-0.75rem)] mx-1 bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden"
-                                    data-aos="fade-up">
-                                    <a href="{{ route('reports.show', ['id' => $report->id]) }}" class="relative block">
-                                        <img src="{{ $thumbnail }}" alt="Thumbnail Aduan"
-                                            class="w-full h-40 object-cover rounded-t-xl">
+                                    <div class="bg-white rounded-2xl shadow hover:shadow-lg hover:scale-[1.02] transition-transform duration-300 ease-in-out overflow-hidden"
+                                        data-aos="fade-up">
+                                        <a href="{{ route('reports.show', ['id' => $report->id]) }}" class="relative block">
+                                            <!-- Gambar dengan ukuran seragam -->
+                                            <img src="{{ $thumbnail }}" alt="Thumbnail Aduan" class="w-full h-64 object-cover">
 
-                                        <span
-                                            class="absolute top-2 left-2 px-3 py-1 rounded-full text-xs font-semibold shadow-lg
-                                            @if($report->status === 'Diajukan') bg-red-200 text-red-800
-                                            @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
-                                            @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
-                                            @elseif($report->status === 'Selesai') bg-green-200 text-green-800
-                                            @else bg-gray-200 text-gray-700
-                                            @endif">
-                                            {{ $report->status }}
-                                        </span>
-
-                                        <span
-                                            class="absolute bottom-2 left-1/2 transform -translate-x-1/2 
-                                            bg-zinc-900/60 text-white text-[8.5px] px-2 py-[1px] 
-                                            rounded-full backdrop-blur-sm tracking-wider italic 
-                                            font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
-                                            {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}
-                                        </span>
-                                    </a>
-
-                                    <div class="p-3">
-                                        <h3 class="font-semibold text-lg text-gray-800 truncate">
-                                            <a href="{{ route('reports.show', ['id' => $report->id]) }}"
-                                                class="hover:text-blue-600">
-                                                {{ Str::limit($report->judul, 27) }}
-                                            </a>
-                                        </h3>
-
-                                        <div class="flex items-center gap-1 text-[10px] text-gray-600 mt-1">
-                                            <i class="fa-solid fa-calendar-alt text-[11px] text-zinc-500 relative top-[0.5px]"></i>
-                                            <span class="truncate">
-                                                {{ $report->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }}
-                                                WIB
+                                            <!-- Status -->
+                                            <span class="absolute top-2 left-2 px-4 py-1.5 rounded-full text-base font-semibold shadow-lg
+                                                                        @if($report->status === 'Diajukan') bg-red-200 text-red-800
+                                                                        @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
+                                                                        @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
+                                                                        @elseif($report->status === 'Selesai') bg-green-200 text-green-800
+                                                                        @else bg-gray-200 text-gray-700
+                                                                        @endif">
+                                                {{ $report->status }}
                                             </span>
-                                        </div>
 
-                                        <p class="text-sm text-gray-700 mt-2 line-clamp-2">
-                                            <a href="{{ route('reports.show', ['id' => $report->id]) }}"
-                                                class="hover:text-blue-600">
-                                                {{ Str::limit($report->isi, 100) }}
-                                            </a>
-                                        </p>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
+                                            <!-- Nama pengadu -->
+                                            <span class="absolute bottom-2 left-1/2 transform -translate-x-1/2 
+                                                                        bg-zinc-900/60 text-white text-[12px] px-3 py-[3px] 
+                                                                        rounded-full backdrop-blur-sm tracking-wider italic 
+                                                                        font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
+                                                {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}
+                                            </span>
+                                        </a>
 
-                    <!-- Next -->
-                    <button id="nextBtn"
-                        class="absolute right-0 top-1/2 -translate-y-1/2 bg-white shadow rounded-full w-10 h-10 flex items-center justify-center disabled:opacity-40">
-                        <i class="fas fa-chevron-right text-blue-700"></i>
-                    </button>
-                </div>
+                                        <!-- Konten -->
+                                        <div class="p-3">
+                                            <h3 class="font-semibold text-lg text-gray-800 truncate">
+                                                <a href="{{ route('reports.show', ['id' => $report->id]) }}" class="hover:text-blue-600">
+                                                    {{ Str::limit($report->judul, 40) }}
+                                                </a>
+                                            </h3>
 
-               {{-- Desktop: Grid --}}
-                <div class="hidden md:grid grid-cols-3 gap-8">
-                    @foreach ($reports as $report)
-                                                    @php
-                                                        $defaultImage = asset('images/image.jpg');
-                                                        $thumbnail = $defaultImage;
-
-                                                        if (!empty($report->file)) {
-                                                            $files = is_array($report->file) ? $report->file : json_decode($report->file, true);
-                                                            if (is_array($files)) {
-                                                                foreach ($files as $f) {
-                                                                    $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
-                                                                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                                                                        $thumbnail = asset('storage/' . $f);
-                                                                        break;
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    @endphp
-
-                                                   <div class="bg-white rounded-2xl shadow hover:shadow-lg transition overflow-hidden" data-aos="fade-up">
-                                            <a href="{{ route('reports.show', ['id' => $report->id]) }}" class="relative block">
-                                                <!-- Gambar dengan ukuran seragam -->
-                                                <img src="{{ $thumbnail }}" 
-                                                     alt="Thumbnail Aduan"
-                                                     class="w-full h-64 object-cover">
-
-                                                <!-- Status -->
-                        <span class="absolute top-2 left-2 px-4 py-1.5 rounded-full text-base font-semibold shadow-lg
-                            @if($report->status === 'Diajukan') bg-red-200 text-red-800
-                            @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
-                            @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
-                            @elseif($report->status === 'Selesai') bg-green-200 text-green-800
-                            @else bg-gray-200 text-gray-700
-                            @endif">
-                            {{ $report->status }}
-                        </span>
-
-                        <!-- Nama pengadu -->
-                        <span class="absolute bottom-2 left-1/2 transform -translate-x-1/2 
-                            bg-zinc-900/60 text-white text-[12px] px-3 py-[3px] 
-                            rounded-full backdrop-blur-sm tracking-wider italic 
-                            font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
-                            {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}
-                        </span>
-                                            </a>
-
-                                            <!-- Konten -->
-                                            <div class="p-4">
-                                                <h3 class="font-semibold text-lg text-gray-800 truncate">
-                                                    <a href="{{ route('reports.show', ['id' => $report->id]) }}" class="hover:text-blue-600">
-                                                        {{ Str::limit($report->judul, 40) }}
-                                                    </a>
-                                                </h3>
-
-                                                <div class="flex items-center gap-1 text-[10px] text-gray-600 mt-1">
-                                                    <i class="fa-solid fa-calendar-alt text-[11px] text-zinc-500 relative top-[0.5px]"></i>
-                                                    <span class="truncate">
-                                                        {{ $report->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }}
-                                                        WIB
-                                                    </span>
-                                                </div>
-
-                                                <p class="text-sm text-gray-700 mt-2 line-clamp-2">
-                                                    <a href="{{ route('reports.show', ['id' => $report->id]) }}" class="hover:text-blue-600">
-                                                        {{ Str::limit($report->isi, 100) }}
-                                                    </a>
-                                                </p>
+                                            <div class="flex items-center gap-1 text-[10px] text-gray-600 mt-1">
+                                                <i class="fa-solid fa-calendar-alt text-[11px] text-zinc-500 relative top-[0.5px]"></i>
+                                                <span class="truncate">
+                                                    {{ $report->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }}
+                                                    WIB
+                                                </span>
                                             </div>
+
+                                            <p class="text-sm text-gray-700 mt-2 line-clamp-2">
+                                                <a href="{{ route('reports.show', ['id' => $report->id]) }}" class="hover:text-blue-600">
+                                                    {{ Str::limit($report->isi, 100) }}
+                                                </a>
+                                            </p>
                                         </div>
+                                    </div>
 
-                    @endforeach
-                </div>
-            </div>
+                                @endforeach
+                            </div>
+                        </div>
 
-                </section>
+                    </section>
 @endsection
 
 @push('scripts')
@@ -972,35 +960,35 @@
             // Beberapa query kecil
             const queries = [
                 `
-                                                                [out:json][timeout:20];
-                                                                ${areaQuery}
-                                                                (node["place"](area.searchArea); way["place"](area.searchArea););
-                                                                out center tags;
-                                                                `,
+                                                                        [out:json][timeout:20];
+                                                                        ${areaQuery}
+                                                                        (node["place"](area.searchArea); way["place"](area.searchArea););
+                                                                        out center tags;
+                                                                        `,
                 `
-                                                                [out:json][timeout:20];
-                                                                ${areaQuery}
-                                                                (node["highway"~"motorway|trunk|primary|secondary|tertiary|residential"](area.searchArea););
-                                                                out center tags;
-                                                                `,
+                                                                        [out:json][timeout:20];
+                                                                        ${areaQuery}
+                                                                        (node["highway"~"motorway|trunk|primary|secondary|tertiary|residential"](area.searchArea););
+                                                                        out center tags;
+                                                                        `,
                 `
-                                                                [out:json][timeout:20];
-                                                                ${areaQuery}
-                                                                (node["amenity"](area.searchArea); way["amenity"](area.searchArea););
-                                                                out center tags;
-                                                                `,
+                                                                        [out:json][timeout:20];
+                                                                        ${areaQuery}
+                                                                        (node["amenity"](area.searchArea); way["amenity"](area.searchArea););
+                                                                        out center tags;
+                                                                        `,
                 `
-                                                                [out:json][timeout:20];
-                                                                ${areaQuery}
-                                                                (node["shop"](area.searchArea); way["shop"](area.searchArea););
-                                                                out center tags;
-                                                                `,
+                                                                        [out:json][timeout:20];
+                                                                        ${areaQuery}
+                                                                        (node["shop"](area.searchArea); way["shop"](area.searchArea););
+                                                                        out center tags;
+                                                                        `,
                 `
-                                                                [out:json][timeout:20];
-                                                                ${areaQuery}
-                                                                (node["office"](area.searchArea); way["office"](area.searchArea););
-                                                                out center tags;
-                                                                `
+                                                                        [out:json][timeout:20];
+                                                                        ${areaQuery}
+                                                                        (node["office"](area.searchArea); way["office"](area.searchArea););
+                                                                        out center tags;
+                                                                        `
             ];
 
             const fetchQuery = (query) => {
@@ -1395,11 +1383,11 @@
             const div = document.createElement('div');
             div.className = 'flex items-center gap-3 mb-2';
             div.innerHTML = `
-                                                                                                                                                                                                                                                                <input type="file" name="file[]" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
-                                                                                                                                                                                                                                                                    class="file-input flex-1 border px-2 py-1 rounded text-sm">
-                                                                                                                                                                                                                                                                <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
-                                                                                                                                                                                                                                                                    <i class="fas fa-trash-alt"></i>
-                                                                                                                                                                                                                                                                </button>`;
+                                                                                                                                                                                                                                                                        <input type="file" name="file[]" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
+                                                                                                                                                                                                                                                                            class="file-input flex-1 border px-2 py-1 rounded text-sm">
+                                                                                                                                                                                                                                                                        <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
+                                                                                                                                                                                                                                                                            <i class="fas fa-trash-alt"></i>
+                                                                                                                                                                                                                                                                        </button>`;
             fileInputsContainer.appendChild(div);
             updateAddFileButtonVisibility();
         });
