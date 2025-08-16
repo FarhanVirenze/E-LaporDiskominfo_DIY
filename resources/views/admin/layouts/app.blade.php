@@ -23,12 +23,43 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- NProgress CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" />
 
     {{-- Styles & Scripts --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     {{-- Tambahan CSS dari halaman --}}
     @yield('include-css')
+
+    <style>
+        #nprogress .bar {
+            background: linear-gradient(to right,
+                    #1e3a8a,
+                    /* biru tua (indigo-900) */
+                    #2563eb,
+                    /* biru utama (blue-600) */
+                    #3b82f6,
+                    /* biru terang (blue-500) */
+                    #06b6d4
+                    /* cyan neon sebagai aksen */
+                );
+            height: 3px;
+        }
+
+        #nprogress .peg {
+            box-shadow:
+                0 0 15px #2563eb,
+                0 0 10px #3b82f6,
+                0 0 8px #06b6d4;
+            /* glow biru dominan */
+        }
+
+        #nprogress .spinner-icon {
+            border-top-color: #2563eb;
+            border-left-color: #3b82f6;
+        }
+    </style>
 </head>
 
 <body class="font-sans antialiased bg-white text-gray-800">
