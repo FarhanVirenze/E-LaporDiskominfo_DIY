@@ -51,7 +51,7 @@
                     <!-- Login -->
                     <li>
                         <a href="{{ route('login') }}" class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                            {{ request()->routeIs('login')
+                                    {{ request()->routeIs('login')
                 ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
                 : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                             <i
@@ -66,7 +66,7 @@
                     <!-- Kelola Admin -->
                     <li>
                         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                {{ request()->routeIs('admin.dashboard')
+                                        {{ request()->routeIs('admin.dashboard')
                     ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
                     : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                             <i
@@ -80,7 +80,7 @@
                     <!-- Kelola Superadmin -->
                     <li>
                         <a href="{{ route('superadmin.dashboard') }}" class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                {{ request()->routeIs('superadmin.dashboard')
+                                        {{ request()->routeIs('superadmin.dashboard')
                     ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
                     : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                             <i
@@ -115,10 +115,10 @@
                         </button>
 
                         <!-- Menu Accordion -->
-                        <div x-show="open" @click.outside="open = false" x-transition
+                        <div x-show="open" x-cloak @click.outside="open = false" x-transition
                             class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-xl border border-gray-200 overflow-hidden z-50">
                             <a href="{{ route('user.profile.edit') }}" class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                {{ request()->routeIs('user.profile.edit')
+                {{ request()->routeIs('user.profile.edit')
                 ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
                 : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                                 <i class="fas fa-user text-[17px] w-5"></i>
@@ -128,7 +128,7 @@
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="w-full text-left flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                            hover:bg-blue-100 hover:text-blue-600 text-gray-800">
+                    hover:bg-blue-100 hover:text-blue-600 text-gray-800">
                                     <i class="fas fa-sign-out-alt text-[17px] w-5"></i>
                                     <span>Logout</span>
                                 </button>
@@ -180,7 +180,7 @@
                 <li>
                     <a href="{{ route('login') }}"
                         class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                                                        {{ request()->routeIs('login') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                                                                                            {{ request()->routeIs('login') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                         <i
                             class="fas fa-sign-in-alt text-[17px] w-5 {{ request()->routeIs('login') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
                         <span>Login</span>
@@ -193,7 +193,7 @@
                     <li>
                         <a href="{{ route('admin.dashboard') }}"
                             class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                                                                                                                                        {{ request()->routeIs('admin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                                                                                                                                                                                {{ request()->routeIs('admin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                             <i
                                 class="fas fa-tools text-[17px] w-5 {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
                             <span>Kelola Admin</span>
@@ -205,7 +205,7 @@
                     <li>
                         <a href="{{ route('superadmin.dashboard') }}"
                             class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                                                                                                                                        {{ request()->routeIs('superadmin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                                                                                                                                                                                {{ request()->routeIs('superadmin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                             <i
                                 class="fas fa-user-cog text-[17px] w-5 {{ request()->routeIs('superadmin.dashboard') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
                             <span>Kelola Superadmin</span>
@@ -218,7 +218,7 @@
                     <div x-data="{ open: false }">
                         <!-- Trigger -->
                         <button @click="open = !open" class="flex items-center gap-3 w-full px-2 py-2 rounded-lg transition
-                                                                   hover:bg-blue-100 hover:text-blue-600"
+                                                                       hover:bg-blue-100 hover:text-blue-600"
                             :class="{ 'bg-blue-50 text-blue-700 shadow-sm': open }">
                             <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('images/avatar.jpg') }}"
                                 alt="Avatar"
@@ -247,7 +247,7 @@
                             <!-- Tombol Profil -->
                             <a href="{{ route('user.profile.edit') }}"
                                 class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                {{ request()->routeIs('user.profile.edit') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                                                    {{ request()->routeIs('user.profile.edit') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                                 <i class="fas fa-user text-[17px] w-5"></i>
                                 <span>Profil</span>
                             </a>
@@ -256,7 +256,7 @@
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="w-full text-left flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                    hover:bg-blue-100 hover:text-blue-600 text-gray-800">
+                                                        hover:bg-blue-100 hover:text-blue-600 text-gray-800">
                                     <i class="fas fa-sign-out-alt text-[17px] w-5"></i>
                                     <span>Logout</span>
                                 </button>

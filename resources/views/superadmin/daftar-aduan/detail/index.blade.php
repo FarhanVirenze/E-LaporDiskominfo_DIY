@@ -10,9 +10,107 @@
     <div class="max-w-4xl mx-auto px-4 py-8">
 
         @if (session('success'))
-            <div id="successMessage" class="bg-green-100 border border-green-400 text-green-800 px-4 py-2 rounded mb-4">
-                {{ session('success') }}
+            <div id="successMessage" class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
+                               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-blue-400 
+                               bg-gradient-to-r from-blue-600 to-blue-500/90 backdrop-blur-md text-white 
+                               transition-all duration-500 opacity-100 animate-fade-in">
+
+                <!-- Ikon -->
+                <div id="success-icon-wrapper" class="flex-shrink-0">
+                    <!-- Spinner -->
+                    <svg id="success-spinner" class="w-6 h-6 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="white" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+
+                    <!-- Check -->
+                    <svg id="success-check" class="w-6 h-6 text-white hidden scale-75" fill="none" viewBox="0 0 24 24">
+                        <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                            d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+
+                <!-- Pesan -->
+                <span class="flex-1 font-medium tracking-wide">{{ session('success') }}</span>
+
+                <!-- Tombol Close -->
+                <button onclick="document.getElementById('successMessage').remove()"
+                    class="text-white/70 hover:text-white font-bold transition-colors">
+                    ✕
+                </button>
+
+                <!-- Progress Bar -->
+                <div
+                    class="absolute bottom-0 left-0 h-[3px] bg-white/70 w-full origin-left scale-x-0 animate-progress rounded-b-xl">
+                </div>
             </div>
+
+            <style>
+                @keyframes fade-in {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-12px) scale(0.98);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
+                }
+
+                @keyframes progress {
+                    from {
+                        transform: scaleX(0);
+                    }
+
+                    to {
+                        transform: scaleX(1);
+                    }
+                }
+
+                @keyframes pop {
+                    from {
+                        transform: scale(0.6);
+                        opacity: 0;
+                    }
+
+                    to {
+                        transform: scale(1);
+                        opacity: 1;
+                    }
+                }
+
+                .animate-fade-in {
+                    animation: fade-in 0.4s ease-out;
+                }
+
+                .animate-progress {
+                    animation: progress 3s linear forwards;
+                }
+
+                .animate-pop {
+                    animation: pop 0.3s ease-out;
+                }
+            </style>
+
+            <script>
+                // Ganti spinner jadi centang
+                setTimeout(() => {
+                    document.getElementById('success-spinner').classList.add('hidden');
+                    const check = document.getElementById('success-check');
+                    check.classList.remove('hidden');
+                    check.classList.add('animate-pop');
+                }, 800);
+
+                // Auto hide notif
+                setTimeout(() => {
+                    const alert = document.getElementById('successMessage');
+                    if (alert) {
+                        alert.classList.add('opacity-0', 'translate-y-2');
+                        setTimeout(() => alert.remove(), 500);
+                    }
+                }, 3500);
+            </script>
         @endif
 
         {{-- Meta --}}
@@ -33,10 +131,10 @@
                     <span class="font-medium">Status Aduan</span>
                     <span
                         class="ml-1 inline-block px-2 py-0.5 rounded-full text-xs font-semibold
-                                                                                            @if($report->status == 'Diajukan') bg-blue-100 text-blue-700
-                                                                                            @elseif($report->status == 'Dibaca') bg-teal-100 text-teal-700
-                                                                                            @elseif($report->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                                            @elseif($report->status == 'Selesai') bg-green-100 text-green-700 @endif">
+                                                                                                @if($report->status == 'Diajukan') bg-red-100 text-red-700
+                                                                                                @elseif($report->status == 'Dibaca') bg-blue-100 text-blue-700
+                                                                                                @elseif($report->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                                                                @elseif($report->status == 'Selesai') bg-green-100 text-green-700 @endif">
                         Aduan {{ strtolower($report->status) }}
                     </span>
                 </p>
@@ -100,7 +198,7 @@
                             @csrf
                             <button type="submit"
                                 class="flex items-center text-sm transition-all duration-200 
-                                                                {{ session('vote_report_' . $report->id) === 'like' ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
+                                                                        {{ session('vote_report_' . $report->id) === 'like' ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
                                 <i class="fas fa-thumbs-up mr-1"></i> {{ $report->likes }}
                             </button>
                         </form>
@@ -110,7 +208,7 @@
                             @csrf
                             <button type="submit"
                                 class="flex items-center text-sm transition-all duration-200 
-                                                                {{ session('vote_report_' . $report->id) === 'dislike' ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
+                                                                        {{ session('vote_report_' . $report->id) === 'dislike' ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
                                 <i class="fas fa-thumbs-down mr-1"></i> {{ $report->dislikes }}
                             </button>
                         </form>
@@ -602,4 +700,61 @@
             document.getElementById('imgModal').classList.add('hidden');
         }
     </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+    <script>
+        // ⚙️ Konfigurasi default NProgress
+        NProgress.configure({
+            showSpinner: false,
+            trickleSpeed: 200,
+            minimum: 0.08
+        });
+
+        // 🔹 1. Tangkap klik semua link internal
+        document.addEventListener("click", function (e) {
+            const link = e.target.closest("a");
+            if (link && link.href && link.origin === window.location.origin) {
+                NProgress.start();
+                setTimeout(() => NProgress.set(0.9), 150);
+            }
+        });
+
+        // 🔹 2. Patch untuk XMLHttpRequest
+        (function (open) {
+            XMLHttpRequest.prototype.open = function () {
+                NProgress.start();
+                this.addEventListener("loadend", function () {
+                    NProgress.set(1.0);
+                    setTimeout(() => NProgress.done(), 300);
+                });
+                open.apply(this, arguments);
+            };
+        })(XMLHttpRequest.prototype.open);
+
+        // 🔹 3. Patch untuk Fetch API
+        const originalFetch = window.fetch;
+        window.fetch = function () {
+            NProgress.start();
+            return originalFetch.apply(this, arguments).finally(() => {
+                NProgress.set(1.0);
+                setTimeout(() => NProgress.done(), 300);
+            });
+        };
+
+        // 🔹 4. Saat halaman selesai load
+        window.addEventListener("pageshow", () => {
+            NProgress.set(1.0);
+            setTimeout(() => NProgress.done(), 300);
+        });
+
+        // 🔹 5. Tangkap submit form (SAMAIN dengan klik link)
+        document.addEventListener("submit", function (e) {
+            const form = e.target;
+            if (form.tagName === "FORM") {
+                NProgress.start();
+                setTimeout(() => NProgress.set(0.9), 150);
+            }
+        }, true);
+    </script>
+
 @endsection

@@ -173,3 +173,7 @@ canvas:hover {
 #carouselContainer {
     touch-action: pan-y;
 }
+
+[x-cloak] {
+    display: none !important;
+}

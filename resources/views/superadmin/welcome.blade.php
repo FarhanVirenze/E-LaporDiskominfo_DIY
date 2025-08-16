@@ -11,24 +11,106 @@
     @endphp
     <!-- Notifikasi Sukses -->
     @if (session('success'))
-        <div id="alert-success"
-            class="fixed top-5 right-5 z-50 flex items-center gap-3 bg-green-500 text-white px-5 py-3 rounded-lg shadow-lg transition-opacity duration-500 opacity-100 animate-fade-in">
-            <!-- Icon Wrapper -->
-            <div id="success-icon-wrapper" class="transition-all duration-300">
-                <!-- Spinner awal -->
-                <svg id="success-spinner" class="w-5 h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+        <div id="alert-success" class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
+                               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-blue-400 
+                               bg-gradient-to-r from-blue-600 to-blue-500/90 backdrop-blur-md text-white 
+                               transition-all duration-500 opacity-100 animate-fade-in">
+
+            <!-- Ikon -->
+            <div id="success-icon-wrapper" class="flex-shrink-0">
+                <!-- Spinner -->
+                <svg id="success-spinner" class="w-6 h-6 animate-spin text-white" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="white" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                 </svg>
 
-                <!-- Centang, disembunyikan dulu -->
-                <svg id="success-check" class="w-6 h-6 text-white hidden" fill="none" viewBox="0 0 24 24">
+                <!-- Check -->
+                <svg id="success-check" class="w-6 h-6 text-white hidden scale-75" fill="none" viewBox="0 0 24 24">
                     <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
                 </svg>
             </div>
+
             <!-- Pesan -->
-            <span>{{ session('success') }}</span>
+            <span class="flex-1 font-medium tracking-wide">{{ session('success') }}</span>
+
+            <!-- Tombol Close -->
+            <button onclick="document.getElementById('alert-success').remove()"
+                class="text-white/70 hover:text-white font-bold transition-colors">
+                ✕
+            </button>
+
+            <!-- Progress Bar -->
+            <div
+                class="absolute bottom-0 left-0 h-[3px] bg-white/70 w-full origin-left scale-x-0 animate-progress rounded-b-xl">
+            </div>
         </div>
+
+        <style>
+            @keyframes fade-in {
+                from {
+                    opacity: 0;
+                    transform: translateY(-12px) scale(0.98);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+
+            @keyframes progress {
+                from {
+                    transform: scaleX(0);
+                }
+
+                to {
+                    transform: scaleX(1);
+                }
+            }
+
+            @keyframes pop {
+                from {
+                    transform: scale(0.6);
+                    opacity: 0;
+                }
+
+                to {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+            }
+
+            .animate-fade-in {
+                animation: fade-in 0.4s ease-out;
+            }
+
+            .animate-progress {
+                animation: progress 3s linear forwards;
+            }
+
+            .animate-pop {
+                animation: pop 0.3s ease-out;
+            }
+        </style>
+
+        <script>
+            // Ganti spinner jadi centang dengan animasi pop
+            setTimeout(() => {
+                document.getElementById('success-spinner').classList.add('hidden');
+                const check = document.getElementById('success-check');
+                check.classList.remove('hidden');
+                check.classList.add('animate-pop');
+            }, 800);
+
+            // Auto hide notif setelah 3.5 detik
+            setTimeout(() => {
+                const alert = document.getElementById('alert-success');
+                if (alert) {
+                    alert.classList.add('opacity-0', 'translate-y-2');
+                    setTimeout(() => alert.remove(), 500);
+                }
+            }, 3500);
+        </script>
     @endif
 
     @if (session('error'))
@@ -359,11 +441,11 @@
                         @csrf
                         <input type="text" name="tracking_id" placeholder="Nomor Tiket Aduan"
                             class="w-full md:flex-1 px-6 py-3 border border-gray-300 rounded-full shadow 
-                                               focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 
-                                               text-lg text-center font-semibold uppercase tracking-wider transition duration-300" required>
+                                                   focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600 
+                                                   text-lg text-center font-semibold uppercase tracking-wider transition duration-300" required>
 
                         <button type="submit" class="bg-[#c0392b] hover:bg-[#922b21] text-white font-bold px-8 py-3 rounded-full 
-                                                    uppercase tracking-wide shadow transition-all duration-200">
+                                                        uppercase tracking-wide shadow transition-all duration-200">
                             LACAK
                         </button>
                     </form>
@@ -442,17 +524,17 @@
                                     <i class="fas fa-tasks text-yellow-500"></i>
                                     <span class="font-semibold">Status:</span>
                                     <span class="rounded-full px-2 py-1 font-semibold text-xs
-                                            @if($report->status === 'Diajukan')
-                                                bg-blue-200 text-blue-800
-                                            @elseif($report->status === 'Dibaca')
-                                                bg-teal-200 text-teal-800
-                                            @elseif($report->status === 'Direspon')
-                                                bg-yellow-200 text-yellow-800
-                                            @elseif($report->status === 'Selesai')
-                                                bg-green-200 text-green-800
-                                            @else
-                                                bg-gray-200 text-gray-700
-                                            @endif">
+                                                    @if($report->status === 'Diajukan')
+                                                        bg-red-200 text-red-800
+                                                    @elseif($report->status === 'Dibaca')
+                                                        bg-blue-200 text-blue-800
+                                                    @elseif($report->status === 'Direspon')
+                                                        bg-yellow-200 text-yellow-800
+                                                    @elseif($report->status === 'Selesai')
+                                                        bg-green-200 text-green-800
+                                                    @else
+                                                        bg-gray-200 text-gray-700
+                                                    @endif">
                                         {{ $report->status }}
                                     </span>
                                 </div>
@@ -615,13 +697,13 @@
                         const div = document.createElement('div');
                         div.className = 'flex items-center gap-3 mb-2';
                         div.innerHTML = `
-                                                                                                                                                                                                                <input type="file" name="file[]" 
-                                                                                                                                                                                                                       accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
-                                                                                                                                                                                                                       class="file-input flex-1 border px-2 py-1 rounded text-sm">
-                                                                                                                                                                                                                <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
-                                                                                                                                                                                                                    <i class="fas fa-trash-alt"></i>
-                                                                                                                                                                                                                </button>
-                                                                                                                                                                                                            `;
+                                                                                                                                                                                                                    <input type="file" name="file[]" 
+                                                                                                                                                                                                                           accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
+                                                                                                                                                                                                                           class="file-input flex-1 border px-2 py-1 rounded text-sm">
+                                                                                                                                                                                                                    <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
+                                                                                                                                                                                                                        <i class="fas fa-trash-alt"></i>
+                                                                                                                                                                                                                    </button>
+                                                                                                                                                                                                                `;
                         fileInputsContainer.appendChild(div);
                         updateAddFileButtonVisibility();
                     });
@@ -772,5 +854,61 @@
                 deleteConfirmModal.classList.add('hidden');
                 deleteConfirmModal.classList.remove('flex');
             }
+        </script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+        <script>
+            // ⚙️ Konfigurasi default NProgress
+            NProgress.configure({
+                showSpinner: false,
+                trickleSpeed: 200,
+                minimum: 0.08
+            });
+
+            // 🔹 1. Tangkap klik semua link internal
+            document.addEventListener("click", function (e) {
+                const link = e.target.closest("a");
+                if (link && link.href && link.origin === window.location.origin) {
+                    NProgress.start();
+                    setTimeout(() => NProgress.set(0.9), 150);
+                }
+            });
+
+            // 🔹 2. Patch untuk XMLHttpRequest
+            (function (open) {
+                XMLHttpRequest.prototype.open = function () {
+                    NProgress.start();
+                    this.addEventListener("loadend", function () {
+                        NProgress.set(1.0);
+                        setTimeout(() => NProgress.done(), 300);
+                    });
+                    open.apply(this, arguments);
+                };
+            })(XMLHttpRequest.prototype.open);
+
+            // 🔹 3. Patch untuk Fetch API
+            const originalFetch = window.fetch;
+            window.fetch = function () {
+                NProgress.start();
+                return originalFetch.apply(this, arguments).finally(() => {
+                    NProgress.set(1.0);
+                    setTimeout(() => NProgress.done(), 300);
+                });
+            };
+
+            // 🔹 4. Saat halaman selesai load
+            window.addEventListener("pageshow", () => {
+                NProgress.set(1.0);
+                setTimeout(() => NProgress.done(), 300);
+            });
+
+            // 🔹 5. Tangkap submit form (SAMAIN dengan klik link)
+            document.addEventListener("submit", function (e) {
+                const form = e.target;
+                if (form.tagName === "FORM") {
+                    NProgress.start();
+                    setTimeout(() => NProgress.set(0.9), 150);
+                }
+            }, true);
         </script>
     @endpush

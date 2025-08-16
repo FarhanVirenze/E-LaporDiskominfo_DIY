@@ -52,4 +52,53 @@
             @endcomponent
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+    <script>
+        // ⚙️ Konfigurasi default NProgress
+        NProgress.configure({
+            showSpinner: false,   // Matikan spinner (biar lebih clean)
+            trickleSpeed: 200,    // Kecepatan progress otomatis
+            minimum: 0.08         // Start dari 8% biar gak langsung loncat
+        });
+
+        // 🔹 1. Tangkap klik semua link internal
+        document.addEventListener("click", function (e) {
+            const link = e.target.closest("a");
+            if (link && link.href && link.origin === window.location.origin) {
+                NProgress.start();
+                // Biar keliatan dulu baru pindah halaman
+                setTimeout(() => NProgress.set(0.9), 150);
+            }
+        });
+
+        // 🔹 2. Patch untuk XMLHttpRequest
+        (function (open) {
+            XMLHttpRequest.prototype.open = function () {
+                NProgress.start();
+                this.addEventListener("loadend", function () {
+                    NProgress.set(1.0); // Langsung ke ujung
+                    setTimeout(() => NProgress.done(), 200);
+                });
+                open.apply(this, arguments);
+            };
+        })(XMLHttpRequest.prototype.open);
+
+        // 🔹 3. Patch untuk Fetch API
+        const originalFetch = window.fetch;
+        window.fetch = function () {
+            NProgress.start();
+            return originalFetch.apply(this, arguments).finally(() => {
+                NProgress.set(1.0);
+                setTimeout(() => NProgress.done(), 200);
+            });
+        };
+
+        // 🔹 4. Saat halaman selesai load (termasuk back/forward cache)
+        window.addEventListener("pageshow", () => {
+            NProgress.set(1.0);
+            setTimeout(() => NProgress.done(), 200);
+        });
+    </script>
+
 @endsection

@@ -26,6 +26,8 @@
     <link rel="preload" as="image" href="{{ asset('images/carousel1.jpg') }}">
     <link rel="preload" as="image" href="{{ asset('images/carousel2.jpg') }}">
     <link rel="preload" as="image" href="{{ asset('images/carousel3.jpg') }}">
+    <!-- NProgress CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" />
 
     {{-- Styles & Scripts --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -39,6 +41,20 @@
             font-family: 'Open Sans', 'Segoe UI', sans-serif;
             margin: 0;
             padding: 0;
+        }
+
+        #nprogress .bar {
+            background: linear-gradient(to right, #2563eb, #60a5fa);
+            height: 3px;
+        }
+
+        #nprogress .peg {
+            box-shadow: 0 0 10px #2563eb, 0 0 5px #60a5fa;
+        }
+
+        #nprogress .spinner-icon {
+            border-top-color: #2563eb;
+            border-left-color: #2563eb;
         }
     </style>
 </head>

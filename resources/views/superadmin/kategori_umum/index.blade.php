@@ -6,15 +6,17 @@
     <div class="container mt-4">
         <h2 class="mb-4 text-2xl font-semibold text-[#37474F]">Kelola Kategori</h2>
 
-        @if(session('success'))
-            <div id="alert-success" class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @elseif(session('error'))
-            <div id="alert-error" class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
+       @if(session('success'))
+    <div id="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@elseif(session('error'))
+    <div id="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 
         <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
             <!-- Tombol Tambah Kategori -->
@@ -200,4 +202,61 @@
             $('#alert-error').fadeOut('slow');
         }, 3000);
     </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+<script>
+    // ⚙️ Konfigurasi default NProgress
+    NProgress.configure({
+        showSpinner: false,
+        trickleSpeed: 200,
+        minimum: 0.08
+    });
+
+    // 🔹 1. Tangkap klik semua link internal
+    document.addEventListener("click", function (e) {
+        const link = e.target.closest("a");
+        if (link && link.href && link.origin === window.location.origin) {
+            NProgress.start();
+            setTimeout(() => NProgress.set(0.9), 150);
+        }
+    });
+
+    // 🔹 2. Patch untuk XMLHttpRequest
+    (function (open) {
+        XMLHttpRequest.prototype.open = function () {
+            NProgress.start();
+            this.addEventListener("loadend", function () {
+                NProgress.set(1.0);
+                setTimeout(() => NProgress.done(), 300);
+            });
+            open.apply(this, arguments);
+        };
+    })(XMLHttpRequest.prototype.open);
+
+    // 🔹 3. Patch untuk Fetch API
+    const originalFetch = window.fetch;
+    window.fetch = function () {
+        NProgress.start();
+        return originalFetch.apply(this, arguments).finally(() => {
+            NProgress.set(1.0);
+            setTimeout(() => NProgress.done(), 300);
+        });
+    };
+
+    // 🔹 4. Saat halaman selesai load
+    window.addEventListener("pageshow", () => {
+        NProgress.set(1.0);
+        setTimeout(() => NProgress.done(), 300);
+    });
+
+    // 🔹 5. Tangkap submit form (SAMAIN dengan klik link)
+    document.addEventListener("submit", function (e) {
+        const form = e.target;
+        if (form.tagName === "FORM") {
+            NProgress.start();
+            setTimeout(() => NProgress.set(0.9), 150);
+        }
+    }, true);
+</script>
+
 @endpush

@@ -10,7 +10,7 @@
     <div class="font-bold text-gray-800 mb-5 mt-20">
         {{-- Accordion Header --}}
         <button type="button" class="flex justify-between items-center w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold text-xl shadow-lg hover:from-blue-700 hover:to-cyan-600
-                                                   lg:cursor-default lg:pointer-events-none"
+                                                           lg:cursor-default lg:pointer-events-none"
             onclick="toggleFilterAccordion()" aria-expanded="false" aria-controls="filterAccordionContent"
             id="filterAccordionButton">
             <span class="flex items-center gap-3">
@@ -25,7 +25,7 @@
 
         {{-- Accordion Content --}}
         <div id="filterAccordionContent" class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out
-                                               lg:max-h-[1000px] lg:overflow-visible">
+                                                       lg:max-h-[1000px] lg:overflow-visible">
             <div class="relative overflow-hidden w-full"
                 style="background-image: url('/images/footer3.jpg'); background-size: cover; background-position: center;">
                 {{-- Overlay Gelap 30% --}}
@@ -61,8 +61,8 @@
                         </span>
                         <select name="kategori"
                             class="w-full pl-10 pr-10 py-3 rounded-xl border border-white text-white bg-transparent font-semibold text-sm sm:text-xs
-                                                                                       placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition appearance-none
-                                                                                       bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem]"
+                                                                                               placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition appearance-none
+                                                                                               bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem]"
                             style="background-image: url('data:image/svg+xml;utf8,<svg fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' width=\'20\' height=\'20\'><path d=\'M7 10l5 5 5-5z\'/></svg>');">
                             <option value="" class="bg-white text-gray-800">Kategori</option>
                             @foreach ($kategoriList as $kategori)
@@ -80,8 +80,8 @@
                         </span>
                         <select name="wilayah"
                             class="w-full pl-10 pr-10 py-3 rounded-xl border border-white text-white bg-transparent font-semibold text-sm sm:text-xs
-                                                                                   placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition appearance-none
-                                                                                   bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem]"
+                                                                                           placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition appearance-none
+                                                                                           bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem]"
                             style="background-image: url('data:image/svg+xml;utf8,<svg fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' width=\'20\' height=\'20\'><path d=\'M7 10l5 5 5-5z\'/></svg>');">
                             <option value="" class="bg-white text-gray-800">Wilayah</option>
                             @foreach ($wilayahList as $wilayah)
@@ -99,8 +99,8 @@
                         </span>
                         <select name="sort"
                             class="w-full pl-10 pr-10 py-3 rounded-xl border border-white text-white bg-transparent font-semibold text-sm sm:text-xs
-                                                                               placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition appearance-none
-                                                                               bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem]"
+                                                                                       placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition appearance-none
+                                                                                       bg-no-repeat bg-[right_0.75rem_center] bg-[length:1rem]"
                             style="background-image: url('data:image/svg+xml;utf8,<svg fill=\'white\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' width=\'20\' height=\'20\'><path d=\'M7 10l5 5 5-5z\'/></svg>');">
                             <option value="" class="bg-white text-gray-800">Urutkan</option>
                             <option value="terbaru" class="bg-white text-gray-800" {{ request('sort') == 'terbaru' ? 'selected' : '' }}>Terbaru</option>
@@ -118,7 +118,7 @@
                         <input type="text" id="tanggal" name="tanggal" placeholder="Tanggal"
                             value="{{ request('tanggal') }}"
                             class="w-full pl-10 pr-3 py-3 rounded-xl border border-white text-white bg-transparent font-semibold text-sm sm:text-xs
-                                                                                                       placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition">
+                                                                                                               placeholder-gray-200 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition">
                     </div>
 
                     {{-- Tombol --}}
@@ -177,19 +177,19 @@
 
                         {{-- Status --}}
                         <span class="absolute top-2 left-2 px-4 py-1.5 rounded-full text-sm font-semibold shadow-lg
-                                                @if($report->status === 'Diajukan') bg-red-200 text-red-800
-                                                @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
-                                                @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
-                                                @elseif($report->status === 'Selesai') bg-green-200 text-green-800
-                                                @else bg-gray-200 text-gray-700 @endif">
+                                                                @if($report->status === 'Diajukan') bg-red-200 text-red-800
+                                                                @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
+                                                                @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
+                                                                @elseif($report->status === 'Selesai') bg-green-200 text-green-800
+                                                                @else bg-gray-200 text-gray-700 @endif">
                             {{ $report->status }}
                         </span>
 
                         {{-- Nama Pengadu / Anonim --}}
                         <span
                             class="absolute bottom-3 left-1/2 transform -translate-x-1/2
-                                                bg-zinc-900/60 text-white text-xs px-3 py-[2px] rounded-full backdrop-blur-sm
-                                                tracking-wider italic font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
+                                                                bg-zinc-900/60 text-white text-xs px-3 py-[2px] rounded-full backdrop-blur-sm
+                                                                tracking-wider italic font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
                             {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}
                         </span>
                     </div>
@@ -270,24 +270,60 @@
         });
     </script>
 
-    {{-- Script perPage otomatis --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            let perPage;
-            const width = window.innerWidth;
+        // ⚙️ Konfigurasi default NProgress
+        NProgress.configure({
+            showSpinner: false,
+            trickleSpeed: 200,
+            minimum: 0.08
+        });
 
-            if (width < 640) perPage = 8;       // base
-            else if (width < 768) perPage = 8;  // sm
-            else if (width < 1024) perPage = 8; // md
-            else if (width < 1280) perPage = 9; // lg
-            else if (width < 1536) perPage = 9; // xl
-            else perPage = 8;                   // 2xl
-
-            const url = new URL(window.location.href);
-            if (url.searchParams.get('perPage') != perPage) {
-                url.searchParams.set('perPage', perPage);
-                window.location.href = url.toString();
+        // 🔹 1. Tangkap klik semua link internal
+        document.addEventListener("click", function (e) {
+            const link = e.target.closest("a");
+            if (link && link.href && link.origin === window.location.origin) {
+                NProgress.start();
+                setTimeout(() => NProgress.set(0.9), 150);
             }
         });
+
+        // 🔹 2. Patch untuk XMLHttpRequest
+        (function (open) {
+            XMLHttpRequest.prototype.open = function () {
+                NProgress.start();
+                this.addEventListener("loadend", function () {
+                    NProgress.set(1.0);
+                    setTimeout(() => NProgress.done(), 300);
+                });
+                open.apply(this, arguments);
+            };
+        })(XMLHttpRequest.prototype.open);
+
+        // 🔹 3. Patch untuk Fetch API
+        const originalFetch = window.fetch;
+        window.fetch = function () {
+            NProgress.start();
+            return originalFetch.apply(this, arguments).finally(() => {
+                NProgress.set(1.0);
+                setTimeout(() => NProgress.done(), 300);
+            });
+        };
+
+        // 🔹 4. Saat halaman selesai load
+        window.addEventListener("pageshow", () => {
+            NProgress.set(1.0);
+            setTimeout(() => NProgress.done(), 300);
+        });
+
+        // 🔹 5. Tangkap submit form (SAMAIN dengan klik link)
+        document.addEventListener("submit", function (e) {
+            const form = e.target;
+            if (form.tagName === "FORM") {
+                NProgress.start();
+                setTimeout(() => NProgress.set(0.9), 150);
+            }
+        }, true);
     </script>
+
 @endsection

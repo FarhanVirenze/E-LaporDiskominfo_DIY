@@ -11,63 +11,124 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
+    <!-- NProgress CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" />
     {{-- Styles & Scripts --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        #nprogress .bar {
+            background: linear-gradient(to right, #2563eb, #60a5fa);
+            height: 3px;
+        }
+
+        #nprogress .peg {
+            box-shadow: 0 0 10px #2563eb, 0 0 5px #60a5fa;
+        }
+
+        #nprogress .spinner-icon {
+            border-top-color: #2563eb;
+            border-left-color: #2563eb;
+        }
+    </style>
 </head>
 
-<body class="font-sans antialiased bg-white text-gray-900">
+<body class="font-sans antialiased bg-gray-900 text-gray-900">
 
-    <div class="min-h-screen flex flex-col justify-between main-wrapper">
+    <!-- Full Background -->
+    <div class="min-h-screen flex items-center justify-center bg-cover bg-center relative"
+        style="background-image: url('/images/carousel1.jpg');">
 
-        <!-- Notifikasi Sukses -->
-        @if (session('success'))
-            <div id="alert-success"
-                class="fixed top-5 right-5 z-50 flex items-center gap-3 bg-green-500 text-white px-5 py-3 rounded-lg shadow-lg transition-opacity duration-500 opacity-100 animate-fade-in">
-                <!-- Icon Wrapper -->
-                <div id="success-icon-wrapper" class="transition-all duration-300">
-                    <!-- Spinner awal -->
-                    <svg id="success-spinner" class="w-5 h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="white" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                    </svg>
+        <!-- Overlay Hitam -->
+        <div class="absolute inset-0 bg-black/60 z-10"></div>
 
-                    <!-- Centang, disembunyikan dulu -->
-                    <svg id="success-check" class="w-6 h-6 text-white hidden" fill="none" viewBox="0 0 24 24">
-                        <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                            d="M5 13l4 4L19 7" />
-                    </svg>
+        <!-- Overlay Biru -->
+        <div class="absolute inset-0 bg-blue-600/30"></div>
+
+        <!-- Content Wrapper -->
+        <div
+            class="relative z-20 w-full max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between md:gap-3 gap-6">
+
+            <!-- Kiri: Logo & Deskripsi -->
+            <div class="hidden md:block flex-1 text-left text-white md:pr-8">
+                <img src="{{ asset('images/logo-diy.png') }}" alt="Logo E-Lapor" class="w-36 h-32 mb-6 drop-shadow-lg">
+
+                <h1 class="text-3xl font-bold mb-2">Selamat Datang di</h1>
+                <h2 class="text-2xl font-bold mb-4">E-Lapor DIY</h2>
+
+                <p class="text-gray-200 font-medium leading-relaxed">
+                    Platform resmi pengaduan masyarakat Daerah Istimewa Yogyakarta.<br>
+                    Wujudkan pelayanan publik yang
+                    <span class="font-semibold text-blue-300">cepat, transparan,</span>
+                    dan <span class="font-semibold text-blue-300">mudah diakses</span> kapan saja.
+                </p>
+            </div>
+
+            <!-- Kanan: Form -->
+            <div class="flex-1 w-full max-w-md">
+                <div class="p-8 rounded-2xl shadow-2xl border border-white/20 bg-white/10">
+                    {{ $slot }}
                 </div>
-                <!-- Pesan -->
-                <span>{{ session('success') }}</span>
             </div>
-        @endif
 
-        @if (session('error'))
-            <div id="alert-error"
-                class="fixed top-5 right-5 z-50 flex items-center gap-3 bg-red-500 text-white px-5 py-3 rounded-lg shadow-lg transition-opacity duration-500 opacity-100 animate-fade-in">
-                <!-- Icon -->
-                <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24">
-                    <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12" />
-                </svg>
-                <span>{{ session('error') }}</span>
-            </div>
-        @endif
-
-        {{-- Main Auth Container --}}
-        <main class="flex items-center justify-center flex-grow bg-gradient-to-br">
-            <div class="w-full max-w-md px-6 py-8 rounded-3xl shadow-[0_15px_40px_rgba(0,0,0,0.4)] ring-2 ring-white/30 border border-white/20 backdrop-blur-sm"
-                style="background: linear-gradient(135deg, rgba(192,57,43,0.95), rgba(121,3,3,0.95));
-                box-shadow: 0 0 30px 10px rgba(224, 217, 217, 0.31), inset 0 1px 3px rgba(175, 168, 168, 0.42);">
-                {{ $slot }}
-            </div>
-        </main>
-
+        </div>
     </div>
 
-    {{-- Extra JS --}}
-    @stack('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+    <script>
+        // ⚙️ Konfigurasi default NProgress
+        NProgress.configure({
+            showSpinner: false,
+            trickleSpeed: 200,
+            minimum: 0.08
+        });
+
+        // 🔹 1. Tangkap klik semua link internal
+        document.addEventListener("click", function (e) {
+            const link = e.target.closest("a");
+            if (link && link.href && link.origin === window.location.origin) {
+                NProgress.start();
+                setTimeout(() => NProgress.set(0.9), 150);
+            }
+        });
+
+        // 🔹 2. Patch untuk XMLHttpRequest
+        (function (open) {
+            XMLHttpRequest.prototype.open = function () {
+                NProgress.start();
+                this.addEventListener("loadend", function () {
+                    NProgress.set(1.0);
+                    setTimeout(() => NProgress.done(), 300);
+                });
+                open.apply(this, arguments);
+            };
+        })(XMLHttpRequest.prototype.open);
+
+        // 🔹 3. Patch untuk Fetch API
+        const originalFetch = window.fetch;
+        window.fetch = function () {
+            NProgress.start();
+            return originalFetch.apply(this, arguments).finally(() => {
+                NProgress.set(1.0);
+                setTimeout(() => NProgress.done(), 300);
+            });
+        };
+
+        // 🔹 4. Saat halaman selesai load
+        window.addEventListener("pageshow", () => {
+            NProgress.set(1.0);
+            setTimeout(() => NProgress.done(), 300);
+        });
+
+        // 🔹 5. Tangkap submit form (SAMAIN dengan klik link)
+        document.addEventListener("submit", function (e) {
+            const form = e.target;
+            if (form.tagName === "FORM") {
+                NProgress.start();
+                setTimeout(() => NProgress.set(0.9), 150);
+            }
+        }, true);
+    </script>
 
 </body>
 

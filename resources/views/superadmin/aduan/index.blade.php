@@ -6,15 +6,127 @@
 <div class="container mt-4">
     <h2 class="mb-4 text-2xl font-semibold text-[#37474F]">Kelola Aduan Umum</h2>
 
-    @if(session('success'))
-        <div id="alert-success" class="alert alert-success">
-            {{ session('success') }}
+   @if(session('success'))
+    <!-- SUCCESS NOTIF -->
+    <div id="successMessage" 
+        class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
+               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-emerald-400 
+               bg-gradient-to-r from-emerald-600 to-emerald-500/90 backdrop-blur-md text-white 
+               transition-all duration-500 opacity-100 animate-fade-in">
+
+        <!-- Ikon -->
+        <div class="flex-shrink-0">
+            <!-- Spinner -->
+            <svg id="success-spinner" class="w-6 h-6 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="white" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            <!-- Check -->
+            <svg id="success-check" class="w-6 h-6 text-white hidden scale-75" fill="none" viewBox="0 0 24 24">
+                <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+            </svg>
         </div>
-    @elseif(session('error'))
-        <div id="alert-error" class="alert alert-danger">
-            {{ session('error') }}
+
+        <!-- Pesan -->
+        <span class="flex-1 font-medium tracking-wide">{{ session('success') }}</span>
+
+        <!-- Tombol Close -->
+        <button onclick="document.getElementById('successMessage').remove()" 
+            class="text-white/70 hover:text-white font-bold transition-colors">✕</button>
+
+        <!-- Progress Bar -->
+        <div class="absolute bottom-0 left-0 h-[3px] bg-white/70 w-full origin-left scale-x-0 animate-progress rounded-b-xl"></div>
+    </div>
+
+@elseif(session('error'))
+    <!-- ERROR NOTIF -->
+    <div id="errorMessage" 
+        class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
+               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
+               bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
+               transition-all duration-500 opacity-100 animate-fade-in">
+
+        <!-- Ikon -->
+        <div class="flex-shrink-0">
+            <!-- Spinner -->
+            <svg id="error-spinner" class="w-6 h-6 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="white" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            <!-- X -->
+            <svg id="error-x" class="w-6 h-6 text-white hidden scale-75" fill="none" viewBox="0 0 24 24">
+                <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+            </svg>
         </div>
-    @endif
+
+        <!-- Pesan -->
+        <span class="flex-1 font-medium tracking-wide">{{ session('error') }}</span>
+
+        <!-- Tombol Close -->
+        <button onclick="document.getElementById('errorMessage').remove()" 
+            class="text-white/70 hover:text-white font-bold transition-colors">✕</button>
+
+        <!-- Progress Bar -->
+        <div class="absolute bottom-0 left-0 h-[3px] bg-white/70 w-full origin-left scale-x-0 animate-progress rounded-b-xl"></div>
+    </div>
+@endif
+
+<style>
+    @keyframes fade-in {
+        from { opacity: 0; transform: translateY(-12px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes progress {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(1); }
+    }
+    @keyframes pop {
+        from { transform: scale(0.6); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+
+    .animate-fade-in { animation: fade-in 0.4s ease-out; }
+    .animate-progress { animation: progress 3s linear forwards; }
+    .animate-pop { animation: pop 0.3s ease-out; }
+</style>
+
+<script>
+    // SUCCESS
+    if (document.getElementById('successMessage')) {
+        setTimeout(() => {
+            document.getElementById('success-spinner').classList.add('hidden');
+            const check = document.getElementById('success-check');
+            check.classList.remove('hidden');
+            check.classList.add('animate-pop');
+        }, 800);
+
+        setTimeout(() => {
+            const alert = document.getElementById('successMessage');
+            if (alert) {
+                alert.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => alert.remove(), 500);
+            }
+        }, 3500);
+    }
+
+    // ERROR
+    if (document.getElementById('errorMessage')) {
+        setTimeout(() => {
+            document.getElementById('error-spinner').classList.add('hidden');
+            const x = document.getElementById('error-x');
+            x.classList.remove('hidden');
+            x.classList.add('animate-pop');
+        }, 800);
+
+        setTimeout(() => {
+            const alert = document.getElementById('errorMessage');
+            if (alert) {
+                alert.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => alert.remove(), 500);
+            }
+        }, 3500);
+    }
+</script>
 
     <!-- Filter Admin & Kategori -->
     <div class="mb-4">
@@ -146,4 +258,61 @@
         }, 3000);
     @endif
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+<script>
+    // ⚙️ Konfigurasi default NProgress
+    NProgress.configure({
+        showSpinner: false,
+        trickleSpeed: 200,
+        minimum: 0.08
+    });
+
+    // 🔹 1. Tangkap klik semua link internal
+    document.addEventListener("click", function (e) {
+        const link = e.target.closest("a");
+        if (link && link.href && link.origin === window.location.origin) {
+            NProgress.start();
+            setTimeout(() => NProgress.set(0.9), 150);
+        }
+    });
+
+    // 🔹 2. Patch untuk XMLHttpRequest
+    (function (open) {
+        XMLHttpRequest.prototype.open = function () {
+            NProgress.start();
+            this.addEventListener("loadend", function () {
+                NProgress.set(1.0);
+                setTimeout(() => NProgress.done(), 300);
+            });
+            open.apply(this, arguments);
+        };
+    })(XMLHttpRequest.prototype.open);
+
+    // 🔹 3. Patch untuk Fetch API
+    const originalFetch = window.fetch;
+    window.fetch = function () {
+        NProgress.start();
+        return originalFetch.apply(this, arguments).finally(() => {
+            NProgress.set(1.0);
+            setTimeout(() => NProgress.done(), 300);
+        });
+    };
+
+    // 🔹 4. Saat halaman selesai load
+    window.addEventListener("pageshow", () => {
+        NProgress.set(1.0);
+        setTimeout(() => NProgress.done(), 300);
+    });
+
+    // 🔹 5. Tangkap submit form (SAMAIN dengan klik link)
+    document.addEventListener("submit", function (e) {
+        const form = e.target;
+        if (form.tagName === "FORM") {
+            NProgress.start();
+            setTimeout(() => NProgress.set(0.9), 150);
+        }
+    }, true);
+</script>
+
 @endpush
