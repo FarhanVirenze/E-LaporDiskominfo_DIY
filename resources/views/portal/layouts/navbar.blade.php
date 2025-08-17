@@ -1,6 +1,6 @@
 <!-- Navbar -->
 <nav class="fixed top-0 left-0 w-full z-50 bg-white shadow-md text-gray-700">
-    <div class="container mx-auto px-4 py-4 relative flex items-center justify-between">
+    <div class="container mx-auto px-4 py-3 relative flex items-center justify-between">
 
         <!-- Logo (Kiri) -->
         <a href="{{ url('/') }}" class="flex items-center space-x-2">
