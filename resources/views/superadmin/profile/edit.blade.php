@@ -23,31 +23,29 @@
         </div>
     @endif
 
-    <div class="py-12">
+    <div class="py-2">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Slot: Konten Profil -->
             @component('components.riwayatsuperadmin-tabs')
             <div class="space-y-6">
                 <!-- Profile Information Section -->
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg border-2 border-white outline-8 outline-red-500">
-                    <div class="max-w-xl">
-                        @include('superadmin.profile.partials.update-profile-information-form')
-                    </div>
+                <div
+                    class="p-6 sm:p-8 bg-white shadow-lg rounded-xl border border-gray-200 hover:shadow-xl transition w-full max-w-3xl mx-auto">
+                    @include('portal.profile.partials.update-profile-information-form')
                 </div>
 
                 <!-- Password Update Section -->
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg border-2 border-white outline-8 outline-red-500">
-                    <div class="max-w-xl">
-                        @include('superadmin.profile.partials.update-password-form')
-                    </div>
+                <div
+                    class="p-6 sm:p-8 bg-white shadow-lg rounded-xl border border-gray-200 hover:shadow-xl transition w-full max-w-3xl mx-auto">
+                    @include('portal.profile.partials.update-password-form')
                 </div>
 
                 <!-- Delete Account Section -->
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg border-2 border-white outline-8 outline-red-500">
-                    <div class="max-w-xl">
-                        @include('superadmin.profile.partials.delete-user-form')
-                    </div>
+                <div
+                    class="p-6 sm:p-8 bg-white shadow-lg rounded-xl border border-gray-200 hover:shadow-xl transition w-full max-w-3xl mx-auto">
+                    @include('portal.profile.partials.delete-user-form')
                 </div>
+
             </div>
             @endcomponent
         </div>

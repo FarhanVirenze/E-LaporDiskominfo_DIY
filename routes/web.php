@@ -11,7 +11,11 @@ use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Admin\ProfileAdminController;
 use App\Http\Controllers\Superadmin\ProfileSuperadminController;
 use App\Http\Controllers\Superadmin\KategoriAdminController;
+use App\Http\Controllers\GoogleController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 Route::get('/', function () {
     return view('portal.welcome', [

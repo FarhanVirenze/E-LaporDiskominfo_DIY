@@ -1,4 +1,4 @@
-@extends('portal.layouts.app')
+@extends('portal.layouts.appnofooter')
 
 @section('include-css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
@@ -8,10 +8,11 @@
 
     <!-- Notifikasi Sukses -->
     @if (session('success'))
-        <div id="alert-success" class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
-                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-blue-400 
-                                       bg-gradient-to-r from-blue-600 to-blue-500/90 backdrop-blur-md text-white 
-                                       transition-all duration-500 opacity-100 animate-fade-in">
+        <div id="alert-success"
+            class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
+                                                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-blue-400 
+                                                                       bg-gradient-to-r from-blue-600 to-blue-500/90 backdrop-blur-md text-white 
+                                                                       transition-all duration-500 opacity-100 animate-fade-in">
 
             <!-- Ikon -->
             <div id="success-icon-wrapper" class="flex-shrink-0">
@@ -121,111 +122,102 @@
         </div>
     @endif
     <div class="py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 text-center">DAFTAR ADUAN</h2>
+        <div class="max-w-7xl mt-14 md:mt-14 mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 text-center">DAFTAR ADUAN</h2>
 
             @component('components.riwayat-tabs')
-            <div class="mb-4 mt-2 text-left">
-                <a href="{{ route('beranda') }}"
-                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                    + Buat Aduan Baru
-                </a>
+            <div class="flex items-center justify-between mb-2 mt-2 flex-wrap gap-2">
+                <!-- Total Aduan -->
+                <p class="text-sm text-gray-600">Total: {{ $aduan->count() }} Aduan</p>
             </div>
 
-            <p class="text-sm text-gray-600 mb-3">Total: {{ $aduan->count() }} Aduan</p>
-
             <!-- RESPONSIVE TABLE -->
-            <div class="overflow-x-auto bg-white shadow rounded-lg">
+            <div class="overflow-x-auto bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border border-blue-100">
                 <table class="min-w-full text-sm hidden md:table">
-                    <thead class="bg-gradient-to-r from-[#B5332A] to-[#8B1E1E] text-white">
+                    <thead class="bg-gradient-to-r from-blue-700 to-blue-500 text-white">
                         <tr>
-                            <th class="px-4 py-3 text-left">No</th>
-                            <th class="px-4 py-3 text-left">No. Tiket</th>
-                            <th class="px-4 py-3 text-left">Judul</th>
-                            <th class="px-4 py-3 text-left">Tanggal</th>
-                            <th class="px-4 py-3 text-left">Status</th>
-                            <th class="px-4 py-3 text-left">Aksi</th>
+                            <th class="px-4 py-3 text-left font-semibold">No</th>
+                            <th class="px-4 py-3 text-left font-semibold">No Aduan</th>
+                            <th class="px-4 py-3 text-left font-semibold">Judul</th>
+                            <th class="px-4 py-3 text-left font-semibold">Tanggal</th>
+                            <th class="px-4 py-3 text-left font-semibold">Status</th>
+                            <th class="px-4 py-3 text-left font-semibold">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-100">
                         @forelse ($aduan as $index => $item)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-2">{{ $index + 1 }}</td>
-                                <td class="px-4 py-2">{{ $item->tracking_id }}</td>
-                                <td class="px-4 py-2">{{ $item->judul }}</td>
-                                <td class="px-4 py-2">
-                                    {{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY') }}
+                            <tr class="hover:bg-blue-50 transition-colors duration-200">
+                                <td class="px-4 py-3 font-medium text-gray-700">{{ $index + 1 }}</td>
+                                <td class="px-4 py-3 text-blue-700 font-semibold">{{ $item->tracking_id }}</td>
+                                <td class="px-4 py-3">{{ $item->judul }}</td>
+                                <td class="px-4 py-3 text-gray-600">
+                                    {{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMM YYYY') }}
                                 </td>
-                                <td class="px-4 py-2">
-                                    <span
-                                        class="text-xs font-semibold px-2 py-1 rounded-full
-                                                                                                        @if($item->status == 'Diajukan') bg-red-100 text-red-700
-                                                                                                        @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
-                                                                                                        @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                                                        @elseif($item->status == 'Selesai') bg-green-100 text-green-700
-                                                                                                        @else bg-gray-200 text-gray-800 @endif">
+                                <td class="px-4 py-3">
+                                    <span class="text-xs font-semibold px-3 py-1 rounded-full shadow-sm
+                                                            @if($item->status == 'Diajukan') bg-red-100 text-red-700
+                                                            @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
+                                                            @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                            @elseif($item->status == 'Selesai') bg-green-100 text-green-700
+                                                            @else bg-gray-200 text-gray-800 @endif">
                                         {{ $item->status }}
                                     </span>
                                 </td>
-                                <td class="px-4 py-2">
-                                    <a href="{{ route('reports.show', $item->id) }}" class="text-red-600 hover:text-red-800">
-                                        <i class="fas fa-search"></i>
+                                <td class="px-4 py-3">
+                                    <a href="{{ route('reports.show', $item->id) }}"
+                                        class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors">
+                                        <i class="fas fa-search"></i> Lihat
                                     </a>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-4 py-4 text-center text-gray-500">
-                                    Tidak ada aduan.
-                                </td>
+                                <td colspan="6" class="px-4 py-6 text-center text-gray-500">Tidak ada aduan.</td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
 
                 <!-- TABEL MOBILE RESPONSIF -->
-                <div class="md:hidden space-y-4">
+                <div class="md:hidden space-y-4 p-2">
                     @forelse ($aduan as $index => $item)
-                        <div class="rounded-xl shadow-lg overflow-hidden">
-                            <!-- Header dengan gradasi -->
+                        <div
+                            class="rounded-2xl overflow-hidden shadow-md border border-gray-100 bg-white hover:shadow-xl transition-all">
+
+                            <!-- Header dengan gradasi biru + status -->
                             <div
-                                class="bg-gradient-to-r from-[#B5332A] to-[#8B1E1E] p-2 px-4 text-white text-xs flex justify-between">
-                                <span>{{ $index + 1 }}. {{ $item->tracking_id }}</span>
-                                <span>{{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY') }}</span>
+                                class="bg-gradient-to-r from-blue-700 to-blue-500 p-3 px-4 text-white text-xs flex justify-between items-center">
+                                <div>
+                                    <span class="font-semibold">{{ $loop->iteration }}. {{ $item->tracking_id }}</span><br>
+                                    <span>{{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMM YYYY') }}</span>
+                                </div>
+                                <span class="text-[11px] font-semibold px-3 py-1 rounded-full shadow-sm
+                            @if($item->status == 'Diajukan') bg-red-100 text-red-700
+                            @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
+                            @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
+                            @elseif($item->status == 'Selesai') bg-green-100 text-green-700
+                            @else bg-gray-200 text-gray-800 @endif">
+                                    {{ $item->status }}
+                                </span>
                             </div>
 
                             <!-- Konten card -->
-                            <div class="bg-white text-gray-800 p-4">
-                                <div class="font-bold text-base mb-2">
+                            <div class="bg-white text-gray-800 p-4 flex justify-between items-center">
+                                <div class="font-semibold text-base text-blue-700">
                                     {{ $item->judul }}
                                 </div>
-
-                                <div>
-                                    <span class="text-xs font-semibold px-2 py-1 rounded-full
-                                                                                @if($item->status == 'Diajukan') bg-blue-100 text-blue-800
-                                                                                @elseif($item->status == 'Dibaca') bg-teal-100 text-teal-800
-                                                                                @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                                @elseif($item->status == 'Selesai') bg-green-100 text-green-800
-                                                                                @else bg-gray-200 text-gray-800 @endif">
-                                        {{ $item->status }}
-                                    </span>
-                                </div>
-
-                                <div class="mt-3">
-                                    <a href="{{ route('reports.show', $item->id) }}"
-                                        class="inline-flex items-center text-sm text-red-700 font-semibold hover:text-[#8B1E1E] transition-colors duration-200">
-                                        <i class="fas fa-search mr-1"></i> Lihat Detail
-                                    </a>
-                                </div>
+                                <a href="{{ route('reports.show', $item->id) }}"
+                                    class="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+                                    <i class="fas fa-search mr-1"></i> Detail
+                                </a>
                             </div>
                         </div>
                     @empty
-                        <div class="p-4 text-center text-gray-500">
-                            Tidak ada aduan.
-                        </div>
+                        <div class="p-4 text-center text-gray-500">Tidak ada aduan.</div>
                     @endforelse
                 </div>
             </div>
+
             @endcomponent
         </div>
     </div>

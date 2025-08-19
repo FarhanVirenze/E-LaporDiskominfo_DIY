@@ -28,18 +28,22 @@ class ReportController extends Controller
                 $kategoriIds = $user->kategori->pluck('id')->toArray();
 
                 $reports = Report::whereIn('kategori_id', $kategoriIds)
+                    ->with('pelapor') // load user sesuai nama_pengadu
                     ->latest()
                     ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
             } elseif ($user->role === 'superadmin') {
-                $reports = Report::latest()
+                $reports = Report::with('pelapor')
+                    ->latest()
                     ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
             } else {
                 $reports = Report::where('user_id', $user->id_user)
+                    ->with('pelapor')
                     ->latest()
                     ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
             }
         } else {
-            $reports = Report::latest()
+            $reports = Report::with('pelapor')
+                ->latest()
                 ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
         }
 
@@ -70,6 +74,7 @@ class ReportController extends Controller
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
             'is_anonim' => 'nullable|boolean',
+            'g-recaptcha-response' => 'required|captcha',
         ]);
 
         // Simpan file
@@ -239,27 +244,28 @@ class ReportController extends Controller
         $vote = Vote::where('user_id', $user->id_user)->where('report_id', $report->id)->first();
 
         if ($vote && $vote->vote_type === 'like') {
+            // batalin like
             $vote->delete();
             $report->decrement('likes');
-            Session::forget('vote_report_' . $report->id); // hapus session
         } elseif ($vote && $vote->vote_type === 'dislike') {
+            // ubah dislike jadi like
             $vote->update(['vote_type' => 'like']);
             $report->increment('likes');
-            $report->decrement('dislikes');
-            Session::put('vote_report_' . $report->id, 'like');
+            if ($report->dislikes > 0) {
+                $report->decrement('dislikes');
+            }
         } else {
+            // baru pertama kali like
             Vote::create([
                 'user_id' => $user->id_user,
                 'report_id' => $report->id,
                 'vote_type' => 'like',
             ]);
             $report->increment('likes');
-            Session::put('vote_report_' . $report->id, 'like');
         }
 
         return back();
     }
-
 
     public function dislike($id)
     {
@@ -272,26 +278,26 @@ class ReportController extends Controller
         $vote = Vote::where('user_id', $user->id_user)->where('report_id', $report->id)->first();
 
         if ($vote && $vote->vote_type === 'dislike') {
+            // batalin dislike
             $vote->delete();
             if ($report->dislikes > 0) {
                 $report->decrement('dislikes');
             }
-            Session::forget('vote_report_' . $report->id); // hapus session
         } elseif ($vote && $vote->vote_type === 'like') {
+            // ubah like jadi dislike
             $vote->update(['vote_type' => 'dislike']);
             if ($report->likes > 0) {
                 $report->decrement('likes');
             }
             $report->increment('dislikes');
-            Session::put('vote_report_' . $report->id, 'dislike');
         } else {
+            // baru pertama kali dislike
             Vote::create([
                 'user_id' => $user->id_user,
                 'report_id' => $report->id,
                 'vote_type' => 'dislike',
             ]);
             $report->increment('dislikes');
-            Session::put('vote_report_' . $report->id, 'dislike');
         }
 
         return back();

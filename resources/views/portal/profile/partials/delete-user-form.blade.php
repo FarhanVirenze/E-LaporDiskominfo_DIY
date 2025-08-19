@@ -1,55 +1,95 @@
-<section class="space-y-6">
-    <header>
-        <h2 class="text-lg font-medium">
+<section class="bg-white rounded-2xl shadow-lg border border-white p-6 max-w-3xl mx-auto">
+    <!-- Header -->
+    <header class="mb-6">
+        <h2 class="text-2xl font-semibold text-gray-900 flex items-center gap-3">
+            <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
             {{ __('Delete Account') }}
         </h2>
-
-        <p class="mt-1 text-sm">
+        <p class="mt-2 text-gray-600 text-sm leading-relaxed">
             {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.') }}
         </p>
     </header>
 
-    <x-danger-button
-        x-data=""
-        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
-    >{{ __('Delete Account') }}</x-danger-button>
+    <!-- Trigger Button -->
+    <button
+        onclick="openModal()"
+        class="w-full md:w-auto px-6 py-3 bg-red-600 text-white font-semibold rounded-xl shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 flex items-center justify-center gap-2 transition">
+        <i class="fas fa-user-slash"></i>
+        {{ __('Delete Account') }}
+    </button>
 
-    <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
-        <form method="post" action="{{ route('user.profile.destroy') }}" class="p-6">
-            @csrf
-            @method('delete')
+    <!-- Custom Confirmation Modal -->
+    <div id="confirmDeletionModal" 
+         class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300 p-4">
 
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                {{ __('Are you sure you want to delete your account?') }}
-            </h2>
+        <!-- Modal Container -->
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md md:max-w-lg mx-auto transform scale-95 opacity-0 transition-all duration-300 ease-out overflow-auto">
+            
+            <!-- Form -->
+            <form method="post" action="{{ route('user.profile.destroy') }}" class="p-6">
+                @csrf
+                @method('delete')
 
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
-            </p>
+                <!-- Header -->
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="text-red-500 text-3xl">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-900">
+                        {{ __('Are you sure you want to delete your account?') }}
+                    </h2>
+                </div>
 
-            <div class="mt-6">
-                <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
+                <!-- Body -->
+                <p class="text-gray-600 mb-6 text-sm leading-relaxed">
+                    {{ __('Once your account is deleted, all resources and data will be permanently removed. Please enter your password to confirm deletion.') }}
+                </p>
 
-                <x-text-input
-                    id="password"
-                    name="password"
-                    type="password"
-                    class="mt-1 block w-3/4"
-                    placeholder="{{ __('Password') }}"
-                />
+                <!-- Password Input -->
+                <div class="mb-6">
+                    <input 
+                        type="password" 
+                        name="password" 
+                        id="password" 
+                        placeholder="{{ __('Enter your password') }}"
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-500 transition"
+                    />
+                    <p class="mt-2 text-red-500 text-sm">
+                        @error('password') {{ $message }} @enderror
+                    </p>
+                </div>
 
-                <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
-            </div>
+                <!-- Actions -->
+                <div class="flex flex-col md:flex-row justify-end gap-3">
+                    <button type="button" onclick="closeModal()"
+                        class="w-full md:w-auto px-5 py-2.5 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition flex items-center justify-center gap-2">
+                        <i class="fas fa-times"></i> {{ __('Cancel') }}
+                    </button>
 
-            <div class="mt-6 flex justify-end">
-                <x-secondary-button x-on:click="$dispatch('close')">
-                    {{ __('Cancel') }}
-                </x-secondary-button>
-
-                <x-danger-button class="ms-3">
-                    {{ __('Delete Account') }}
-                </x-danger-button>
-            </div>
-        </form>
-    </x-modal>
+                    <button type="submit"
+                        class="w-full md:w-auto px-6 py-2.5 bg-red-600 text-white font-semibold rounded-xl shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 flex items-center justify-center gap-2 transition">
+                        <i class="fas fa-trash-alt"></i> {{ __('Delete Account') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </section>
+
+<!-- Script untuk buka/tutup modal -->
+<script>
+function openModal() {
+    const modal = document.getElementById('confirmDeletionModal');
+    modal.classList.remove('hidden');
+    setTimeout(() => {
+        modal.querySelector('div').classList.remove('scale-95', 'opacity-0');
+    }, 10);
+}
+
+function closeModal() {
+    const modal = document.getElementById('confirmDeletionModal');
+    const modalContent = modal.querySelector('div');
+    modalContent.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => modal.classList.add('hidden'), 200);
+}
+</script>

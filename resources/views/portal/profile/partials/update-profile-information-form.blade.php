@@ -1,9 +1,11 @@
-<section>
-    <header>
-        <h2 class="text-lg font-medium text-black">
+<section class="">
+    <!-- Header Section -->
+    <header class="mb-6">
+        <h2 class="text-2xl font-bold text-blue-700 flex items-center gap-2">
+            <i class="fa-solid fa-user-circle"></i>
             {{ __('Profile Information') }}
         </h2>
-        <p class="mt-1 text-sm text-black">
+        <p class="mt-1 text-sm text-gray-600">
             {{ __("Update your account's profile information and email address.") }}
         </p>
     </header>
@@ -14,18 +16,25 @@
     </form>
 
     <!-- Form Update Profile -->
-    <form method="post" action="{{ route('user.profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('user.profile.update') }}" enctype="multipart/form-data"
+        class="bg-white shadow-md rounded-xl p-6 space-y-6 border border-gray-100 hover:shadow-xl transition">
         @csrf
         @method('patch')
 
         <!-- Foto Profil -->
         <div class="flex flex-col items-center">
-            <img src="{{ $user->foto ? asset('storage/' . $user->foto) : asset('images/avatar.jpg') }}"
-                 alt="Foto Profil" class="w-24 h-24 rounded-full object-cover mb-2">
+            <img src="{{ $user->foto
+                ? asset('storage/' . $user->foto)
+                : ($user->avatar
+                    ? $user->avatar
+                    : asset('images/avatar.jpg')) }}"
+                alt="Foto Profil"
+                class="w-28 h-28 rounded-full object-cover mb-3 ring-4 ring-blue-200 shadow">
 
             <!-- Ganti Foto -->
-            <label class="cursor-pointer text-sm text-blue-600 hover:underline">
-                <span>Ganti Foto</span>
+            <label
+                class="cursor-pointer inline-flex items-center px-4 py-2 bg-blue-50 text-blue-600 text-sm font-medium rounded-lg border border-blue-200 hover:bg-blue-100 hover:text-blue-800 transition">
+                <i class="fa-solid fa-camera mr-2"></i> Ganti Foto
                 <input type="file" name="foto" class="hidden" accept="image/*">
             </label>
 
@@ -37,45 +46,51 @@
         <!-- Name -->
         <div>
             <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full"
-                          :value="old('name', $user->name)" required autofocus autocomplete="name" />
+            <x-text-input id="name" name="name" type="text"
+                class="mt-1 block w-full border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500"
+                :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
         <!-- NIK -->
         <div>
             <x-input-label for="nik" :value="__('NIK')" />
-            <x-text-input id="nik" name="nik" type="text" class="mt-1 block w-full"
-                          :value="old('nik', $user->nik)" required autocomplete="nik" />
+            <x-text-input id="nik" name="nik" type="text"
+                class="mt-1 block w-full border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500"
+                :value="old('nik', $user->nik)" autocomplete="nik" />
             <x-input-error class="mt-2" :messages="$errors->get('nik')" />
         </div>
 
         <!-- Nomor Telepon -->
         <div>
             <x-input-label for="nomor_telepon" :value="__('Phone Number')" />
-            <x-text-input id="nomor_telepon" name="nomor_telepon" type="text" class="mt-1 block w-full"
-                          :value="old('nomor_telepon', $user->nomor_telepon)" required autocomplete="tel" />
+            <x-text-input id="nomor_telepon" name="nomor_telepon" type="text"
+                class="mt-1 block w-full border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500"
+                :value="old('nomor_telepon', $user->nomor_telepon)" autocomplete="tel" />
             <x-input-error class="mt-2" :messages="$errors->get('nomor_telepon')" />
         </div>
 
         <!-- Email -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full"
-                          :value="old('email', $user->email)" required autocomplete="username" />
+            <x-text-input id="email" name="email" type="email"
+                class="mt-1 block w-full border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500"
+                :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
-                <div class="mt-2 text-sm text-black">
+                <div class="mt-2 text-sm text-gray-600">
+                    <i class="fa-solid fa-circle-exclamation text-yellow-500 mr-1"></i>
                     {{ __('Your email address is unverified.') }}
                     <button form="send-verification"
-                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        class="underline text-blue-600 hover:text-blue-800 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ml-1">
                         {{ __('Click here to re-send the verification email.') }}
                     </button>
                 </div>
 
                 @if (session('status') === 'verification-link-sent')
-                    <p class="mt-2 font-medium text-sm text-green-600">
+                    <p class="mt-2 font-medium text-sm text-green-600 flex items-center gap-1">
+                        <i class="fa-solid fa-envelope-circle-check"></i>
                         {{ __('A new verification link has been sent to your email address.') }}
                     </p>
                 @endif
@@ -84,27 +99,27 @@
 
         <!-- Tombol Simpan -->
         <div class="flex items-center gap-4">
-            <x-profile-button>{{ __('Save') }}</x-profile-button>
+            <button type="submit"
+                class="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold rounded-lg shadow hover:scale-105 transition">
+                <i class="fa-solid fa-save mr-2"></i> {{ __('Save') }}
+            </button>
 
             @if (session('status') === 'profile-updated')
+                <!-- Toast Notifikasi -->
                 <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 4000)" x-show="show"
-                     x-transition:enter="transition ease-out duration-300"
-                     x-transition:enter-start="opacity-0 translate-y-2"
-                     x-transition:enter-end="opacity-100 translate-y-0"
-                     x-transition:leave="transition ease-in duration-200"
-                     x-transition:leave-start="opacity-100 translate-y-0"
-                     x-transition:leave-end="opacity-0 translate-y-2"
-                     class="fixed bottom-6 right-6 z-50 max-w-sm w-full bg-green-100 border border-green-400 text-green-800 text-sm rounded-lg shadow-lg px-4 py-3"
-                     role="alert">
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 translate-y-2"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    x-transition:leave="transition ease-in duration-200"
+                    x-transition:leave-start="opacity-100 translate-y-0"
+                    x-transition:leave-end="opacity-0 translate-y-2"
+                    class="fixed bottom-6 right-6 z-50 max-w-sm w-full bg-white border-l-4 border-blue-600 text-gray-800 text-sm rounded-lg shadow-lg px-4 py-3"
+                    role="alert">
                     <div class="flex items-start">
-                        <svg class="w-5 h-5 mr-2 mt-0.5 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
-                             viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+                        <i class="fa-solid fa-circle-check text-blue-600 text-lg mr-2"></i>
                         <div>
                             <strong class="font-semibold">Success!</strong>
-                            <span class="block sm:inline">Profile updated successfully.</span>
+                            <span class="block sm:inline"> Profile updated successfully.</span>
                         </div>
                     </div>
                 </div>
@@ -115,12 +130,13 @@
     <!-- Reset Foto -->
     @if ($user->foto)
         <form method="POST" action="{{ route('user.profile.resetFoto') }}"
-              onsubmit="return confirm('Yakin ingin menghapus foto dan kembali ke default?')"
-              class="flex justify-center mt-4">
+            onsubmit="return confirm('Yakin ingin menghapus foto dan kembali ke default?')"
+            class="flex justify-center mt-7">
             @csrf
             @method('PATCH')
-            <button type="submit" class="text-red-600 hover:underline text-sm">
-                Defaultkan Foto
+            <button type="submit"
+                class="text-red-600 hover:text-red-800 font-medium flex items-center gap-1 text-sm">
+                <i class="fa-solid fa-rotate-left"></i> Defaultkan Foto
             </button>
         </form>
     @endif

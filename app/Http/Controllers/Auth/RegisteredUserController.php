@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -36,18 +37,20 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'nik' => $request->nik,
-            'nomor_telepon' => $request->nomor_telepon,
-            'email' => $request->email,
-            'role' => 'user', // default role
-            'password' => Hash::make($request->password),
+            'name'            => $request->name,
+            'nik'             => $request->nik,
+            'nomor_telepon'   => $request->nomor_telepon,
+            'email'           => $request->email,
+            'role'            => 'user', // default role
+            'password'        => Hash::make($request->password),
+            'email_verified_at' => now(), // ✅ anggap langsung terverifikasi
+            'remember_token'    => Str::random(10), // ✅ generate token
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect()->route('beranda');
+        return redirect()->route('beranda')->with('success', 'Anda berhasil masuk sebagai User.');
     }
 }

@@ -65,7 +65,7 @@
                        text-white font-semibold py-2 rounded-lg 
                        shadow-md transition duration-300 ease-in-out 
                        focus:outline-none focus:ring-2 focus:ring-blue-400">
-                {{ __('Log in') }}
+                {{ __('Login') }}
             </button>
         </div>
 
@@ -76,11 +76,12 @@
             <div class="flex-grow border-t border-white/20"></div>
         </div>
 
-        <!-- Google Login -->
-        <a href="{{ url('auth/google') }}"
+        <!-- Tombol Login dengan Google -->
+        <a href="{{ route('google.login') }}"
             class="w-full flex items-center justify-center gap-3 bg-white text-black font-medium py-2 rounded-lg shadow-md hover:bg-gray-200 transition">
+            <!-- Icon Google -->
             <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" class="w-5 h-5">
-            <span>Masuk dengan Google</span>
+            <span>Login dengan Google</span>
         </a>
 
         <!-- Register -->

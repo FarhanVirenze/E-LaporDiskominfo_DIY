@@ -48,15 +48,15 @@
         <div>
             <x-input-label for="nik" :value="__('NIK')" />
             <x-text-input id="nik" name="nik" type="text" class="mt-1 block w-full" :value="old('nik', $user->nik)"
-                required autocomplete="nik" />
+                autocomplete="nik" />
             <x-input-error class="mt-2" :messages="$errors->get('nik')" />
         </div>
 
-        <!-- Phone -->
+        <!-- Nomor Telepon -->
         <div>
             <x-input-label for="nomor_telepon" :value="__('Phone Number')" />
             <x-text-input id="nomor_telepon" name="nomor_telepon" type="text" class="mt-1 block w-full"
-                :value="old('nomor_telepon', $user->nomor_telepon)" required autocomplete="tel" />
+                :value="old('nomor_telepon', $user->nomor_telepon)" autocomplete="tel" />
             <x-input-error class="mt-2" :messages="$errors->get('nomor_telepon')" />
         </div>
 

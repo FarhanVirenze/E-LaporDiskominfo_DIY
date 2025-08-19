@@ -51,7 +51,7 @@
                     <!-- Login -->
                     <li>
                         <a href="{{ route('login') }}" class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                    {{ request()->routeIs('login')
+                                                    {{ request()->routeIs('login')
                 ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
                 : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                             <i
@@ -66,7 +66,7 @@
                     <!-- Kelola Admin -->
                     <li>
                         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                        {{ request()->routeIs('admin.dashboard')
+                                                        {{ request()->routeIs('admin.dashboard')
                     ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
                     : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                             <i
@@ -80,7 +80,7 @@
                     <!-- Kelola Superadmin -->
                     <li>
                         <a href="{{ route('superadmin.dashboard') }}" class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                        {{ request()->routeIs('superadmin.dashboard')
+                                                        {{ request()->routeIs('superadmin.dashboard')
                     ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
                     : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                             <i
@@ -104,8 +104,12 @@
                                 {{ Auth::user()->name }} <span class="mx-1 text-gray-800">|</span>
                                 {{ Auth::user()->nik }}
                             </div>
-                            <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('images/avatar.jpg') }}"
-                                alt="Avatar" class="h-8 w-8 object-cover rounded-full border border-gray-300 bg-white shadow" />
+                            <img src="{{ Auth::user()->foto
+                ? asset('storage/' . Auth::user()->foto)
+                : (Auth::user()->avatar
+                    ? Auth::user()->avatar
+                    : asset('images/avatar.jpg')) }}" alt="Avatar"
+                                class="h-8 w-8 object-cover rounded-full border border-gray-300 bg-white shadow" />
                             <svg class="w-4 h-4 text-[#0F3D3E] transition-transform" :class="{ 'rotate-180': open }"
                                 xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd"
@@ -118,7 +122,7 @@
                         <div x-show="open" x-cloak @click.outside="open = false" x-transition
                             class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-xl border border-gray-200 overflow-hidden z-50">
                             <a href="{{ route('user.profile.edit') }}" class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                {{ request()->routeIs('user.profile.edit')
+                                {{ request()->routeIs('user.profile.edit')
                 ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
                 : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                                 <i class="fas fa-user text-[17px] w-5"></i>
@@ -128,7 +132,7 @@
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="w-full text-left flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                    hover:bg-blue-100 hover:text-blue-600 text-gray-800">
+                                    hover:bg-blue-100 hover:text-blue-600 text-gray-800">
                                     <i class="fas fa-sign-out-alt text-[17px] w-5"></i>
                                     <span>Logout</span>
                                 </button>
@@ -180,7 +184,7 @@
                 <li>
                     <a href="{{ route('login') }}"
                         class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                                                            {{ request()->routeIs('login') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                                                                                                    {{ request()->routeIs('login') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                         <i
                             class="fas fa-sign-in-alt text-[17px] w-5 {{ request()->routeIs('login') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
                         <span>Login</span>
@@ -189,81 +193,84 @@
             @endguest
 
             @auth
-                @if (Auth::user()->role === 'admin')
-                    <li>
-                        <a href="{{ route('admin.dashboard') }}"
-                            class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                                                                                                                                                {{ request()->routeIs('admin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
-                            <i
-                                class="fas fa-tools text-[17px] w-5 {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
-                            <span>Kelola Admin</span>
-                        </a>
-                    </li>
-                @endif
-
-                @if (Auth::user()->role === 'superadmin')
-                    <li>
-                        <a href="{{ route('superadmin.dashboard') }}"
-                            class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                                                                                                                                                {{ request()->routeIs('superadmin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
-                            <i
-                                class="fas fa-user-cog text-[17px] w-5 {{ request()->routeIs('superadmin.dashboard') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
-                            <span>Kelola Superadmin</span>
-                        </a>
-                    </li>
-                @endif
-
-                <!-- Avatar + Profil & Logout di Sidebar (Accordion Style) -->
-                <li class="pt-2 border-t border-gray-200">
-                    <div x-data="{ open: false }">
-                        <!-- Trigger -->
-                        <button @click="open = !open" class="flex items-center gap-3 w-full px-2 py-2 rounded-lg transition
-                                                                       hover:bg-blue-100 hover:text-blue-600"
-                            :class="{ 'bg-blue-50 text-blue-700 shadow-sm': open }">
-                            <img src="{{ Auth::user()->foto ? asset('storage/' . Auth::user()->foto) : asset('images/avatar.jpg') }}"
-                                alt="Avatar"
-                                class="h-10 w-10 rounded-full object-cover border-2 border-blue-800 bg-white shadow" />
-                            <div class="flex flex-col text-left flex-1">
-                                <span class="text-gray-700 font-semibold text-md leading-tight"
-                                    :class="{ 'text-blue-700': open }">
-                                    {{ Auth::user()->name }}
-                                </span>
-                                <span class="text-gray-500 text-sm capitalize leading-tight">
-                                    {{ Auth::user()->nik }}
-                                </span>
-                            </div>
-                            <!-- Icon Chevron -->
-                            <i class="fas fa-chevron-down text-gray-500 transition-transform duration-300"
-                                :class="{ 'rotate-180 text-blue-700': open }"></i>
-                        </button>
-
-                        <!-- Menu Dropdown -->
-                        <div x-show="open" x-transition:enter="transition ease-out duration-300"
-                            x-transition:enter-start="opacity-0 max-h-0" x-transition:enter-end="opacity-100 max-h-40"
-                            x-transition:leave="transition ease-in duration-200"
-                            x-transition:leave-start="opacity-100 max-h-40" x-transition:leave-end="opacity-0 max-h-0"
-                            class="overflow-hidden mt-2 space-y-1">
-
-                            <!-- Tombol Profil -->
-                            <a href="{{ route('user.profile.edit') }}"
+                    @if (Auth::user()->role === 'admin')
+                        <li>
+                            <a href="{{ route('admin.dashboard') }}"
                                 class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                    {{ request()->routeIs('user.profile.edit') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
-                                <i class="fas fa-user text-[17px] w-5"></i>
-                                <span>Profil</span>
+                                                                                                                                                                                                    {{ request()->routeIs('admin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                                <i
+                                    class="fas fa-tools text-[17px] w-5 {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                                <span>Kelola Admin</span>
                             </a>
+                        </li>
+                    @endif
 
-                            <!-- Tombol Logout -->
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="w-full text-left flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                        hover:bg-blue-100 hover:text-blue-600 text-gray-800">
-                                    <i class="fas fa-sign-out-alt text-[17px] w-5"></i>
-                                    <span>Logout</span>
-                                </button>
-                            </form>
+                    @if (Auth::user()->role === 'superadmin')
+                        <li>
+                            <a href="{{ route('superadmin.dashboard') }}"
+                                class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                                                                                                                                                                                                    {{ request()->routeIs('superadmin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                                <i
+                                    class="fas fa-user-cog text-[17px] w-5 {{ request()->routeIs('superadmin.dashboard') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                                <span>Kelola Superadmin</span>
+                            </a>
+                        </li>
+                    @endif
+
+                    <!-- Avatar + Profil & Logout di Sidebar (Accordion Style) -->
+                    <li class="pt-2 border-t border-gray-200">
+                        <div x-data="{ open: false }">
+                            <!-- Trigger -->
+                            <button @click="open = !open" class="flex items-center gap-3 w-full px-2 py-2 rounded-lg transition
+                                                                                   hover:bg-blue-100 hover:text-blue-600"
+                                :class="{ 'bg-blue-50 text-blue-700 shadow-sm': open }">
+                                <img src="{{ Auth::user()->foto
+                ? asset('storage/' . Auth::user()->foto)
+                : (Auth::user()->avatar
+                    ? Auth::user()->avatar
+                    : asset('images/avatar.jpg')) }}" alt="Avatar"
+                                    class="h-10 w-10 rounded-full object-cover border-2 border-blue-800 bg-white shadow" />
+                                <div class="flex flex-col text-left flex-1">
+                                    <span class="text-gray-700 font-semibold text-md leading-tight"
+                                        :class="{ 'text-blue-700': open }">
+                                        {{ Auth::user()->name }}
+                                    </span>
+                                    <span class="text-gray-500 text-sm capitalize leading-tight">
+                                        {{ Auth::user()->nik }}
+                                    </span>
+                                </div>
+                                <!-- Icon Chevron -->
+                                <i class="fas fa-chevron-down text-gray-500 transition-transform duration-300"
+                                    :class="{ 'rotate-180 text-blue-700': open }"></i>
+                            </button>
+
+                            <!-- Menu Dropdown -->
+                            <div x-show="open" x-transition:enter="transition ease-out duration-300"
+                                x-transition:enter-start="opacity-0 max-h-0" x-transition:enter-end="opacity-100 max-h-40"
+                                x-transition:leave="transition ease-in duration-200"
+                                x-transition:leave-start="opacity-100 max-h-40" x-transition:leave-end="opacity-0 max-h-0"
+                                class="overflow-hidden mt-2 space-y-1">
+
+                                <!-- Tombol Profil -->
+                                <a href="{{ route('user.profile.edit') }}"
+                                    class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                                                                {{ request()->routeIs('user.profile.edit') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                                    <i class="fas fa-user text-[17px] w-5"></i>
+                                    <span>Profil</span>
+                                </a>
+
+                                <!-- Tombol Logout -->
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="w-full text-left flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                                                                    hover:bg-blue-100 hover:text-blue-600 text-gray-800">
+                                        <i class="fas fa-sign-out-alt text-[17px] w-5"></i>
+                                        <span>Logout</span>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                </li>
+                    </li>
             @endauth
         </ul>
     </div>

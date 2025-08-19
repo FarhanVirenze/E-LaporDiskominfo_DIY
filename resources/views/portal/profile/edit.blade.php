@@ -1,4 +1,4 @@
-@extends('portal.layouts.app')
+@extends('portal.layouts.appnofooter')
 
 @section('include-css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
@@ -7,31 +7,30 @@
 
 @section('content')
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6 md:mt-4 lg:mt-12">
             <!-- Panggil Komponen Riwayat Tabs -->
             @component('components.riwayat-tabs')
             <!-- Slot: Konten Profil -->
             <div class="space-y-6">
+
                 <!-- Profile Information Section -->
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg border-2 border-white outline-8 outline-red-500">
-                    <div class="max-w-xl">
-                        @include('portal.profile.partials.update-profile-information-form')
-                    </div>
+                <div
+                    class="p-6 sm:p-8 bg-white shadow-lg rounded-xl border border-gray-200 hover:shadow-xl transition w-full max-w-3xl mx-auto">
+                    @include('portal.profile.partials.update-profile-information-form')
                 </div>
 
                 <!-- Password Update Section -->
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg border-2 border-white outline-8 outline-red-500">
-                    <div class="max-w-xl">
-                        @include('portal.profile.partials.update-password-form')
-                    </div>
+                <div
+                    class="p-6 sm:p-8 bg-white shadow-lg rounded-xl border border-gray-200 hover:shadow-xl transition w-full max-w-3xl mx-auto">
+                    @include('portal.profile.partials.update-password-form')
                 </div>
 
                 <!-- Delete Account Section -->
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg border-2 border-white outline-8 outline-red-500">
-                    <div class="max-w-xl">
-                        @include('portal.profile.partials.delete-user-form')
-                    </div>
+                <div
+                    class="p-6 sm:p-8 bg-white shadow-lg rounded-xl border border-gray-200 hover:shadow-xl transition w-full max-w-3xl mx-auto">
+                    @include('portal.profile.partials.delete-user-form')
                 </div>
+
             </div>
             @endcomponent
         </div>
@@ -94,3 +93,4 @@
     </script>
 
 @endsection
+

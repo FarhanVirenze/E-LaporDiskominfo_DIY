@@ -84,6 +84,26 @@ class Report extends Model
         return $this->belongsTo(User::class, 'admin_id', 'id_user');
     }
 
+    public function votes()
+    {
+        return $this->hasMany(Vote::class);
+    }
+
+    public function likedBy($userId)
+    {
+        return $this->votes()->where('user_id', $userId)->where('vote_type', 'like')->exists();
+    }
+
+    public function dislikedBy($userId)
+    {
+        return $this->votes()->where('user_id', $userId)->where('vote_type', 'dislike')->exists();
+    }
+
+    public function pelapor()
+    {
+        return $this->belongsTo(User::class, 'nama_pengadu', 'name');
+    }
+
     // (Opsional) Generate tracking_id otomatis jika belum diset
     protected static function booted()
     {
