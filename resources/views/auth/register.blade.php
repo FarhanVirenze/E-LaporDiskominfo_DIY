@@ -100,8 +100,8 @@
 
         <!-- Tombol Register -->
         <div class="mt-4 sm:mt-6">
-            <button type="submit" class="w-full justify-center bg-gradient-to-r from-blue-500 to-cyan-500 
-                       hover:from-blue-600 hover:to-cyan-600 
+            <button type="submit" class="w-full justify-center bg-gradient-to-r from-red-500 to-rose-500 
+                       hover:from-red-600 hover:to-rose-600 
                        text-white font-semibold py-1.5 sm:py-2 rounded-lg 
                        shadow-md transition duration-300 ease-in-out 
                        focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base">

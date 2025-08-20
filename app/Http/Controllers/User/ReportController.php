@@ -20,35 +20,45 @@ class ReportController extends Controller
      * Menampilkan semua laporan milik user (atau semua jika tidak login).
      */
     public function index()
-    {
-        if (auth()->check()) {
-            $user = auth()->user();
+{
+    if (auth()->check()) {
+        $user = auth()->user();
 
-            if ($user->role === 'admin') {
-                $kategoriIds = $user->kategori->pluck('id')->toArray();
+        if ($user->role === 'admin') {
+            $kategoriIds = $user->kategori->pluck('id')->toArray();
 
-                $reports = Report::whereIn('kategori_id', $kategoriIds)
-                    ->with('pelapor') // load user sesuai nama_pengadu
-                    ->latest()
-                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
-            } elseif ($user->role === 'superadmin') {
-                $reports = Report::with('pelapor')
-                    ->latest()
-                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
-            } else {
-                $reports = Report::where('user_id', $user->id_user)
-                    ->with('pelapor')
-                    ->latest()
-                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
-            }
-        } else {
+            $reports = Report::whereIn('kategori_id', $kategoriIds)
+                ->with('pelapor')
+                ->latest()
+                ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
+        } elseif ($user->role === 'superadmin') {
             $reports = Report::with('pelapor')
                 ->latest()
                 ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
+        } else {
+            $reports = Report::where('user_id', $user->id_user)
+                ->with('pelapor')
+                ->latest()
+                ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
         }
-
-        return view('portal.welcome', compact('reports'));
+    } else {
+        $reports = Report::with('pelapor')
+            ->latest()
+            ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
     }
+
+    // 🔹 Tambahkan statistik di sini
+    $totalAduan = Report::count();
+
+    $aduanBulanIni = Report::whereMonth('created_at', Carbon::now()->month)
+        ->whereYear('created_at', Carbon::now()->year)
+        ->count();
+
+    $aduanSelesai = Report::where('status', Report::STATUS_SELESAI)->count();
+
+    return view('portal.welcome', compact('reports', 'totalAduan', 'aduanBulanIni', 'aduanSelesai'));
+}
+
 
     /**
      * Tampilkan form pembuatan laporan.

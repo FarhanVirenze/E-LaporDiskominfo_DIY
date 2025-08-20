@@ -2,7 +2,7 @@
     <div class="relative border-t border-white/10 backdrop-blur-md shadow-inner overflow-hidden">
 
         <!-- Background Gambar sebagai layer terpisah -->
-        <div class="absolute inset-0 bg-cover bg-center z-10" style="background-image: url('/images/redfooter.jpg');">
+        <div class="absolute inset-0 bg-cover bg-center z-10" style="background-image: url('/images/red.jpg');">
         </div>
 
         <!-- Overlay Gelap Transparan -->

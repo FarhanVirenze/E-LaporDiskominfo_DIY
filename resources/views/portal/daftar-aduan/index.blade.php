@@ -123,7 +123,7 @@
                     <div
                         class="flex items-center gap-3 col-span-1 sm:col-span-3 lg:col-span-2 justify-center lg:justify-center">
                         <button type="submit"
-                            class="flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-red-500 to-rose-500 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition leading-none">
+                            class="flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-red-600 to-rose-500 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition leading-none">
                             <i class="fas fa-filter"></i> Filter
                         </button>
                         <a href="{{ route('daftar-aduan') }}"

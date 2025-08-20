@@ -45,13 +45,10 @@
 
     <!-- Full Background -->
     <div class="min-h-screen flex items-center justify-center bg-cover bg-center relative"
-        style="background-image: url('/images/carousel1.jpg');">
+        style="background-image: url('/images/login1.jpg');">
 
         <!-- Overlay Hitam -->
-        <div class="absolute inset-0 bg-black/60 z-10"></div>
-
-        <!-- Overlay Biru -->
-        <div class="absolute inset-0 bg-blue-600/30"></div>
+        <div class="absolute inset-0 bg-black/30 z-10"></div>
 
         <!-- Content Wrapper -->
         <div
