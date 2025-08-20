@@ -396,7 +396,7 @@
                                             @if($report->admin)
                                                 <span
                                                     class="inline-block px-3 py-1 rounded-full text-xs font-semibold 
-                                                                                                                                                                                                                                                                                                                        border border-transparent bg-gradient-to-r from-blue-500 to-cyan-500 
+                                                                                                                                                                                                                                                                                                                        border border-transparent bg-gradient-to-r from-red-500 to-rose-500 
                                                                                                                                                                                                                                                                                                                         text-white shadow-md hover:shadow-lg">
                                                     {{ $report->admin->name }}
                                                 </span>
@@ -421,7 +421,7 @@
                             {{-- Timeline Aduan (hanya muncul di mobile) --}}
                             <div x-data="{ openTimeline: false }" class="md:hidden">
                                 <h2 class="flex items-center text-lg justify-between gap-2 px-6 py-2 rounded-full 
-                                                               bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-semibold 
+                                                               bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-700 hover:to-rose-600 text-white font-semibold 
                                                                shadow-lg hover:shadow-xl transition mb-5 mt-5 cursor-pointer"
                                     @click="openTimeline = !openTimeline">
                                     <span>Timeline Aduan</span>
@@ -431,7 +431,7 @@
                                     </span>
                                 </h2>
 
-                                <div class="relative border-l-4 border-blue-400 ml-3" x-show="openTimeline"
+                                <div class="relative border-l-4 border-red-400 ml-3" x-show="openTimeline"
                                     x-transition.duration.300ms>
                                     @foreach($timeline as $item)
                                         <div class="mb-4 ml-6">
@@ -612,7 +612,7 @@
                                                 placeholder="Tindak lanjut..." required></textarea>
                                             <input type="file" name="file" class="block w-full border rounded p-1">
                                             <button type="submit"
-                                                class="flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition group">
+                                                class="flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-red-500 to-rose-500 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition group">
                                                 <i class="fas fa-paper-plane text-white"></i>
                                                 <span>Kirim Tindak Lanjut</span>
                                             </button>
@@ -723,7 +723,7 @@
                                                 placeholder="Tulis komentar..." required></textarea>
                                             <input type="file" name="file" class="block w-full border rounded p-1">
                                             <button type="submit"
-                                                class="flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition group">
+                                                class="flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-red-500 to-rose-500 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition group">
                                                 <i class="fas fa-paper-plane text-white"></i>
                                                 <span>Kirim Komentar</span>
                                             </button>
@@ -950,7 +950,7 @@
                 });
 
                 const activeBtn = document.getElementById(`tab-${tab}`);
-                activeBtn.classList.remove('text-gray-600', 'border-transparent');
+                activeBtn.classList.remove('text-blue-600', 'border-transparent');
                 activeBtn.classList.add('border-blue-600', 'text-blue-600');
 
                 const activePane = document.querySelector(`.tab-pane[data-tab="${tab}"]`);

@@ -45,29 +45,24 @@
 
         #nprogress .bar {
             background: linear-gradient(to right,
-                    #1e3a8a,
-                    /* biru tua (indigo-900) */
-                    #2563eb,
-                    /* biru utama (blue-600) */
-                    #3b82f6,
-                    /* biru terang (blue-500) */
-                    #06b6d4
-                    /* cyan neon sebagai aksen */
+                    #ff1744,
+                    /* vivid red */
+                    #f50057
+                    /* pinkish red */
                 );
             height: 3px;
         }
 
         #nprogress .peg {
             box-shadow:
-                0 0 15px #2563eb,
-                0 0 10px #3b82f6,
-                0 0 8px #06b6d4;
-            /* glow biru dominan */
+                0 0 15px #ff1744,
+                0 0 10px #f50057,
+                0 0 6px #ff4081;
         }
 
         #nprogress .spinner-icon {
-            border-top-color: #2563eb;
-            border-left-color: #3b82f6;
+            border-top-color: #ff1744;
+            border-left-color: #f50057;
         }
     </style>
 </head>
@@ -96,4 +91,5 @@
     @stack('scripts')
 
 </body>
+
 </html>

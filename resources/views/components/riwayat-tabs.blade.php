@@ -4,27 +4,27 @@
         <div class="space-y-2">
             <!-- Riwayat Aduan -->
             <a href="{{ route('user.aduan.riwayat') }}" class="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors duration-200
-          {{ request()->routeIs('user.aduan.riwayat')
-    ? 'bg-gradient-to-r from-[#2563eb] to-[#1e40af] text-white'
-    : 'bg-gray-100 text-[#2563eb] hover:bg-gray-300 hover:text-[#1e40af]' }}">
+           {{ request()->routeIs('user.aduan.riwayat')
+    ? 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] text-white'
+    : 'bg-gray-100 text-[#ef4444] hover:bg-gray-300 hover:text-[#b91c1c]' }}">
                 <i class="fa-solid fa-clock-rotate-left w-5 h-5"></i>
                 <span>Riwayat Aduan</span>
             </a>
 
             <!-- Profil -->
             <a href="{{ route('user.profile.edit') }}" class="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors duration-200
-          {{ request()->routeIs('user.profile.edit')
-    ? 'bg-gradient-to-r from-[#2563eb] to-[#1e40af] text-white'
-    : 'bg-gray-100 text-[#2563eb] hover:bg-gray-300 hover:text-[#1e40af]' }}">
+           {{ request()->routeIs('user.profile.edit')
+    ? 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] text-white'
+    : 'bg-gray-100 text-[#ef4444] hover:bg-gray-300 hover:text-[#b91c1c]' }}">
                 <i class="fa-solid fa-user w-5 h-5"></i>
                 <span>Profil</span>
             </a>
 
             <!-- Buat Aduan (desktop) -->
             <a href="{{ route('beranda') }}" class="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors duration-200
-   {{ request()->routeIs('beranda')
-    ? 'bg-gradient-to-r from-[#2563eb] to-[#1e40af] text-white'
-    : 'bg-gray-100 text-[#2563eb] hover:bg-gray-300 hover:text-[#1e40af]' }}">
+           {{ request()->routeIs('beranda')
+    ? 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] text-white'
+    : 'bg-gray-100 text-[#ef4444] hover:bg-gray-300 hover:text-[#b91c1c]' }}">
                 <i class="fa-solid fa-plus w-5 h-5"></i>
                 <span>Buat Aduan</span>
             </a>
@@ -43,8 +43,8 @@
         <!-- Riwayat -->
         <a href="{{ route('user.aduan.riwayat') }}" class="flex flex-col items-center justify-center py-2 text-sm font-medium
           {{ request()->routeIs('user.aduan.riwayat')
-    ? 'text-[#2563eb] hover:text-[#2563eb] cursor-default'
-    : 'text-gray-500 hover:text-[#2563eb]' }}">
+    ? 'text-[#ef4444] hover:text-[#ef4444] cursor-default'
+    : 'text-gray-500 hover:text-[#ef4444]' }}">
             <i class="fa-solid fa-clock-rotate-left text-lg"></i>
             <span>Riwayat</span>
         </a>
@@ -54,21 +54,21 @@
             class="absolute -top-5 left-1/2 transform -translate-x-1/2 flex flex-col items-center group">
 
             <!-- Icon bulat -->
-            <div class="bg-gradient-to-r from-blue-600 to-blue-500 text-white 
+            <div class="bg-gradient-to-r from-red-600 to-red-500 text-white 
                 w-14 h-14 rounded-full flex items-center justify-center 
                 shadow-lg group-hover:scale-110 transition-all">
                 <i class="fa-solid fa-plus text-xl"></i>
             </div>
 
             <!-- Label -->
-            <span class="mt-1 text-xs font-medium text-[#2563eb]">Buat Aduan</span>
+            <span class="mt-1 text-xs font-medium text-[#ef4444]">Buat Aduan</span>
         </a>
 
         <!-- Profil -->
         <a href="{{ route('user.profile.edit') }}" class="flex flex-col items-center justify-center py-2 text-sm font-medium
           {{ request()->routeIs('user.profile.edit')
-    ? 'text-[#2563eb] hover:text-[#2563eb] cursor-default'
-    : 'text-gray-500 hover:text-[#2563eb]' }}">
+    ? 'text-[#ef4444] hover:text-[#ef4444] cursor-default'
+    : 'text-gray-500 hover:text-[#ef4444]' }}">
             <i class="fa-solid fa-user text-lg"></i>
             <span>Profil</span>
         </a>

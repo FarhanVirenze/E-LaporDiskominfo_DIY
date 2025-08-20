@@ -13,36 +13,36 @@
 
             <!-- Daftar Aduan -->
             <li>
-                <a href="{{ route('daftar-aduan') }}" class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                <a href="{{ route('daftar-aduan') }}" class="group flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
                 {{ request()->routeIs('daftar-aduan')
-    ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
-    : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+    ? 'bg-gradient-to-b from-[#FF5252] to-[#B71C1C] text-white'
+    : 'hover:bg-red-100 hover:text-red-600 text-gray-800' }}">
                     <i
-                        class="fas fa-list text-[17px] w-5 {{ request()->routeIs('daftar-aduan') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                        class="fas fa-list text-[17px] w-5 {{ request()->routeIs('daftar-aduan') ? 'text-white' : 'text-gray-500 group-hover:text-red-600' }}"></i>
                     <span>Daftar Aduan</span>
                 </a>
             </li>
 
             <!-- WBS -->
             <li>
-                <a href="{{ route('wbs.index') }}" class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                <a href="{{ route('wbs.index') }}" class="group flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
                 {{ request()->routeIs('wbs.index')
-    ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
-    : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+    ? 'bg-gradient-to-b from-[#FF5252] to-[#B71C1C] text-white'
+    : 'hover:bg-red-100 hover:text-red-600 text-gray-800' }}">
                     <i
-                        class="fas fa-user-secret text-[17px] w-5 {{ request()->routeIs('wbs.index') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                        class="fas fa-user-secret text-[17px] w-5 {{ request()->routeIs('wbs.index') ? 'text-white' : 'text-gray-500 group-hover:text-red-600' }}"></i>
                     <span>WBS</span>
                 </a>
             </li>
 
             <!-- Tentang Kami -->
             <li>
-                <a href="{{ route('tentang') }}" class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                <a href="{{ route('tentang') }}" class="group flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
                 {{ request()->routeIs('tentang')
-    ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
-    : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+    ? 'bg-gradient-to-b from-[#FF5252] to-[#B71C1C] text-white'
+    : 'hover:bg-red-100 hover:text-red-600 text-gray-800' }}">
                     <i
-                        class="fas fa-info-circle text-[17px] w-5 {{ request()->routeIs('tentang') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                        class="fas fa-info-circle text-[17px] w-5 {{ request()->routeIs('tentang') ? 'text-white' : 'text-gray-500 group-hover:text-red-600' }}"></i>
                     <span>Tentang Kami</span>
                 </a>
             </li>
@@ -50,12 +50,12 @@
             @guest
                     <!-- Login -->
                     <li>
-                        <a href="{{ route('login') }}" class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                    {{ request()->routeIs('login')
-                ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
-                : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                        <a href="{{ route('login') }}" class="group flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                                                            {{ request()->routeIs('login')
+                ? 'bg-gradient-to-b from-[#FF5252] to-[#B71C1C] text-white'
+                : 'hover:bg-red-100 hover:text-red-600 text-gray-800' }}">
                             <i
-                                class="fas fa-sign-in-alt text-[17px] w-5 {{ request()->routeIs('login') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                                class="fas fa-sign-in-alt text-[17px] w-5 {{ request()->routeIs('login') ? 'text-white' : 'text-gray-500 group-hover:text-red-600' }}"></i>
                             <span>Login</span>
                         </a>
                     </li>
@@ -65,12 +65,12 @@
                 @if (Auth::user()->role === 'admin')
                     <!-- Kelola Admin -->
                     <li>
-                        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                        {{ request()->routeIs('admin.dashboard')
-                    ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
-                    : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                        <a href="{{ route('admin.dashboard') }}" class="group flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                                                                {{ request()->routeIs('admin.dashboard')
+                    ? 'bg-gradient-to-b from-[#FF5252] to-[#B71C1C] text-white'
+                    : 'hover:bg-red-100 hover:text-red-600 text-gray-800' }}">
                             <i
-                                class="fas fa-tools text-[17px] w-5 {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                                class="fas fa-tools text-[17px] w-5 {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-gray-500 group-hover:text-red-600' }}"></i>
                             <span>Kelola Admin</span>
                         </a>
                     </li>
@@ -79,12 +79,12 @@
                 @if (Auth::user()->role === 'superadmin')
                     <!-- Kelola Superadmin -->
                     <li>
-                        <a href="{{ route('superadmin.dashboard') }}" class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                        {{ request()->routeIs('superadmin.dashboard')
-                    ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
-                    : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                        <a href="{{ route('superadmin.dashboard') }}" class="group flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                                                                {{ request()->routeIs('superadmin.dashboard')
+                    ? 'bg-gradient-to-b from-[#FF5252] to-[#B71C1C] text-white'
+                    : 'hover:bg-red-100 hover:text-red-600 text-gray-800' }}">
                             <i
-                                class="fas fa-user-cog text-[17px] w-5 {{ request()->routeIs('superadmin.dashboard') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                                class="fas fa-user-cog text-[17px] w-5 {{ request()->routeIs('superadmin.dashboard') ? 'text-white' : 'text-gray-500 group-hover:text-red-600' }}"></i>
                             <span>Kelola Superadmin</span>
                         </a>
                     </li>
@@ -122,9 +122,9 @@
                         <div x-show="open" x-cloak @click.outside="open = false" x-transition
                             class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-xl border border-gray-200 overflow-hidden z-50">
                             <a href="{{ route('user.profile.edit') }}" class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                {{ request()->routeIs('user.profile.edit')
+                                        {{ request()->routeIs('user.profile.edit')
                 ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white'
-                : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                : 'hover:bg-red-100 hover:text-red-600 text-gray-800' }}">
                                 <i class="fas fa-user text-[17px] w-5"></i>
                                 <span>Profil</span>
                             </a>
@@ -132,7 +132,7 @@
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="w-full text-left flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                    hover:bg-blue-100 hover:text-blue-600 text-gray-800">
+                                            hover:bg-red-100 hover:text-red-600 text-gray-800">
                                     <i class="fas fa-sign-out-alt text-[17px] w-5"></i>
                                     <span>Logout</span>
                                 </button>
@@ -154,28 +154,28 @@
         <ul class="bg-white px-2 py-2 space-y-2">
             <li>
                 <a href="{{ route('daftar-aduan') }}"
-                    class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                {{ request()->routeIs('daftar-aduan') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                    class="group flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                {{ request()->routeIs('daftar-aduan') ? 'bg-gradient-to-b from-[#FF5252] to-[#B71C1C] text-white' : 'hover:bg-red-100 hover:text-red-600 text-gray-800' }}">
                     <i
-                        class="fas fa-list text-[17px] w-5 {{ request()->routeIs('daftar-aduan') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                        class="fas fa-list text-[17px] w-5 {{ request()->routeIs('daftar-aduan') ? 'text-white' : 'text-gray-500 group-hover:text-red-600' }}"></i>
                     <span>Daftar Aduan</span>
                 </a>
             </li>
             <li>
                 <a href="{{ route('wbs.index') }}"
-                    class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                {{ request()->routeIs('wbs.index') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                    class="group flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                {{ request()->routeIs('wbs.index') ? 'bg-gradient-to-b from-[#FF5252] to-[#B71C1C] text-white' : 'hover:bg-red-100 hover:text-red-600 text-gray-800' }}">
                     <i
-                        class="fas fa-user-secret text-[17px] w-5 {{ request()->routeIs('wbs.index') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                        class="fas fa-user-secret text-[17px] w-5 {{ request()->routeIs('wbs.index') ? 'text-white' : 'text-gray-500 group-hover:text-red-600' }}"></i>
                     <span>Wbs</span>
                 </a>
             </li>
             <li>
                 <a href="{{ route('tentang') }}"
-                    class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                {{ request()->routeIs('tentang') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                    class="group flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                {{ request()->routeIs('tentang') ? 'bg-gradient-to-b from-[#FF5252] to-[#B71C1C] text-white' : 'hover:bg-red-100 hover:text-red-600 text-gray-800' }}">
                     <i
-                        class="fas fa-info-circle text-[17px] w-5 {{ request()->routeIs('tentang') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                        class="fas fa-info-circle text-[17px] w-5 {{ request()->routeIs('tentang') ? 'text-white' : 'text-gray-500 group-hover:text-red-600' }}"></i>
                     <span>Tentang Kami</span>
                 </a>
             </li>
@@ -183,10 +183,10 @@
             @guest
                 <li>
                     <a href="{{ route('login') }}"
-                        class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                                                                    {{ request()->routeIs('login') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                        class="group flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                                                                                                        {{ request()->routeIs('login') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-red-100 hover:text-red-600 text-gray-800' }}">
                         <i
-                            class="fas fa-sign-in-alt text-[17px] w-5 {{ request()->routeIs('login') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                            class="fas fa-sign-in-alt text-[17px] w-5 {{ request()->routeIs('login') ? 'text-white' : 'text-gray-500 group-hover:text-red-600' }}"></i>
                         <span>Login</span>
                     </a>
                 </li>
@@ -196,10 +196,10 @@
                     @if (Auth::user()->role === 'admin')
                         <li>
                             <a href="{{ route('admin.dashboard') }}"
-                                class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                                                                                                                                                                    {{ request()->routeIs('admin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                                class="group flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                                                                                                                                                                                                                {{ request()->routeIs('admin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                                 <i
-                                    class="fas fa-tools text-[17px] w-5 {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                                    class="fas fa-tools text-[17px] w-5 {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-gray-500 group-hover:text-red-600' }}"></i>
                                 <span>Kelola Admin</span>
                             </a>
                         </li>
@@ -208,10 +208,10 @@
                     @if (Auth::user()->role === 'superadmin')
                         <li>
                             <a href="{{ route('superadmin.dashboard') }}"
-                                class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                                                                                                                                                                    {{ request()->routeIs('superadmin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                                class="group flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                                                                                                                                                                                                                {{ request()->routeIs('superadmin.dashboard') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
                                 <i
-                                    class="fas fa-user-cog text-[17px] w-5 {{ request()->routeIs('superadmin.dashboard') ? 'text-white' : 'text-gray-500 hover:text-blue-600' }}"></i>
+                                    class="fas fa-user-cog text-[17px] w-5 {{ request()->routeIs('superadmin.dashboard') ? 'text-white' : 'text-gray-500 group-hover:text-red-600' }}"></i>
                                 <span>Kelola Superadmin</span>
                             </a>
                         </li>
@@ -222,14 +222,14 @@
                         <div x-data="{ open: false }">
                             <!-- Trigger -->
                             <button @click="open = !open" class="flex items-center gap-3 w-full px-2 py-2 rounded-lg transition
-                                                                                   hover:bg-blue-100 hover:text-blue-600"
-                                :class="{ 'bg-blue-50 text-blue-700 shadow-sm': open }">
+                                                                                           hover:bg-red-100 hover:text-red-600"
+                                :class="{ 'bg-red-50 text-red-700 shadow-sm': open }">
                                 <img src="{{ Auth::user()->foto
                 ? asset('storage/' . Auth::user()->foto)
                 : (Auth::user()->avatar
                     ? Auth::user()->avatar
                     : asset('images/avatar.jpg')) }}" alt="Avatar"
-                                    class="h-10 w-10 rounded-full object-cover border-2 border-blue-800 bg-white shadow" />
+                                    class="h-10 w-10 rounded-full object-cover border-2 border-red-800 bg-white shadow" />
                                 <div class="flex flex-col text-left flex-1">
                                     <span class="text-gray-700 font-semibold text-md leading-tight"
                                         :class="{ 'text-blue-700': open }">
@@ -241,7 +241,7 @@
                                 </div>
                                 <!-- Icon Chevron -->
                                 <i class="fas fa-chevron-down text-gray-500 transition-transform duration-300"
-                                    :class="{ 'rotate-180 text-blue-700': open }"></i>
+                                    :class="{ 'rotate-180 text-red-700': open }"></i>
                             </button>
 
                             <!-- Menu Dropdown -->
@@ -254,7 +254,7 @@
                                 <!-- Tombol Profil -->
                                 <a href="{{ route('user.profile.edit') }}"
                                     class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                                {{ request()->routeIs('user.profile.edit') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-blue-100 hover:text-blue-600 text-gray-800' }}">
+                                                                        {{ request()->routeIs('user.profile.edit') ? 'bg-gradient-to-b from-[#2962FF] to-[#0039CB] text-white' : 'hover:bg-red-100 hover:text-red-600 text-gray-800' }}">
                                     <i class="fas fa-user text-[17px] w-5"></i>
                                     <span>Profil</span>
                                 </a>
@@ -263,7 +263,7 @@
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="w-full text-left flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-                                                                    hover:bg-blue-100 hover:text-blue-600 text-gray-800">
+                                                                            hover:bg-red-100 hover:text-red-600 text-gray-800">
                                         <i class="fas fa-sign-out-alt text-[17px] w-5"></i>
                                         <span>Logout</span>
                                     </button>

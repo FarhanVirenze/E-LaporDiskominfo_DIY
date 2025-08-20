@@ -10,8 +10,8 @@
     @if (session('success'))
         <div id="alert-success"
             class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
-                                                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-blue-400 
-                                                                       bg-gradient-to-r from-blue-600 to-blue-500/90 backdrop-blur-md text-white 
+                                                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
+                                                                       bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
                                                                        transition-all duration-500 opacity-100 animate-fade-in">
 
             <!-- Ikon -->
@@ -132,9 +132,9 @@
             </div>
 
             <!-- RESPONSIVE TABLE -->
-            <div class="overflow-x-auto bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border border-blue-100">
+            <div class="overflow-x-auto bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border border-red-100">
                 <table class="min-w-full text-sm hidden md:table">
-                    <thead class="bg-gradient-to-r from-blue-700 to-blue-500 text-white">
+                    <thead class="bg-gradient-to-r from-red-700 to-red-500 text-white">
                         <tr>
                             <th class="px-4 py-3 text-left font-semibold">No</th>
                             <th class="px-4 py-3 text-left font-semibold">No Aduan</th>
@@ -148,7 +148,7 @@
                         @forelse ($aduan as $index => $item)
                             <tr class="hover:bg-blue-50 transition-colors duration-200">
                                 <td class="px-4 py-3 font-medium text-gray-700">{{ $index + 1 }}</td>
-                                <td class="px-4 py-3 text-blue-700 font-semibold">{{ $item->tracking_id }}</td>
+                                <td class="px-4 py-3 text-gray-700 font-semibold">{{ $item->tracking_id }}</td>
                                 <td class="px-4 py-3">{{ $item->judul }}</td>
                                 <td class="px-4 py-3 text-gray-600">
                                     {{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMM YYYY') }}
@@ -165,7 +165,7 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     <a href="{{ route('reports.show', $item->id) }}"
-                                        class="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors">
+                                        class="inline-flex items-center gap-1 text-red-600 hover:text-red-800 transition-colors">
                                         <i class="fas fa-search"></i> Lihat
                                     </a>
                                 </td>
@@ -186,7 +186,7 @@
 
                             <!-- Header dengan gradasi biru + status -->
                             <div
-                                class="bg-gradient-to-r from-blue-700 to-blue-500 p-3 px-4 text-white text-xs flex justify-between items-center">
+                                class="bg-gradient-to-r from-red-700 to-red-500 p-3 px-4 text-white text-xs flex justify-between items-center">
                                 <div>
                                     <span class="font-semibold">{{ $loop->iteration }}. {{ $item->tracking_id }}</span><br>
                                     <span>{{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMM YYYY') }}</span>
@@ -203,11 +203,11 @@
 
                             <!-- Konten card -->
                             <div class="bg-white text-gray-800 p-4 flex justify-between items-center">
-                                <div class="font-semibold text-base text-blue-700">
+                                <div class="font-semibold text-base text-gray-700">
                                     {{ $item->judul }}
                                 </div>
                                 <a href="{{ route('reports.show', $item->id) }}"
-                                    class="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+                                    class="inline-flex items-center text-sm font-semibold text-red-600 hover:text-red-800 transition-colors">
                                     <i class="fas fa-search mr-1"></i> Detail
                                 </a>
                             </div>

@@ -2,18 +2,11 @@
     <div class="relative border-t border-white/10 backdrop-blur-md shadow-inner overflow-hidden">
 
         <!-- Background Gambar sebagai layer terpisah -->
-        <div class="absolute inset-0 bg-cover bg-center z-10" style="background-image: url('/images/footer1.jpg');">
+        <div class="absolute inset-0 bg-cover bg-center z-10" style="background-image: url('/images/redfooter.jpg');">
         </div>
 
         <!-- Overlay Gelap Transparan -->
-        <div class="absolute inset-0 bg-black/70 z-30"></div>
-
-        <div class="absolute inset-0 bg-gradient-to-r from-[#0039CB]/30 to-[#2962FF]/20 z-20"></div>
-
-        <!-- Efek Glow -->
-        <div class="absolute top-0 left-0 w-40 h-40 bg-blue-400/20 blur-3xl rounded-full z-40 animate-pulse"></div>
-        <div class="absolute bottom-0 right-0 w-40 h-40 bg-indigo-500/20 blur-2xl rounded-full z-40 animate-pulse">
-        </div>
+        <div class="absolute inset-0 bg-black/30 z-30"></div>
 
         <!-- Konten Footer -->
         <div class="relative z-50 px-6 py-10 max-w-7xl mx-auto space-y-8">

@@ -87,7 +87,9 @@ class ProfileController extends Controller
         $user->save();
 
         // Redirect with success message
-        return Redirect::route('user.profile.edit')->with('status', 'password-updated');
+        return Redirect::route('user.profile.edit')
+            ->with('status', 'password-updated')
+            ->with('active_tab', 'tab-password'); // tambahkan session active_tab
     }
 
     /**

@@ -1,6 +1,6 @@
 <section class="bg-white rounded-2xl shadow-lg border border-white p-6 max-w-3xl mx-auto">
     <!-- Header -->
-    <header class="mb-6">
+    <header class="mb-1">
         <h2 class="text-2xl font-semibold text-gray-900 flex items-center gap-3">
             <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
             {{ __('Delete Account') }}
@@ -13,17 +13,17 @@
     <!-- Trigger Button -->
     <button
         onclick="openModal()"
-        class="w-full md:w-auto px-6 py-3 bg-red-600 text-white font-semibold rounded-xl shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 flex items-center justify-center gap-2 transition">
+        class="w-full mt-2 md:w-auto px-6 py-3 bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold rounded-lg shadow hover:scale-105 transition">
         <i class="fas fa-user-slash"></i>
         {{ __('Delete Account') }}
     </button>
 
-    <!-- Custom Confirmation Modal -->
-    <div id="confirmDeletionModal" 
-         class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300 p-4">
+   <!-- Custom Confirmation Modal -->
+<div id="confirmDeletionModal" 
+     class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300 p-4">
 
-        <!-- Modal Container -->
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md md:max-w-lg mx-auto transform scale-95 opacity-0 transition-all duration-300 ease-out overflow-auto">
+    <!-- Modal Container -->
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md md:max-w-lg mx-auto transform scale-95 opacity-0 transition-all duration-300 ease-out max-h-[90vh] overflow-y-auto">
             
             <!-- Form -->
             <form method="post" action="{{ route('user.profile.destroy') }}" class="p-6">
@@ -67,7 +67,7 @@
                     </button>
 
                     <button type="submit"
-                        class="w-full md:w-auto px-6 py-2.5 bg-red-600 text-white font-semibold rounded-xl shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 flex items-center justify-center gap-2 transition">
+                        class="w-full md:w-auto px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold rounded-lg shadow hover:scale-105 transition">
                         <i class="fas fa-trash-alt"></i> {{ __('Delete Account') }}
                     </button>
                 </div>

@@ -5,7 +5,7 @@
             {{-- Previous Button --}}
             @if ($paginator->onFirstPage())
                 <li>
-                    <span class="flex items-center px-3 py-2 text-white bg-blue-300 border border-blue-300 rounded-md cursor-not-allowed">
+                    <span class="flex items-center px-3 py-2 text-white bg-rose-300 border border-rose-300 rounded-md cursor-not-allowed">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                         </svg>
@@ -14,7 +14,7 @@
             @else
                 <li>
                     <a href="{{ $paginator->previousPageUrl() }}"
-                       class="flex items-center px-3 py-2 text-white bg-blue-600 border border-blue-600 rounded-md hover:bg-blue-700 hover:scale-105 transition-all duration-200">
+                       class="flex items-center px-3 py-2 text-white bg-rose-600 border border-rose-600 rounded-md hover:bg-rose-700 hover:scale-105 transition-all duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                         </svg>
@@ -36,14 +36,14 @@
                     @foreach ($element as $page => $url)
                         @if ($page == $paginator->currentPage())
                             <li>
-                                <span class="px-3 py-2 text-white bg-blue-800 border border-blue-800 rounded-md shadow-md">
+                                <span class="px-3 py-2 text-white bg-rose-800 border border-rose-800 rounded-md shadow-md">
                                     {{ $page }}
                                 </span>
                             </li>
                         @else
                             <li>
                                 <a href="{{ $url }}"
-                                   class="px-3 py-2 text-white bg-blue-600 border border-blue-600 rounded-md hover:bg-blue-700 hover:scale-105 transition-all duration-200">
+                                   class="px-3 py-2 text-white bg-rose-600 border border-rose-600 rounded-md hover:bg-rose-700 hover:scale-105 transition-all duration-200">
                                     {{ $page }}
                                 </a>
                             </li>
@@ -56,7 +56,7 @@
             @if ($paginator->hasMorePages())
                 <li>
                     <a href="{{ $paginator->nextPageUrl() }}"
-                       class="flex items-center px-3 py-2 text-white bg-blue-600 border border-blue-600 rounded-md hover:bg-blue-700 hover:scale-105 transition-all duration-200">
+                       class="flex items-center px-3 py-2 text-white bg-rose-600 border border-rose-600 rounded-md hover:bg-rose-700 hover:scale-105 transition-all duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                         </svg>
@@ -64,7 +64,7 @@
                 </li>
             @else
                 <li>
-                    <span class="flex items-center px-3 py-2 text-white bg-blue-300 border border-blue-300 rounded-md cursor-not-allowed">
+                    <span class="flex items-center px-3 py-2 text-white bg-rose-300 border border-rose-300 rounded-md cursor-not-allowed">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                         </svg>
