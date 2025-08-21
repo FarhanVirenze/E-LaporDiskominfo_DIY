@@ -359,7 +359,7 @@
                     <a href="#aduanCepatBox"
                         class="relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-500 to-red-600 p-[1px] shadow-lg transition hover:scale-105 hover:shadow-xl">
                         <span
-                            class="flex items-center gap-3 sm:gap-4 px-8 sm:px-12 md:px-16 lg:px-24 py-3 sm:py-3 bg-black/20 rounded-full text-white font-bold text-base sm:text-xl md:text-2xl">
+                            class="flex items-center gap-3 sm:gap-4 px-8 sm:px-12 md:px-16 lg:px-12 py-3 sm:py-3 bg-black/20 rounded-full text-white font-bold text-base sm:text-xl md:text-2xl">
                             <i class="fas fa-paper-plane"></i>
                             Buat Aduan Cepat
                         </span>
