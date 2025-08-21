@@ -8,14 +8,14 @@
 
 @section('content')
     <div class="w-full max-w-full 
-                                                                md:max-w-3xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-screen-2xl 
-                                                                mx-auto px-4 sm:px-6 lg:px-8 py-6 mt-20 mb-5">
+                                                                        md:max-w-3xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-screen-2xl 
+                                                                        mx-auto px-4 sm:px-6 lg:px-8 py-6 mt-20 mb-5">
 
         @if (session('success'))
             <div id="successMessage" class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
-                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
-                                       bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
-                                       transition-all duration-500 opacity-100 animate-fade-in">
+                                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
+                                                       bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
+                                                       transition-all duration-500 opacity-100 animate-fade-in">
 
                 <!-- Ikon -->
                 <div id="success-icon-wrapper" class="flex-shrink-0">
@@ -132,8 +132,8 @@
                     x-init="window.addEventListener('resize', () => { openTimeline = window.innerWidth >= 768; });">
 
                     <h2 class="flex items-center text-lg justify-between gap-2 px-6 py-2 rounded-full 
-                                                                                   bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-700 hover:to-rose-600 text-white font-semibold 
-                                                                                   shadow-lg hover:shadow-xl transition mb-5 mt-5 cursor-pointer md:cursor-default"
+                                                                                           bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-700 hover:to-rose-600 text-white font-semibold 
+                                                                                           shadow-lg hover:shadow-xl transition mb-5 mt-5 cursor-pointer md:cursor-default"
                         @click="if (window.innerWidth < 768) openTimeline = !openTimeline">
                         <span>Timeline Aduan</span>
                         <!-- Icon hanya tampil di mobile -->
@@ -148,13 +148,13 @@
                                 {{-- Bulatan status --}}
                                 <div
                                     class="absolute -left-5 flex items-center justify-center w-8 h-8 rounded-full
-                                                                                                                                                                    @if($item['type'] === 'created') bg-red-500 text-white
-                                                                                                                                                                    @elseif($item['type'] === 'assigned') bg-orange-500 text-white
-                                                                                                                                                                    @elseif($item['type'] === 'read') bg-blue-500 text-white
-                                                                                                                                                                    @elseif($item['type'] === 'followup') bg-purple-500 text-white
-                                                                                                                                                                    @elseif($item['type'] === 'comment') bg-yellow-500 text-white
-                                                                                                                                                                    @elseif($item['type'] === 'done') bg-green-500 text-white
-                                                                                                                                                                    @else bg-gray-400 text-white @endif">
+                                                                                                                                                                                    @if($item['type'] === 'created') bg-red-500 text-white
+                                                                                                                                                                                    @elseif($item['type'] === 'assigned') bg-orange-500 text-white
+                                                                                                                                                                                    @elseif($item['type'] === 'read') bg-blue-500 text-white
+                                                                                                                                                                                    @elseif($item['type'] === 'followup') bg-purple-500 text-white
+                                                                                                                                                                                    @elseif($item['type'] === 'comment') bg-yellow-500 text-white
+                                                                                                                                                                                    @elseif($item['type'] === 'done') bg-green-500 text-white
+                                                                                                                                                                                    @else bg-gray-400 text-white @endif">
                                     @if($item['type'] === 'created')
                                         <i class="fas fa-edit"></i>
                                     @elseif($item['type'] === 'assigned')
@@ -220,7 +220,7 @@
                                         @csrf
                                         <button type="submit"
                                             class="flex items-center text-sm transition-all duration-200
-                                                                    {{ $report->likedBy(auth()->id()) ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
+                                                                                    {{ $report->likedBy(auth()->id()) ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
                                             <i class="fas fa-thumbs-up mr-1"></i> {{ $report->likes }}
                                         </button>
                                     </form>
@@ -230,7 +230,7 @@
                                         @csrf
                                         <button type="submit"
                                             class="flex items-center text-sm transition-all duration-200
-                                                                    {{ $report->dislikedBy(auth()->id()) ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
+                                                                                    {{ $report->dislikedBy(auth()->id()) ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
                                             <i class="fas fa-thumbs-down mr-1"></i> {{ $report->dislikes }}
                                         </button>
                                     </form>
@@ -295,7 +295,7 @@
                         <!-- Overlay Gelap + Icon (z-20) -->
                         <div
                             class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 
-                                                                                                                                                                                                    transition duration-300 bg-black/20 z-20">
+                                                                                                                                                                                                            transition duration-300 bg-black/20 z-20">
                             <i class="fas fa-search-plus text-white text-3xl"></i>
                         </div>
                     </div>
@@ -324,10 +324,10 @@
                                             class="h-8 w-8 rounded-full object-cover bg-white shadow" />
                                     @else
                                         <img src="{{ $report->pelapor && $report->pelapor->foto
-                                                                                            ? asset('storage/' . $report->pelapor->foto)  {{-- Prioritas: foto upload --}}
-                                                                                            : ($report->pelapor && $report->pelapor->avatar
-                                                                                                ? $report->pelapor->avatar                {{-- Kedua: avatar Google --}}
-                                                                                                : asset('images/avatar.jpg')) }}"
+                                                                                                            ? asset('storage/' . $report->pelapor->foto)  {{-- Prioritas: foto upload --}}
+                                                                                                            : ($report->pelapor && $report->pelapor->avatar
+                                                                                                                ? $report->pelapor->avatar                {{-- Kedua: avatar Google --}}
+                                                                                                                : asset('images/avatar.jpg')) }}"
                                             {{-- Fallback default --}} alt="Avatar {{ $report->nama_pengadu }}"
                                             class="h-8 w-8 rounded-full object-cover bg-white shadow" />
                                     @endif
@@ -343,11 +343,11 @@
                                         <!-- Status -->
                                         <span
                                             class="px-2 py-0.5 rounded-full text-xs font-medium
-                                                                                                                                                                                    @if($report->status === 'Diajukan') border border-red-500 text-red-500
-                                                                                                                                                                                    @elseif($report->status === 'Dibaca') border border-blue-500 text-blue-500
-                                                                                                                                                                                    @elseif($report->status === 'Direspon') border border-yellow-500 text-yellow-600
-                                                                                                                                                                                    @elseif($report->status === 'Selesai') border border-green-500 text-green-500
-                                                                                                                                                                                    @else border border-gray-400 text-gray-600 @endif">
+                                                                                                                                                                                            @if($report->status === 'Diajukan') border border-red-500 text-red-500
+                                                                                                                                                                                            @elseif($report->status === 'Dibaca') border border-blue-500 text-blue-500
+                                                                                                                                                                                            @elseif($report->status === 'Direspon') border border-yellow-500 text-yellow-600
+                                                                                                                                                                                            @elseif($report->status === 'Selesai') border border-green-500 text-green-500
+                                                                                                                                                                                            @else border border-gray-400 text-gray-600 @endif">
                                             {{ $report->status }}
                                         </span>
                                         <!-- Kategori -->
@@ -395,8 +395,8 @@
                                         @if($report->admin)
                                             <span
                                                 class="inline-block px-3 py-1 rounded-full text-xs font-semibold 
-                                                                                                                                                                                                                                                                                                                                                border border-transparent bg-gradient-to-r from-red-500 to-rose-500 
-                                                                                                                                                                                                                                                                                                                                                text-white shadow-md hover:shadow-lg">
+                                                                                                                                                                                                                                                                                                                                                                border border-transparent bg-gradient-to-r from-red-500 to-rose-500 
+                                                                                                                                                                                                                                                                                                                                                                text-white shadow-md hover:shadow-lg">
                                                 {{ $report->admin->name }}
                                             </span>
                                         @else
@@ -420,8 +420,8 @@
                         {{-- Timeline Aduan (hanya muncul di mobile) --}}
                         <div x-data="{ openTimeline: false }" class="md:hidden">
                             <h2 class="flex items-center text-lg justify-between gap-2 px-6 py-2 rounded-full 
-                                                                           bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-700 hover:to-rose-600 text-white font-semibold 
-                                                                           shadow-lg hover:shadow-xl transition mb-5 mt-5 cursor-pointer"
+                                                                                   bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-700 hover:to-rose-600 text-white font-semibold 
+                                                                                   shadow-lg hover:shadow-xl transition mb-5 mt-5 cursor-pointer"
                                 @click="openTimeline = !openTimeline">
                                 <span>Timeline Aduan</span>
                                 <!-- Icon toggle -->
@@ -437,13 +437,13 @@
                                         {{-- Bulatan status --}}
                                         <div
                                             class="absolute -left-5 flex items-center justify-center w-8 h-8 rounded-full
-                                                                                                                                    @if($item['type'] === 'created') bg-red-500 text-white
-                                                                                                                                    @elseif($item['type'] === 'assigned') bg-orange-500 text-white
-                                                                                                                                    @elseif($item['type'] === 'read') bg-blue-500 text-white
-                                                                                                                                    @elseif($item['type'] === 'followup') bg-purple-500 text-white
-                                                                                                                                    @elseif($item['type'] === 'comment') bg-yellow-500 text-white
-                                                                                                                                    @elseif($item['type'] === 'done') bg-green-500 text-white
-                                                                                                                                    @else bg-gray-400 text-white @endif">
+                                                                                                                                                    @if($item['type'] === 'created') bg-red-500 text-white
+                                                                                                                                                    @elseif($item['type'] === 'assigned') bg-orange-500 text-white
+                                                                                                                                                    @elseif($item['type'] === 'read') bg-blue-500 text-white
+                                                                                                                                                    @elseif($item['type'] === 'followup') bg-purple-500 text-white
+                                                                                                                                                    @elseif($item['type'] === 'comment') bg-yellow-500 text-white
+                                                                                                                                                    @elseif($item['type'] === 'done') bg-green-500 text-white
+                                                                                                                                                    @else bg-gray-400 text-white @endif">
 
                                             @if($item['type'] === 'created')
                                                 <i class="fas fa-edit"></i>
@@ -542,13 +542,13 @@
                                                     <img src="{{ asset('images/avatar.jpg') }}" alt="Anonim"
                                                         class="h-8 w-8 rounded-full object-cover bg-white shadow" />
                                                 @else
-                                                                        <img src="{{ $item->user && $item->user->foto
-                                                    ? asset('storage/' . $item->user->foto)   {{-- Prioritas: foto upload --}}
-                                                    : ($item->user && $item->user->avatar
-                                                        ? $item->user->avatar                 {{-- Kedua: avatar Google --}}
-                                                        : asset('images/avatar.jpg')) }}" {{-- Fallback default --}}
-                                                                            alt="Avatar {{ $item->user->name ?? $item->nama_pengadu }}"
-                                                                            class="h-8 w-8 rounded-full object-cover bg-white shadow" />
+                                                    <img src="{{ $item->user && $item->user->foto
+                                                                            ? asset('storage/' . $item->user->foto)   {{-- Prioritas: foto upload --}}
+                                                                            : ($item->user && $item->user->avatar
+                                                                                ? $item->user->avatar                 {{-- Kedua: avatar Google --}}
+                                                                                : asset('images/avatar.jpg')) }}" {{-- Fallback
+                                                        default --}} alt="Avatar {{ $item->user->name ?? $item->nama_pengadu }}"
+                                                        class="h-8 w-8 rounded-full object-cover bg-white shadow" />
                                                 @endif
                                             </div>
 
@@ -649,10 +649,10 @@
                                                         class="h-8 w-8 rounded-full object-cover bg-white shadow" />
                                                 @else
                                                     <img src="{{ $item->user && $item->user->foto
-                                                                                                                    ? asset('storage/' . $item->user->foto)   {{-- Prioritas: foto upload --}}
-                                                                                                                    : ($item->user && $item->user->avatar
-                                                                                                                        ? $item->user->avatar                 {{-- Kedua: avatar Google --}}
-                                                                                                                        : asset('images/avatar.jpg')) }}"
+                                                                                                                                            ? asset('storage/' . $item->user->foto)   {{-- Prioritas: foto upload --}}
+                                                                                                                                            : ($item->user && $item->user->avatar
+                                                                                                                                                ? $item->user->avatar                 {{-- Kedua: avatar Google --}}
+                                                                                                                                                : asset('images/avatar.jpg')) }}"
                                                         {{-- Fallback default --}}
                                                         alt="Avatar {{ $item->user->name ?? $item->nama_pengadu }}"
                                                         class="h-8 w-8 rounded-full object-cover bg-white shadow" />
@@ -860,62 +860,61 @@
     @section('include-js')
         <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <!-- Mapbox CSS & JS -->
+        <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+        <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+        <script
+            src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.1/mapbox-gl-geocoder.min.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", () => {
                 // Tampilkan tab default
                 showTab('tindak');
 
-                // Inisialisasi peta jika ada koordinat
                 const lat = {{ $report->latitude ?? 0 }};
                 const lng = {{ $report->longitude ?? 0 }};
                 const mapElement = document.getElementById('map');
 
                 if (lat && lng) {
-                    // Membuat peta
-                    const map = L.map(mapElement).setView([lat, lng], 17);
+                    // ==== GLOBAL KONFIGURASI PETA ====
+                    mapboxgl.accessToken = "pk.eyJ1IjoiZmFkaWxhaDI0OCIsImEiOiJja3dnZXdmMnQwbno1MnRxcXYwdjB3cG9qIn0.v4gAtavpn1GzgtD7f3qapA";
 
-                    // Menambahkan tile layer (OpenStreetMap)
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        maxZoom: 19
-                    }).addTo(map);
+                    // Inisialisasi peta
+                    const map = new mapboxgl.Map({
+                        container: mapElement,
+                        style: "mapbox://styles/mapbox/streets-v12", // bisa diganti "satellite-v9" dll
+                        center: [lng, lat],
+                        zoom: 17
+                    });
 
-                    // Menambahkan marker
-                    L.marker([lat, lng]).addTo(map);
+                    // Tambahkan kontrol navigasi (zoom & rotate)
+                    map.addControl(new mapboxgl.NavigationControl());
 
-                    // Fungsi untuk mengatur ulang ukuran peta
+                    // Tambahkan marker di lokasi
+                    new mapboxgl.Marker({ color: "red" })
+                        .setLngLat([lng, lat])
+                        .setPopup(new mapboxgl.Popup().setHTML(`<b>{{ $report->lokasi }}</b>`)) // popup alamat
+                        .addTo(map);
+
+                    // Fungsi untuk resize map
                     function resizeMap() {
-                        map.invalidateSize();
+                        map.resize();
                     }
 
-                    // Mengatur ulang ukuran peta saat halaman pertama kali dimuat
+                    // Resize saat halaman selesai load
                     window.addEventListener('load', () => {
-                        setTimeout(() => {
-                            resizeMap();  // Panggil invalidateSize setelah beberapa detik
-                        }, 500); // Memberikan waktu bagi elemen lain untuk dimuat
+                        setTimeout(resizeMap, 500);
                     });
 
-                    // Mengatur ulang ukuran peta jika ukuran layar berubah
+                    // Resize saat layar berubah ukuran
                     window.addEventListener('resize', () => {
-                        setTimeout(() => {
-                            resizeMap();  // Mengatur ulang ukuran peta
-                        }, 200);  // Memberikan waktu sedikit agar perubahan ukuran layar selesai
+                        setTimeout(resizeMap, 200);
                     });
 
-                    // Mengatur ulang ukuran peta jika container peta tampilkan ulang
-                    const observer = new MutationObserver(() => {
-                        resizeMap();
-                    });
-
-                    observer.observe(mapElement, { attributes: true, childList: true, subtree: true });
-
-                    // Event listener untuk tab lokasi muncul
-                    const tabLokasi = document.getElementById('tab-lokasi'); // Pastikan ID tab lokasi sesuai
-
+                    // Resize saat tab lokasi diklik
+                    const tabLokasi = document.getElementById('tab-lokasi');
                     if (tabLokasi) {
                         tabLokasi.addEventListener('click', () => {
-                            setTimeout(() => {
-                                resizeMap();  // Pastikan invalidateSize dipanggil saat tab lokasi diklik
-                            }); // Memberikan sedikit waktu agar konten dapat ditampilkan
+                            setTimeout(resizeMap, 300);
                         });
                     }
                 }
