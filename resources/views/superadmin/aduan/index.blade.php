@@ -150,7 +150,7 @@
     @else
         <div class="table-responsive">
             <table class="table table-striped table-bordered w-100">
-                <thead class="bg-gradient-to-r from-blue-700 to-blue-500 text-white">
+                <thead class="bg-gradient-to-r from-red-700 to-rose-500 text-white">
                     <tr>
                         <th class="text-center">No</th>
                         <th class="text-center">Judul</th>
@@ -189,7 +189,7 @@
                                     </button>
 
                                     <a href="{{ route('superadmin.reports.show', ['id' => $report->id]) }}"
-                                        class="px-3 py-1 text-sm bg-blue-500 hover:bg-blue-600 rounded text-white">
+                                        class="px-3 py-1 text-sm bg-red-500 hover:bg-red-600 rounded text-white">
                                         Lihat
                                     </a>
                                 </div>

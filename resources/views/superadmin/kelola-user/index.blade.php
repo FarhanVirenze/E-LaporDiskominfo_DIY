@@ -31,7 +31,7 @@
                     class="flex-1 min-w-[200px] sm:min-w-[250px] md:min-w-[300px] lg:min-w-[400px] border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200"
                     placeholder="Cari nama/email/nik/telepon" value="{{ request('search') }}">
 
-                <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition">
+                <button type="submit" class="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition">
                     Cari
                 </button>
 
@@ -62,7 +62,7 @@
             <!-- Tabel untuk Desktop -->
             <div class="table-responsive d-none d-md-block">
                 <table class="table table-striped table-bordered w-100">
-                    <thead class="bg-gradient-to-r from-blue-700 to-blue-500 text-white">
+                    <thead class="bg-gradient-to-r from-red-700 to-rose-500 text-white">
                       <tr>
     <th class="text-center align-middle">No</th>
     <th class="text-center align-middle">Nama</th>

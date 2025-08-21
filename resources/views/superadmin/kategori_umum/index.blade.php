@@ -20,7 +20,7 @@
 
         <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
             <!-- Tombol Tambah Kategori -->
-            <button type="button" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+            <button type="button" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
                 data-toggle="modal" data-target="#addKategoriModal">
                 Tambah Kategori
             </button>
@@ -33,7 +33,7 @@
                         placeholder="Cari kategori..." value="{{ request('search') }}">
 
                     <button type="submit"
-                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+                        class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-blue-700 transition">
                         Cari
                     </button>
 
@@ -52,7 +52,7 @@
         @else
             <div class="table-responsive">
                 <table class="table table-striped table-bordered w-full">
-                    <thead class="bg-gradient-to-r from-blue-700 to-blue-500 text-white">
+                    <thead class="bg-gradient-to-r from-red-700 to-red-500 text-white">
                         <tr>
                             <th class="text-center w-12">No</th>
                             <th class="text-center">Nama Kategori</th>

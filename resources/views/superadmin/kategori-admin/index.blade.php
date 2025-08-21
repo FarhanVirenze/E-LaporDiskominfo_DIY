@@ -25,10 +25,10 @@
             {{-- Mobile --}}
             <div class="d-block d-md-none">
                 @foreach($admins as $admin)
-                    <div class="card border-0 mb-3 shadow-sm rounded-4"
-                        style="background: linear-gradient(90deg, #e8f0fe 0%, #f0f4ff 100%); border: 1px solid #cddafd;">
+                    <div class="card border-0 mb-3 shadow-sm rounded-xl"
+                        style="background: linear-gradient(90deg, #ffe4e6 0%, #ffd6dc 100%); border: 1px solid #ffb3c6;">
                         <div class="card-body p-3">
-                            <h5 class="fw-bold text-primary mb-2 d-flex align-items-center">
+                            <h5 class="fw-bold text-rose-700 mb-2 d-flex align-items-center">
                                 <i class="bi bi-person-circle me-2 fs-5"></i>{{ $admin->name }}
                             </h5>
 
@@ -36,7 +36,7 @@
                             @if($admin->kategori->isNotEmpty())
                                 <div class="d-flex flex-wrap gap-2 mt-1">
                                     @foreach($admin->kategori as $k)
-                                        <span class="rounded-full px-3 py-1 text-white text-sm bg-blue-500 shadow-sm">
+                                        <span class="rounded-full px-3 py-1 text-white text-sm bg-rose-500 shadow-sm">
                                             {{ $k->nama }}
                                         </span>
                                     @endforeach
@@ -62,7 +62,7 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    <button type="submit" class="btn btn-sm btn-success mt-3 w-100 rounded-pill">Simpan</button>
+                                    <button type="submit" class="btn btn-sm btn-rose mt-3 w-100 rounded-pill">Simpan</button>
                                 </form>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
             {{-- Desktop --}}
             <div class="table-responsive d-none d-md-block">
                 <table class="table table-bordered table-hover shadow-sm align-middle rounded-2 overflow-hidden">
-                    <thead class="bg-gradient-to-r from-blue-700 to-blue-500 text-white">
+                    <thead class="bg-gradient-to-r from-red-700 to-red-500 text-white">
                         <tr>
                             <th class="text-center">No</th>
                             <th class="text-center">Admin OPD</th>
@@ -90,7 +90,7 @@
                                     @if($admin->kategori->isNotEmpty())
                                         <div class="d-flex flex-wrap gap-2">
                                             @foreach($admin->kategori as $k)
-                                                <span class="rounded-full px-3 py-1 text-white text-sm bg-blue-500 shadow-sm">
+                                                <span class="rounded-full px-3 py-1 text-white text-sm bg-red-500 shadow-sm">
                                                     {{ $k->nama }}
                                                 </span>
                                             @endforeach

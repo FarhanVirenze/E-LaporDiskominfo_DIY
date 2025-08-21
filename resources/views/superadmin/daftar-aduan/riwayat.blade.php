@@ -125,12 +125,6 @@
             <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 text-center">DAFTAR ADUAN</h2>
 
             @component('components.riwayatsuperadmin-tabs')
-            <div class="mb-4 mt-2 text-left">
-                <a href="{{ route('superadmin.beranda') }}"
-                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                    + Buat Aduan Baru
-                </a>
-            </div>
 
             <p class="text-sm text-gray-600 mb-3">Total: {{ $aduan->count() }} Aduan</p>
 
@@ -203,8 +197,8 @@
 
                                 <div>
                                     <span class="text-xs font-semibold px-2 py-1 rounded-full
-                                                                        @if($item->status == 'Diajukan') bg-blue-100 text-blue-800
-                                                                        @elseif($item->status == 'Dibaca') bg-teal-100 text-teal-800
+                                                                        @if($item->status == 'Diajukan') bg-red-100 text-red-800
+                                                                        @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-800
                                                                         @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
                                                                         @elseif($item->status == 'Selesai') bg-green-100 text-green-800
                                                                         @else bg-gray-200 text-gray-800 @endif">

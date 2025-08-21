@@ -13,7 +13,7 @@
         @endif
 
         <!-- Tombol Tambah Wilayah -->
-        <button class="px-4 py-2 mb-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+        <button class="px-4 py-2 mb-4 bg-red-600 text-white rounded-md hover:bg-blue-700 transition"
             data-toggle="modal" data-target="#addWilayahModal">
             Tambah Wilayah
         </button>
@@ -26,7 +26,7 @@
         @else
             <div class="table-responsive">
                 <table class="table table-striped table-bordered">
-                    <thead class="bg-gradient-to-r from-blue-700 to-blue-500 text-white">
+                    <thead class="bg-gradient-to-r from-red-700 to-red-500 text-white">
                         <tr>
                             <th class="text-center">No</th>
                             <th class="text-center">Nama Wilayah</th>

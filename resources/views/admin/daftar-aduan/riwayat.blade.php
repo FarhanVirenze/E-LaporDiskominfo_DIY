@@ -76,8 +76,8 @@
                                 </td>
                                 <td class="px-4 py-2">
                                     <span class="text-xs font-semibold px-2 py-1 rounded-full
-                                                                                @if($item->status == 'Diajukan') bg-blue-100 text-blue-700
-                                                                                @elseif($item->status == 'Dibaca') bg-teal-100 text-teal-700
+                                                                                @if($item->status == 'Diajukan') bg-red-100 text-red-700
+                                                                                @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
                                                                                 @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
                                                                                 @elseif($item->status == 'Selesai') bg-green-100 text-green-700
                                                                                 @else bg-gray-200 text-gray-800 @endif">

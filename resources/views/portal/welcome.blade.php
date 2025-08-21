@@ -11,10 +11,11 @@
     @endphp
     <!-- Notifikasi Merah -->
     @if (session('success'))
-        <div id="alert-success" class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
-                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
-                       bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
-                       transition-all duration-500 opacity-100 animate-fade-in">
+        <div id="alert-success"
+            class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
+                                                                                                               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
+                                                                                                               bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
+                                                                                                               transition-all duration-500 opacity-100 animate-fade-in">
 
             <!-- Ikon -->
             <div id="success-icon-wrapper" class="flex-shrink-0">
@@ -144,7 +145,7 @@
                     <!-- Slide 1 -->
                     <div class="swiper-slide relative">
                         <!-- Overlay biru gradient (z-0 - paling bawah) -->
-                        <div class="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-400/10 z-20"></div>
+                        <div class="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-400/10 z-20"></div>
 
                         <!-- Gambar (z-10 - di atas gradient tapi di bawah overlay hitam) -->
                         <img src="{{ asset('images/carousel2.jpg') }}"
@@ -152,29 +153,29 @@
                             loading="eager" alt="E-Lapor">
 
                         <!-- Overlay hitam (z-20 - paling atas) -->
-                        <div class="absolute inset-0 bg-black/50 z-20"></div>
+                        <div class="absolute inset-0 bg-black/65 z-20"></div>
                     </div>
 
                     <!-- Slide 2 -->
                     <div class="swiper-slide relative">
-                        <div class="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-400/10 z-20"></div>
+                        <div class="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-400/10 z-20"></div>
 
                         <img src="{{ asset('images/carousel4.jpg') }}"
                             class="absolute inset-0 w-full h-full object-cover z-10 will-change-transform backface-hidden"
                             loading="eager" alt="Pengaduan">
 
-                        <div class="absolute inset-0 bg-black/50 z-20"></div>
+                        <div class="absolute inset-0 bg-black/65 z-20"></div>
                     </div>
 
                     <!-- Slide 3 -->
                     <div class="swiper-slide relative">
-                        <div class="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-400/10 z-20"></div>
+                        <div class="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-400/10 z-20"></div>
 
                         <img src="{{ asset('images/carousel3.jpg') }}"
                             class="absolute inset-0 w-full h-full object-cover z-10 will-change-transform backface-hidden"
                             loading="eager" alt="Layanan Publik">
 
-                        <div class="absolute inset-0 bg-black/50 z-20"></div>
+                        <div class="absolute inset-0 bg-black/55 z-20"></div>
                     </div>
                 </div>
 
@@ -182,39 +183,62 @@
                 <div class="swiper-pagination z-20"></div>
             </div>
 
-            <!-- Konten Teks -->
-            <div id="heroContent"
-                class="absolute inset-0 z-30 flex flex-col justify-center items-center text-center h-full px-6 py-10 opacity-0 transition-opacity duration-700 ">
+            <!-- Fonts -->
+            <link
+                href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap"
+                rel="stylesheet">
 
-                <h1 class="text-3xl font-extrabold mb-10 leading-tight" data-aos="fade-down" data-aos-delay="0">
-                    <span class="block">Selamat Datang di</span>
-                    <span class="block">E-Lapor DIY</span>
+            <style>
+                .font-heading {
+                    font-family: 'Poppins', sans-serif;
+                }
+
+                .font-body {
+                    font-family: 'Inter', sans-serif;
+                }
+            </style>
+
+            <!-- Hero Content -->
+            <div id="heroContent"
+                class="absolute inset-0 z-30 flex flex-col justify-center items-center text-center h-full px-6 py-10 opacity-0 transition-opacity duration-700">
+
+                <!-- Heading -->
+                <h1 class="text-2xl sm:text-3xl lg:text-5xl font-bold mb-6 leading-tight font-heading text-white"
+                    data-aos="fade-down" data-aos-delay="0">
+                    Wujudkan DIY Lebih Baik</span> <br class="sm:hidden" /> Bersama E-Lapor
                 </h1>
 
-                <p class="text-base opacity-90 mb-4 max-w-md" data-aos="fade-down" data-aos-delay="200">
-                    Layanan pengaduan masyarakat berbasis digital untuk wilayah Daerah Istimewa Yogyakarta.
+                <!-- Sub Heading -->
+                <p class="text-sm sm:text-xl lg:text-2xl max-w-2xl mb-6 opacity-90 font-body text-white"
+                    data-aos="fade-down" data-aos-delay="200">
+                    Platform pengaduan digital yang cepat, dan terpercaya untuk masyarakat Daerah Istimewa
+                    Yogyakarta.
                 </p>
 
-                <p class="text-lg font-semibold italic mb-6 text-white max-w-md" data-aos="fade-down" data-aos-delay="400">
-                    Adukan sekarang, wujudkan DIY yang lebih baik!
+                <!-- Tagline -->
+                <p class="text-sm sm:text-2xl font-semibold italic mb-8 text-white flex items-center gap-3 justify-center font-body tracking-wide"
+                    data-aos="fade-down" data-aos-delay="400">
+                    <i class="fas fa-bullhorn text-rose-500 text-2xl sm:text-3xl md:text-4xl"></i>
+                    Aduan Anda, Perubahan untuk Kita Semua!
                 </p>
 
-                <div class="flex flex-wrap justify-center gap-3" data-aos="fade-up" data-aos-delay="600">
+                <!-- Button -->
+                <div class="flex justify-center" data-aos="fade-up" data-aos-delay="600">
                     <a href="#aduanCepatBox"
-                        class="bg-transparent border border-white hover:bg-white/10 text-white px-5 py-2.5 rounded-lg font-bold shadow-lg transition">
-                        Mulai Aduan
-                    </a>
-                    <a href="#lacakContent"
-                        class="bg-transparent border border-white hover:bg-white/10 text-white px-5 py-2.5 rounded-lg font-bold shadow-lg transition">
-                        Lacak Aduan
+                        class="relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-500 to-red-600 p-[1px] shadow-lg transition hover:scale-105 hover:shadow-xl">
+                        <span
+                            class="flex items-center gap-3 px-8 sm:px-12 py-3 sm:py-4 bg-black/20 rounded-full text-white font-bold text-base sm:text-lg lg:text-xl">
+                            <i class="fas fa-paper-plane"></i>
+                            Buat Aduan Cepat
+                        </span>
                     </a>
                 </div>
 
                 <!-- Statistik -->
-                <div class="grid grid-cols-3 gap-6 mt-8 text-center" data-aos="fade-up" data-aos-delay="800">
+                <div class="grid grid-cols-3 gap-6 mt-10 text-center" data-aos="fade-up" data-aos-delay="800">
                     <!-- Total Aduan -->
                     <div class="flex flex-col items-center">
-                        <i class="fas fa-file-alt text-3xl text-rose-500 mb-2"></i>
+                        <i class="fas fa-file-alt text-3xl md:text-5xl text-rose-500 mb-2"></i>
                         <p class="text-xl font-bold text-white">
                             {{ \App\Models\Report::count() }}
                         </p>
@@ -223,7 +247,7 @@
 
                     <!-- Aduan Bulan Ini -->
                     <div class="flex flex-col items-center">
-                        <i class="fas fa-calendar-alt text-3xl text-rose-500 mb-2"></i>
+                        <i class="fas fa-calendar-alt text-3xl md:text-5xl text-rose-500 mb-2"></i>
                         <p class="text-xl font-bold text-white">
                             {{ \App\Models\Report::whereMonth('created_at', \Carbon\Carbon::now()->month)
         ->whereYear('created_at', \Carbon\Carbon::now()->year)
@@ -234,7 +258,7 @@
 
                     <!-- Aduan Selesai -->
                     <div class="flex flex-col items-center">
-                        <i class="fas fa-check-circle text-3xl text-rose-500 mb-2"></i>
+                        <i class="fas fa-check-circle text-3xl md:text-5xl text-rose-500 mb-2"></i>
                         <p class="text-xl font-bold text-white">
                             {{ \App\Models\Report::where('status', \App\Models\Report::STATUS_SELESAI)->count() }}
                         </p>
@@ -245,33 +269,33 @@
         </div>
 
         <!-- Desktop View -->
-        <div class="hidden lg:block relative h-[110vh] overflow-hidden">
+        <div class="hidden lg:block relative h-[96vh] overflow-hidden">
             <!-- Background Swiper (Full) -->
             <div class="absolute inset-0 z-10">
                 <div class="swiper mySwiper w-full h-full">
                     <div class="swiper-wrapper">
                         <!-- Slide 1 -->
                         <div class="swiper-slide relative">
-                            <div class="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-400/10 z-20"></div>
+                            <div class="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-400/10 z-20"></div>
                             <img src="{{ asset('images/carousel2.jpg') }}"
                                 class="absolute inset-0 w-full h-full object-cover z-10" alt="E-Lapor">
-                            <div class="absolute inset-0 bg-black/50 z-20"></div>
+                            <div class="absolute inset-0 bg-black/65 z-20"></div>
                         </div>
 
                         <!-- Slide 2 -->
                         <div class="swiper-slide relative">
-                            <div class="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-400/10 z-20"></div>
+                            <div class="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-400/10 z-20"></div>
                             <img src="{{ asset('images/carousel4.jpg') }}"
                                 class="absolute inset-0 w-full h-full object-cover z-10" alt="Pengaduan">
-                            <div class="absolute inset-0 bg-black/50 z-20"></div>
+                            <div class="absolute inset-0 bg-black/65 z-20"></div>
                         </div>
 
                         <!-- Slide 3 -->
                         <div class="swiper-slide relative">
-                            <div class="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-400/10 z-20"></div>
+                            <div class="absolute inset-0 bg-gradient-to-r from-red-500/20 to-red-400/10 z-20"></div>
                             <img src="{{ asset('images/carousel3.jpg') }}"
                                 class="absolute inset-0 w-full h-full object-cover z-10" alt="Layanan Publik">
-                            <div class="absolute inset-0 bg-black/50 z-20"></div>
+                            <div class="absolute inset-0 bg-black/55 z-20"></div>
                         </div>
                     </div>
 
@@ -284,26 +308,45 @@
             <div
                 class="relative z-30 container mx-auto px-6 sm:px-10 lg:px-16 h-full flex flex-col items-center justify-center text-center text-white animate__animated animate__fadeIn">
 
-                <h1 class="text-5xl font-extrabold mb-6 leading-tight">
-                    Selamat Datang di <span class="text-white">E-Lapor DIY</span>
+                <!-- Tambahkan di <head> -->
+                <link
+                    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap"
+                    rel="stylesheet">
+
+                <style>
+                    .font-heading {
+                        font-family: 'Poppins', sans-serif;
+                    }
+
+                    .font-body {
+                        font-family: 'Inter', sans-serif;
+                    }
+                </style>
+
+                <!-- Konten -->
+                <h1 class="text-4xl font-bold mb-6 leading-tight font-heading">
+                    Wujudkan <span class="text-white">DIY Lebih Baik</span> Bersama E-Lapor
                 </h1>
 
-                <p class="text-lg max-w-3xl mb-6 opacity-90">
-                    Layanan pengaduan masyarakat berbasis digital untuk wilayah Daerah Istimewa Yogyakarta.
+                <p class="text-xl lg:text-2xl max-w-3xl mb-6 opacity-90 font-body">
+                    Platform pengaduan digital yang cepat, transparan, dan terpercaya untuk masyarakat Daerah Istimewa
+                    Yogyakarta.
                 </p>
 
-                <p class="text-xl font-semibold italic mb-8 text-white">
-                    Laporkan sekarang, wujudkan DIY yang lebih baik!
+                <p
+                    class="text-2xl font-semibold italic mb-8 text-white flex items-center gap-3 justify-center font-body tracking-wide">
+                    <i class="fas fa-bullhorn text-rose-500 text-4xl"></i>
+                    Aduan Anda, Perubahan untuk Kita Semua!
                 </p>
 
-                <div class="flex flex-wrap gap-4 justify-center">
+                <div class="flex justify-center">
                     <a href="#aduanCepatBox"
-                        class="bg-transparent border border-white hover:bg-white/10 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition">
-                        Mulai Laporkan
-                    </a>
-                    <a href="#lacakContent"
-                        class="bg-transparent border border-white hover:bg-white/10 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition">
-                        Lacak Status
+                        class="relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-500 to-red-600 p-[1px] shadow-lg transition hover:scale-105 hover:shadow-xl">
+                        <span
+                            class="flex items-center gap-4 px-24 py-4 bg-black/20 rounded-full text-white font-bold text-lg lg:text-xl">
+                            <i class="fas fa-paper-plane"></i>
+                            Buat Aduan Cepat
+                        </span>
                     </a>
                 </div>
 
@@ -311,31 +354,31 @@
                 <div class="grid grid-cols-3 gap-6 mt-8 text-center" data-aos="fade-up" data-aos-delay="800">
                     <!-- Total Aduan -->
                     <div class="flex flex-col items-center">
-                        <i class="fas fa-file-alt text-3xl text-rose-500 mb-2"></i>
-                        <p class="text-xl font-bold text-white">
+                        <i class="fas fa-file-alt text-3xl lg:text-5xl text-rose-500 mb-2"></i>
+                        <p class="text-xl lg:text-3xl font-bold text-white">
                             {{ \App\Models\Report::count() }}
                         </p>
-                        <span class="text-sm opacity-80">Total Aduan</span>
+                        <span class="text-sm lg:text-lg opacity-80">Total Aduan</span>
                     </div>
 
                     <!-- Aduan Bulan Ini -->
                     <div class="flex flex-col items-center">
-                        <i class="fas fa-calendar-alt text-3xl text-rose-500 mb-2"></i>
-                        <p class="text-xl font-bold text-white">
+                        <i class="fas fa-calendar-alt text-3xl lg:text-5xl text-rose-500 mb-2"></i>
+                        <p class="text-xl lg:text-3xl font-bold text-white">
                             {{ \App\Models\Report::whereMonth('created_at', \Carbon\Carbon::now()->month)
         ->whereYear('created_at', \Carbon\Carbon::now()->year)
         ->count() }}
                         </p>
-                        <span class="text-sm opacity-80">Aduan Bulan Ini</span>
+                        <span class="text-sm lg:text-lg opacity-80">Aduan Bulan Ini</span>
                     </div>
 
                     <!-- Aduan Selesai -->
                     <div class="flex flex-col items-center">
-                        <i class="fas fa-check-circle text-3xl text-rose-500 mb-2"></i>
-                        <p class="text-xl font-bold text-white">
+                        <i class="fas fa-check-circle text-3xl lg:text-5xl text-rose-500 mb-2"></i>
+                        <p class="text-xl lg:text-3xl font-bold text-white">
                             {{ \App\Models\Report::where('status', \App\Models\Report::STATUS_SELESAI)->count() }}
                         </p>
-                        <span class="text-sm opacity-80">Aduan Selesai</span>
+                        <span class="text-sm lg:text-lg opacity-80">Aduan Selesai</span>
                     </div>
                 </div>
             </div>
@@ -426,9 +469,10 @@
         </script>
 
         <!-- Aduan Cepat -->
-        <div id="aduanCepatBox"
-            class="group relative bg-gradient-to-br from-[#1e3a8a]/95 to-[#2563eb]/90 shadow-lg backdrop-blur-md
-                                                                    px-5 py-6 mt-14 w-full md:max-w-[67rem] 2xl:max-w-[90rem] mx-auto rounded-none md:rounded-2xl overflow-hidden z-30"
+        <div id="aduanCepatBox" class="scroll-mt-44 sm:scroll-mt-40 md:scroll-mt-40 
+                group relative bg-gradient-to-br from-[#1e3a8a]/95 to-[#2563eb]/90 shadow-lg backdrop-blur-md 
+                px-5 py-6 mt-20 sm:mt-16 md:mt-14 
+                w-full md:max-w-[67rem] 2xl:max-w-[90rem] mx-auto rounded-none md:rounded-2xl overflow-hidden z-30"
             data-aos="fade-up">
 
             <!-- Background -->
@@ -445,8 +489,8 @@
                 @guest
                     <div id="form-overlay"
                         class="absolute inset-0 z-10 bg-white bg-opacity-80  backdrop-blur-sm flex items-center justify-center rounded-2xl
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               opacity-0 scale-95 pointer-events-none transition-all duration-500 ease-out
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       opacity-0 scale-95 pointer-events-none transition-all duration-500 ease-out
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto">
                         <div
                             class="text-red-700 text-center font-semibold px-4 transform transition duration-500 ease-out translate-y-4 group-hover:translate-y-0">
                             <i class="fas fa-exclamation-triangle text-3xl mb-2 animate-pulse"></i><br>
@@ -548,15 +592,15 @@
 
                                     <!-- Tombol Tambah -->
                                     <button type="button" id="addFileBtn"
-                                        class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-4 py-2 rounded-full w-full mb-6 text-md font-semibold transition shadow-lg
-                                                                                                                                                                                                                                                                                                    hover:from-blue-700 hover:to-cyan-600">
+                                        class="bg-gradient-to-r from-red-600 to-rose-500 text-white px-4 py-2 rounded-full w-full mb-6 text-md font-semibold transition shadow-lg
+                                                                                                                                                                                                                                                                                                                                                hover:from-red-700 hover:to-rose-600">
                                         + Tambah file
                                     </button>
 
                                     <!-- Tombol Aksi -->
                                     <div class="flex justify-end mb-2 space-x-2">
                                         <button type="button" id="confirmFileBtn"
-                                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full transition">
+                                            class="bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white px-4 py-2 rounded-full transition">
                                             Simpan
                                         </button>
 
@@ -648,7 +692,7 @@
         <!-- Modal Lokasi -->
         <div id="locationModal"
             class="fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ease-in-out hidden
-                                                                                                                                                                                                                                                                                bg-black/30">
+                                                                                                                                                                                                                                                                                                                            bg-black/30">
 
             <!-- Background gambar full, posisi absolute di belakang -->
             <div class="absolute inset-0 bg-cover bg-center opacity-70" style="background-image: url('/images/red.jpg');">
@@ -688,7 +732,7 @@
                     <label for="alamatField" class="block text-sm font-medium text-white mb-1">Alamat</label>
                     <input type="text" id="alamatField" readonly
                         class="w-full bg-transparent border border-white/40 rounded-lg px-4 py-2 text-white font-semibold
-                                                                                                                                                                                                                                                                                                                                               focus:outline-none focus:ring-2 focus:ring-white/70" />
+                                                                                                                                                                                                                                                                                                                                                                                           focus:outline-none focus:ring-2 focus:ring-white/70" />
                 </div>
 
                 <!-- Koordinat -->
@@ -749,8 +793,8 @@
                     @csrf
                     <input type="text" name="tracking_id" placeholder="Nomor Tiket Aduan"
                         class="flex-1 border rounded-full px-6 py-3 bg-white text-gray-900 placeholder-gray-500
-                                                                                   text-base font-semibold tracking-wide shadow text-center
-                                                                                   focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition duration-300"
+                                                                                                                               text-base font-semibold tracking-wide shadow text-center
+                                                                                                                               focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition duration-300"
                         required>
                     <button type="submit"
                         class="whitespace-nowrap bg-transparent border border-white hover:bg-white/10 text-white px-6 py-3 rounded-full font-bold shadow-lg transition cursor-pointer flex items-center">
@@ -831,20 +875,20 @@
 
                                     <span
                                         class="absolute top-2 left-2 px-3 py-1 rounded-full text-xs font-semibold shadow-lg
-                                                                                                                                                                                                            @if($report->status === 'Diajukan') bg-red-200 text-red-800
-                                                                                                                                                                                                            @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
-                                                                                                                                                                                                            @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
-                                                                                                                                                                                                            @elseif($report->status === 'Selesai') bg-green-200 text-green-800
-                                                                                                                                                                                                            @else bg-gray-200 text-gray-700
-                                                                                                                                                                                                            @endif">
+                                                                                                                                                                                                                                                                                                    @if($report->status === 'Diajukan') bg-red-200 text-red-800
+                                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
+                                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
+                                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Selesai') bg-green-200 text-green-800
+                                                                                                                                                                                                                                                                                                    @else bg-gray-200 text-gray-700
+                                                                                                                                                                                                                                                                                                    @endif">
                                         {{ $report->status }}
                                     </span>
 
                                     <span
                                         class="absolute bottom-2 left-1/2 transform -translate-x-1/2 
-                                                                                                                                                                                                            bg-zinc-900/60 text-white text-[8.5px] px-2 py-[1px] 
-                                                                                                                                                                                                            rounded-full backdrop-blur-sm tracking-wider italic 
-                                                                                                                                                                                                            font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
+                                                                                                                                                                                                                                                                                                    bg-zinc-900/60 text-white text-[8.5px] px-2 py-[1px] 
+                                                                                                                                                                                                                                                                                                    rounded-full backdrop-blur-sm tracking-wider italic 
+                                                                                                                                                                                                                                                                                                    font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
                                         {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}
                                     </span>
                                 </a>
@@ -914,21 +958,21 @@
                             <!-- Status -->
                             <span
                                 class="absolute top-2 left-2 px-4 py-1.5 rounded-full text-base font-semibold shadow-lg
-                                                                                                                                                                                            @if($report->status === 'Diajukan') bg-red-200 text-red-800
-                                                                                                                                                                                            @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
-                                                                                                                                                                                            @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
-                                                                                                                                                                                            @elseif($report->status === 'Selesai') bg-green-200 text-green-800
-                                                                                                                                                                                            @else bg-gray-200 text-gray-700
-                                                                                                                                                                                            @endif">
+                                                                                                                                                                                                                                                                                    @if($report->status === 'Diajukan') bg-red-200 text-red-800
+                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
+                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
+                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Selesai') bg-green-200 text-green-800
+                                                                                                                                                                                                                                                                                    @else bg-gray-200 text-gray-700
+                                                                                                                                                                                                                                                                                    @endif">
                                 {{ $report->status }}
                             </span>
 
                             <!-- Nama pengadu -->
                             <span
                                 class="absolute bottom-2 left-1/2 transform -translate-x-1/2 
-                                                                                                                                                                                            bg-zinc-900/60 text-white text-[12px] px-3 py-[3px] 
-                                                                                                                                                                                            rounded-full backdrop-blur-sm tracking-wider italic 
-                                                                                                                                                                                            font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
+                                                                                                                                                                                                                                                                                    bg-zinc-900/60 text-white text-[12px] px-3 py-[3px] 
+                                                                                                                                                                                                                                                                                    rounded-full backdrop-blur-sm tracking-wider italic 
+                                                                                                                                                                                                                                                                                    font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
                                 {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}
                             </span>
                         </a>
@@ -1076,35 +1120,35 @@
             // Beberapa query kecil
             const queries = [
                 `
-                                                                                                                                [out:json][timeout:20];
-                                                                                                                                ${areaQuery}
-                                                                                                                                (node["place"](area.searchArea); way["place"](area.searchArea););
-                                                                                                                                out center tags;
-                                                                                                                                `,
+                                                                                                                                                                            [out:json][timeout:20];
+                                                                                                                                                                            ${areaQuery}
+                                                                                                                                                                            (node["place"](area.searchArea); way["place"](area.searchArea););
+                                                                                                                                                                            out center tags;
+                                                                                                                                                                            `,
                 `
-                                                                                                                                [out:json][timeout:20];
-                                                                                                                                ${areaQuery}
-                                                                                                                                (node["highway"~"motorway|trunk|primary|secondary|tertiary|residential"](area.searchArea););
-                                                                                                                                out center tags;
-                                                                                                                                `,
+                                                                                                                                                                            [out:json][timeout:20];
+                                                                                                                                                                            ${areaQuery}
+                                                                                                                                                                            (node["highway"~"motorway|trunk|primary|secondary|tertiary|residential"](area.searchArea););
+                                                                                                                                                                            out center tags;
+                                                                                                                                                                            `,
                 `
-                                                                                                                                [out:json][timeout:20];
-                                                                                                                                ${areaQuery}
-                                                                                                                                (node["amenity"](area.searchArea); way["amenity"](area.searchArea););
-                                                                                                                                out center tags;
-                                                                                                                                `,
+                                                                                                                                                                            [out:json][timeout:20];
+                                                                                                                                                                            ${areaQuery}
+                                                                                                                                                                            (node["amenity"](area.searchArea); way["amenity"](area.searchArea););
+                                                                                                                                                                            out center tags;
+                                                                                                                                                                            `,
                 `
-                                                                                                                                [out:json][timeout:20];
-                                                                                                                                ${areaQuery}
-                                                                                                                                (node["shop"](area.searchArea); way["shop"](area.searchArea););
-                                                                                                                                out center tags;
-                                                                                                                                `,
+                                                                                                                                                                            [out:json][timeout:20];
+                                                                                                                                                                            ${areaQuery}
+                                                                                                                                                                            (node["shop"](area.searchArea); way["shop"](area.searchArea););
+                                                                                                                                                                            out center tags;
+                                                                                                                                                                            `,
                 `
-                                                                                                                                [out:json][timeout:20];
-                                                                                                                                ${areaQuery}
-                                                                                                                                (node["office"](area.searchArea); way["office"](area.searchArea););
-                                                                                                                                out center tags;
-                                                                                                                                `
+                                                                                                                                                                            [out:json][timeout:20];
+                                                                                                                                                                            ${areaQuery}
+                                                                                                                                                                            (node["office"](area.searchArea); way["office"](area.searchArea););
+                                                                                                                                                                            out center tags;
+                                                                                                                                                                            `
             ];
 
             const fetchQuery = (query) => {
@@ -1499,11 +1543,11 @@
             const div = document.createElement('div');
             div.className = 'flex items-center gap-3 mb-2';
             div.innerHTML = `
-                                                                                                                                                                                                                                                                                                                                <input type="file" name="file[]" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
-                                                                                                                                                                                                                                                                                                                                    class="file-input flex-1 border px-2 py-1 rounded text-sm">
-                                                                                                                                                                                                                                                                                                                                <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
-                                                                                                                                                                                                                                                                                                                                    <i class="fas fa-trash-alt"></i>
-                                                                                                                                                                                                                                                                                                                                </button>`;
+                                                                                                                                                                                                                                                                                                                                                                            <input type="file" name="file[]" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
+                                                                                                                                                                                                                                                                                                                                                                                class="file-input flex-1 border px-2 py-1 rounded text-sm">
+                                                                                                                                                                                                                                                                                                                                                                            <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
+                                                                                                                                                                                                                                                                                                                                                                                <i class="fas fa-trash-alt"></i>
+                                                                                                                                                                                                                                                                                                                                                                            </button>`;
             fileInputsContainer.appendChild(div);
             updateAddFileButtonVisibility();
         });

@@ -23,9 +23,6 @@
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="preload" as="image" href="{{ asset('images/carousel1.jpg') }}">
-    <link rel="preload" as="image" href="{{ asset('images/carousel2.jpg') }}">
-    <link rel="preload" as="image" href="{{ asset('images/carousel3.jpg') }}">
     <!-- NProgress CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" />
 

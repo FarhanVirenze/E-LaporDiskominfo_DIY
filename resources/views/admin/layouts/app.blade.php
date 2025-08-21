@@ -4,70 +4,45 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    {{-- CSRF Token --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ $page_title ?? config('app.name', 'E-Lapor DIY') }}</title>
 
-    {{-- SEO --}}
-    <meta name="robots" content="noindex, nofollow">
-
-    {{-- Fonts --}}
+    {{-- Fonts & Icons --}}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Menambahkan jQuery sebelum Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <!-- NProgress CSS -->
+
+    {{-- NProgress --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" />
 
-    {{-- Styles & Scripts --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    {{-- Tambahan CSS dari halaman --}}
-    @yield('include-css')
-
+    {{-- Tambahan CSS --}}
     <style>
-        #nprogress .bar {
-            background: linear-gradient(to right,
-                    #1e3a8a,
-                    /* biru tua (indigo-900) */
-                    #2563eb,
-                    /* biru utama (blue-600) */
-                    #3b82f6,
-                    /* biru terang (blue-500) */
-                    #06b6d4
-                    /* cyan neon sebagai aksen */
-                );
-            height: 3px;
-        }
-
-        #nprogress .peg {
-            box-shadow:
-                0 0 15px #2563eb,
-                0 0 10px #3b82f6,
-                0 0 8px #06b6d4;
-            /* glow biru dominan */
-        }
-
-        #nprogress .spinner-icon {
-            border-top-color: #2563eb;
-            border-left-color: #3b82f6;
-        }
+        body { font-family: 'Poppins', sans-serif; background-color: #F5F7FB; }
+        .material-card { border-radius: 1rem; box-shadow: 0 3px 8px rgba(0,0,0,0.05); transition: 0.3s; }
+        .material-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+        .material-title { font-weight: 600; font-size: 1.2rem; color: #37474F; }
+        .material-subtitle { font-size: 0.9rem; color: #607D8B; }
+        .material-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        #nprogress .bar { background: linear-gradient(to right,#ff1744,#f50057); height:3px; }
+        #nprogress .peg { box-shadow:0 0 15px #ff1744,0 0 10px #f50057,0 0 6px #ff4081; }
+        #nprogress .spinner-icon { border-top-color:#ff1744; border-left-color:#f50057; }
     </style>
+
+    @yield('include-css')
 </head>
 
 <body class="font-sans antialiased bg-white text-gray-800">
     <div class="min-h-screen flex flex-col main-wrapper">
-        {{-- Navbar --}}
+        {{-- Navbar Admin --}}
         @include('admin.layouts.navbar')
 
-        {{-- Page Header (opsional) --}}
+        {{-- Page Header --}}
         @isset($header)
             <header class="bg-white shadow">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -76,20 +51,7 @@
             </header>
         @endisset
 
-        {{-- Main Content --}}
-        <main class="flex-grow">
-            @yield('content')
-        </main>
-
-        {{-- Footer --}}
-        @include('admin.layouts.footer')
-    </div>
-
-    {{-- Tambahan JS dari halaman --}}
     @yield('include-js')
-
-    {{-- Scripts tambahan di bagian bawah halaman --}}
-    @stack('scripts') {{-- Jika ada push stack script di halaman --}}
+    @stack('scripts')
 </body>
-
 </html>

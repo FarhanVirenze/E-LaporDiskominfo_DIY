@@ -17,7 +17,7 @@
             </div>
         @else
             <table class="table table-striped table-bordered">
-                <thead>
+                <thead class="bg-gradient-to-r from-red-700 to-rose-500 text-white">
                     <tr>
                         <th>Judul</th>
                         <th>Status</th>
@@ -29,34 +29,27 @@
                         <tr>
                             <td>{{ $report->judul }}</td>
                             <td>
-                                <!-- Menampilkan Status dengan warna berbeda -->
                                 <span class="status-text
-                                                                        @if($report->status == 'Diajukan') bg-blue-200 text-blue-800
-                                                                        @elseif($report->status == 'Dibaca') bg-teal-200 text-teal-800
-                                                                        @elseif($report->status == 'Direspon') bg-yellow-200 text-yellow-800
-                                                                        @elseif($report->status == 'Selesai') bg-green-200 text-green-800
-                                                                        @endif
-                                                                        rounded-full px-2 py-1 text-xs font-semibold">
+                                                @if($report->status == 'Diajukan') bg-red-200 text-red-800
+                                                @elseif($report->status == 'Dibaca') bg-blue-200 text-blue-800
+                                                @elseif($report->status == 'Direspon') bg-yellow-200 text-yellow-800
+                                                @elseif($report->status == 'Selesai') bg-green-200 text-green-800
+                                                @endif
+                                                rounded-full px-2 py-1 text-xs font-semibold">
                                     {{ $report->status }}
                                 </span>
                             </td>
                             <td>
-                                <!-- Button Actions: Edit, Hapus, Detail -->
                                 <div class="d-flex gap-2">
-                                    <!-- Edit button, triggers the edit modal -->
                                     <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editAduanModal"
                                         data-id="{{ $report->id }}" data-judul="{{ $report->judul }}"
                                         data-status="{{ $report->status }}">
                                         Edit
                                     </button>
-
-                                    <!-- Delete button, triggers the delete confirmation modal -->
                                     <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteAduanModal"
                                         data-id="{{ $report->id }}" data-judul="{{ $report->judul }}">
                                         Hapus
                                     </button>
-
-                                    <!-- Detail button, redirects to the detail page -->
                                     <a href="{{ route('admin.reports.show', ['id' => $report->id]) }}"
                                         class="btn btn-info btn-sm">Lihat</a>
                                 </div>
