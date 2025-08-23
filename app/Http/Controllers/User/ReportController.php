@@ -20,44 +20,44 @@ class ReportController extends Controller
      * Menampilkan semua laporan milik user (atau semua jika tidak login).
      */
     public function index()
-{
-    if (auth()->check()) {
-        $user = auth()->user();
+    {
+        if (auth()->check()) {
+            $user = auth()->user();
 
-        if ($user->role === 'admin') {
-            $kategoriIds = $user->kategori->pluck('id')->toArray();
+            if ($user->role === 'admin') {
+                $kategoriIds = $user->kategori->pluck('id')->toArray();
 
-            $reports = Report::whereIn('kategori_id', $kategoriIds)
-                ->with('pelapor')
-                ->latest()
-                ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
-        } elseif ($user->role === 'superadmin') {
+                $reports = Report::whereIn('kategori_id', $kategoriIds)
+                    ->with('pelapor')
+                    ->latest()
+                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
+            } elseif ($user->role === 'superadmin') {
+                $reports = Report::with('pelapor')
+                    ->latest()
+                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
+            } else {
+                $reports = Report::where('user_id', $user->id_user)
+                    ->with('pelapor')
+                    ->latest()
+                    ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
+            }
+        } else {
             $reports = Report::with('pelapor')
                 ->latest()
                 ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
-        } else {
-            $reports = Report::where('user_id', $user->id_user)
-                ->with('pelapor')
-                ->latest()
-                ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
         }
-    } else {
-        $reports = Report::with('pelapor')
-            ->latest()
-            ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'file', 'created_at']);
+
+        // 🔹 Tambahkan statistik di sini
+        $totalAduan = Report::count();
+
+        $aduanBulanIni = Report::whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->count();
+
+        $aduanSelesai = Report::where('status', Report::STATUS_SELESAI)->count();
+
+        return view('portal.welcome', compact('reports', 'totalAduan', 'aduanBulanIni', 'aduanSelesai'));
     }
-
-    // 🔹 Tambahkan statistik di sini
-    $totalAduan = Report::count();
-
-    $aduanBulanIni = Report::whereMonth('created_at', Carbon::now()->month)
-        ->whereYear('created_at', Carbon::now()->year)
-        ->count();
-
-    $aduanSelesai = Report::where('status', Report::STATUS_SELESAI)->count();
-
-    return view('portal.welcome', compact('reports', 'totalAduan', 'aduanBulanIni', 'aduanSelesai'));
-}
 
 
     /**
@@ -181,22 +181,33 @@ class ReportController extends Controller
         $timeline[] = [
             'time' => $report->created_at,
             'type' => 'created',
-            'title' => ' Aduan dengan Nomor ' . $report->tracking_id . ' dibuat oleh ' . ($report->is_anonim ? 'Anonim' : $report->nama_pengadu)
+            'title' => 'Aduan dengan Nomor ' . $report->tracking_id . ' dibuat oleh '
+                . ($report->is_anonim ? 'Anonim' : $report->nama_pengadu),
         ];
 
-        // Disposisikan ke admin kategori
+        // Disposisikan ke admin kategori (jika ada)
         if ($report->kategori && $report->kategori->admin) {
             $timeline[] = [
                 'time' => $report->created_at,
                 'type' => 'assigned',
-                'title' => 'Aduan disposisikan ke Admin ' . $report->kategori->admin->name
+                'title' => 'Aduan didisposisikan otomatis oleh sistem ke Admin ' . optional($report->kategori->admin)->name,
             ];
         }
 
-        // Ambil waktu dibaca
+        // 🔹 Disposisi diubah (jika ada update admin_id)
+        if ($report->admin_id && $report->updated_at != $report->created_at) {
+            $timeline[] = [
+                'time' => $report->updated_at,
+                'type' => 'reassigned',
+                'title' => 'Aduan didisposisikan ulang ke Admin ' . (optional($report->admin)->name ?? '-')
+                    . ' oleh ' . (optional($report->updatedBy)->name ?? 'System'),
+            ];
+        }
+
+        // Ambil waktu pertama kali admin bertindak (dibaca/tindak lanjut)
         $firstAdminActionTime = optional(
             $report->followUps
-                ->filter(fn($fu) => in_array($fu->user->role, ['admin', 'superadmin']))
+                ->filter(fn($fu) => in_array($fu->user->role ?? '', ['admin', 'superadmin']))
                 ->sortBy('created_at')
                 ->first()
         )->created_at;
@@ -206,7 +217,7 @@ class ReportController extends Controller
             $timeline[] = [
                 'time' => $firstAdminActionTime ?? $report->updated_at,
                 'type' => 'read',
-                'title' => 'Admin ' . ($report->admin->name ?? '-') . ' telah membaca aduan'
+                'title' => 'Admin ' . (optional($report->admin)->name ?? '-') . ' telah membaca aduan',
             ];
         }
 
@@ -215,7 +226,7 @@ class ReportController extends Controller
             $timeline[] = [
                 'time' => $fu->created_at,
                 'type' => 'followup',
-                'title' => 'Tindak Lanjut oleh ' . ($fu->user->name ?? 'Admin')
+                'title' => 'Tindak Lanjut oleh ' . (optional($fu->user)->name ?? 'Admin'),
             ];
         }
 
@@ -224,7 +235,7 @@ class ReportController extends Controller
             $timeline[] = [
                 'time' => $c->created_at,
                 'type' => 'comment',
-                'title' => 'Komentar dari ' . ($c->user->name ?? 'Anonim')
+                'title' => 'Komentar dari ' . (optional($c->user)->name ?? 'Anonim'),
             ];
         }
 
@@ -233,14 +244,15 @@ class ReportController extends Controller
             $timeline[] = [
                 'time' => $report->updated_at,
                 'type' => 'done',
-                'title' => 'Aduan telah dinyatakan Selesai oleh ' . ($report->admin->name ?? 'Admin')
+                'title' => 'Aduan telah dinyatakan Selesai oleh ' . (optional($report->admin)->name ?? 'Admin'),
             ];
         }
 
         // Urutkan dari terbaru ke terlama
-        $timeline = collect($timeline)->sortBy('time')->values()->all();
+        $timeline = collect($timeline)->sortByDesc('time')->values()->all();
 
         return view('portal.daftar-aduan.detail.index', compact('report', 'followUps', 'comments', 'timeline'));
+
     }
 
     public function like($id)
@@ -485,10 +497,9 @@ class ReportController extends Controller
 
         $user = auth()->user();
 
-        // Tidak peduli role-nya apa, ambil aduan berdasarkan siapa yang mengajukan (user_id)
         $aduan = Report::where('user_id', $user->id_user)
             ->latest()
-            ->get(['id', 'tracking_id', 'judul', 'status', 'created_at']);
+            ->paginate(6, ['id', 'tracking_id', 'judul', 'status', 'created_at']); // 🔹 paginate
 
         return view('portal.daftar-aduan.riwayat', compact('aduan'));
     }

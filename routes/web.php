@@ -63,7 +63,13 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:user'])->prefix(
 Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:admin'])->prefix('admin')->name('admin.')->group(function () {
 
     Route::post('/lacak', [ReportAdminController::class, 'lacak'])->name('report.lacak');
+    Route::get('/daftar-aduan', [ReportAdminController::class, 'index'])
+        ->name('reports.index');
+    Route::delete('/reports/{id}/file/{index}', [ReportAdminController::class, 'deleteFile'])
+        ->name('reports.file.delete');
     Route::get('/daftar-aduan/{id}/detail', [ReportAdminController::class, 'show'])->name('reports.show');
+    Route::put('/daftar-aduan/{id}', [ReportAdminController::class, 'update'])->name('reports.update');
+    Route::delete('/daftar-aduan/{id}', [ReportAdminController::class, 'destroy'])->name('reports.destroy');
     Route::post('/daftar-aduan/{id}/follow-up', [ReportAdminController::class, 'storeFollowUp'])->name('reports.followup');
     Route::post('/daftar-aduan/{id}/comment', [ReportAdminController::class, 'storeComment'])->name('reports.comment');
     Route::get('/reports/{id}/badges', [ReportAdminController::class, 'getBadgeCounts'])->name('reports.badges');
@@ -94,11 +100,18 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:admin'])->prefix
 
 });
 
-/// Superadmin Routes
+// Superadmin Routes
 Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:superadmin'])->prefix('superadmin')->name('superadmin.')->group(function () {
 
     Route::post('/lacak', [ReportSuperadminController::class, 'lacak'])->name('report.lacak');
+    // Halaman daftar semua laporan
+    Route::get('/daftar-aduan', [ReportSuperadminController::class, 'index'])
+        ->name('reports.index');
+    Route::delete('/reports/{id}/file/{index}', [ReportSuperadminController::class, 'deleteFile'])
+        ->name('reports.file.delete');
     Route::get('/daftar-aduan/{id}/detail', [ReportSuperadminController::class, 'show'])->name('reports.show');
+    Route::put('/daftar-aduan/{id}', [ReportSuperadminController::class, 'update'])->name('reports.update');
+    Route::delete('/daftar-aduan/{id}', [ReportSuperadminController::class, 'destroy'])->name('reports.destroy');
     Route::post('/daftar-aduan/{id}/follow-up', [ReportSuperadminController::class, 'storeFollowUp'])->name('reports.followup');
     Route::post('/daftar-aduan/{id}/comment', [ReportSuperadminController::class, 'storeComment'])->name('reports.comment');
     Route::get('/reports/{id}/badges', [ReportSuperadminController::class, 'getBadgeCounts'])->name('reports.badges');

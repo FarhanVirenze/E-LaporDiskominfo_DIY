@@ -10,10 +10,11 @@
     <div class="max-w-4xl mx-auto px-4 py-8">
 
         @if (session('success'))
-            <div id="successMessage" class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
-                               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-blue-400 
-                               bg-gradient-to-r from-blue-600 to-blue-500/90 backdrop-blur-md text-white 
-                               transition-all duration-500 opacity-100 animate-fade-in">
+            <div id="successMessage"
+                class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
+                                                                                                                                                                                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
+                                                                                                                                                                                                       bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
+                                                                                                                                                                                                       transition-all duration-500 opacity-100 animate-fade-in">
 
                 <!-- Ikon -->
                 <div id="success-icon-wrapper" class="flex-shrink-0">
@@ -113,6 +114,40 @@
             </script>
         @endif
 
+        {{-- Judul Utama + Tombol Selesaikan --}}
+        <div class="flex items-center justify-between mb-4">
+            <h1 class="text-2xl font-semibold text-[#37474F]">
+                Informasi Detail Aduan
+            </h1>
+
+            {{-- Tombol Selesaikan / Batalkan --}}
+            @if($report->status != 'Selesai')
+                <form action="{{ route('superadmin.reports.update', $report->id) }}" method="POST" class="ml-auto">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="status" value="Selesai">
+                    <button type="submit"
+                        class="group flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-green-600 to-green-600 text-white font-medium shadow-md hover:shadow-lg hover:from-green-700 hover:to-green-600 transition-all duration-200"
+                        title="Tandai sebagai selesai">
+                        <i class="fas fa-check-circle text-lg group-hover:scale-110 transform transition"></i>
+                        <span class="hidden sm:inline">Selesaikan Aduan</span>
+                    </button>
+                </form>
+            @else
+                <form action="{{ route('superadmin.reports.update', $report->id) }}" method="POST" class="ml-auto">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="status" value="Dibaca">
+                    <button type="submit"
+                        class="group flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-red-600 to-red-600 text-white font-medium shadow-md hover:shadow-lg hover:from-red-700 hover:to-red-600 transition-all duration-200"
+                        title="Batalkan status selesai">
+                        <i class="fas fa-times-circle text-lg group-hover:scale-110 transform transition"></i>
+                        <span class="hidden sm:inline">Batalkan Selesai</span>
+                    </button>
+                </form>
+            @endif
+        </div>
+
         {{-- Meta --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-[13px] text-gray-700">
             {{-- Kolom Kiri --}}
@@ -126,49 +161,215 @@
                     <span class="ml-1 text-gray-500">Melalui Website Pengaduan</span>
                 </p>
 
-                <p>
-                    <i class="fas fa-info-circle text-gray-500 mr-1"></i>
-                    <span class="font-medium">Status Aduan</span>
-                    <span
-                        class="ml-1 inline-block px-2 py-0.5 rounded-full text-xs font-semibold
-                                                                                                @if($report->status == 'Diajukan') bg-red-100 text-red-700
-                                                                                                @elseif($report->status == 'Dibaca') bg-blue-100 text-blue-700
-                                                                                                @elseif($report->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                                                @elseif($report->status == 'Selesai') bg-green-100 text-green-700 @endif">
-                        Aduan {{ strtolower($report->status) }}
-                    </span>
-                </p>
+                {{-- Tracking ID --}}
+                <div x-data="{ openTrackingModal: false }">
+                    <p class="flex items-center">
+                        <i class="fas fa-tag text-gray-500 mr-1"></i>
+                        <span class="font-medium">Tracking ID:</span>
+                        <span class="font-bold">{{ $report->tracking_id }}</span>
+
+                        {{-- Icon Edit --}}
+                        <button @click="openTrackingModal = true" class="ml-2 text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </p>
+
+                    <!-- Modal Edit Tracking ID -->
+                    <div x-show="openTrackingModal" x-cloak
+                        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+                            <h3 class="text-lg font-bold mb-4">Edit Tracking ID</h3>
+
+                            <form action="{{ route('superadmin.reports.update', $report->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+
+                                <label class="block font-medium mb-1">Tracking ID</label>
+                                <input type="text" name="tracking_id" value="{{ $report->tracking_id }}"
+                                    class="w-full border rounded-lg px-3 py-2 mb-4 focus:ring focus:ring-blue-300">
+
+                                <div class="flex justify-end gap-2">
+                                    <button type="button" @click="openTrackingModal = false"
+                                        class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Batal</button>
+                                    <button type="submit"
+                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Simpan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Status Aduan + Modal --}}
+                <div x-data="{ openStatusModal: false }">
+                    <p class="flex items-center">
+                        <i class="fas fa-info-circle text-gray-500 mr-1"></i>
+                        <span class="font-medium">Status Aduan</span>
+                        <span
+                            class="ml-1 inline-block px-2 py-0.5 rounded-full text-xs font-semibold
+                                                                                            @if($report->status == 'Diajukan') bg-red-100 text-red-700
+                                                                                            @elseif($report->status == 'Dibaca') bg-blue-100 text-blue-700
+                                                                                            @elseif($report->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                                                            @elseif($report->status == 'Selesai') bg-green-100 text-green-700 @endif">
+                            Aduan {{ strtolower($report->status) }}
+                        </span>
+
+                        {{-- Icon Edit (ini bisa akses openStatusModal karena dalam scope x-data) --}}
+                        <button @click="openStatusModal = true" class="ml-2 text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </p>
+
+                    <!-- Modal Edit Status -->
+                    <div x-show="openStatusModal" x-cloak
+                        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+                            <h3 class="text-lg font-bold mb-4">Edit Status Aduan</h3>
+
+                            <form action="{{ route('superadmin.reports.update', $report->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+
+                                <label class="block font-medium mb-1">Pilih Status</label>
+                                <select name="status"
+                                    class="w-full border rounded-lg px-3 py-2 mb-4 focus:ring focus:ring-blue-300">
+                                    <option value="Diajukan" @selected($report->status == 'Diajukan')>Diajukan</option>
+                                    <option value="Dibaca" @selected($report->status == 'Dibaca')>Dibaca</option>
+                                    <option value="Direspon" @selected($report->status == 'Direspon')>Direspon</option>
+                                    <option value="Selesai" @selected($report->status == 'Selesai')>Selesai</option>
+                                </select>
+
+                                <div class="flex justify-end gap-2">
+                                    <button type="button" @click="openStatusModal = false"
+                                        class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Batal</button>
+                                    <button type="submit"
+                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Simpan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Wilayah --}}
+                <div x-data="{ openWilayahModal: false }">
+                    <p class="text-sm text-gray-700 flex items-center">
+                        <i class="fas fa-map-marker-alt text-gray-500 mr-1"></i>
+                        <span class="ml-1.5 font-medium">Wilayah</span>
+                        <span class="font-semibold text-gray-800 ml-1">{{ $report->wilayah->nama }}</span>
+
+                        {{-- Icon Edit --}}
+                        <button @click="openWilayahModal = true" class="ml-2 text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </p>
+
+                    <!-- Modal Edit Wilayah -->
+                    <div x-show="openWilayahModal" x-cloak
+                        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+                            <h3 class="text-lg font-bold mb-4">Edit Wilayah</h3>
+
+                            <form action="{{ route('superadmin.reports.update', $report->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+
+                                <label class="block font-medium mb-1">Pilih Wilayah</label>
+                                <select name="wilayah_id"
+                                    class="w-full border rounded-lg px-3 py-2 mb-4 focus:ring focus:ring-blue-300">
+                                    @foreach($wilayahList as $wilayah)
+                                        <option value="{{ $wilayah->id }}" @selected($report->wilayah_id == $wilayah->id)>
+                                            {{ $wilayah->nama }}
+                                        </option>
+                                    @endforeach
+                                </select>
+
+                                <div class="flex justify-end gap-2">
+                                    <button type="button" @click="openWilayahModal = false"
+                                        class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Batal</button>
+                                    <button type="submit"
+                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Simpan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
                 {{-- Disposisi --}}
-                <p class="text-sm text-gray-700 flex items-center">
-                    <i class="fas fa-share-square text-gray-500 mr-1"></i>
-                    <span class="font-medium">Aduan ini didisposisikan ke</span>
-                    @if($report->admin)
-                        <span class="ml-1 px-2 py-1 rounded-full bg-gray-600 text-white text-xs font-medium">
-                            {{ $report->admin->name }}
-                        </span>
-                    @else
-                        <span class="ml-1 italic text-gray-500">Belum didisposisikan</span>
-                    @endif
-                </p>
+                <div x-data="{
+                openDisposisiModal: false,
+                selectedAdmin: '{{ $report->admin_id }}',
+                selectedKategori: '{{ $report->kategori_id }}',
+                kategoriList: [
+                    @foreach($kategoriList as $kategori)
+                        { id: '{{ $kategori->id }}', nama: '{{ $kategori->nama }}', admin_id: '{{ $kategori->admin_id }}' },
+                    @endforeach
+                ],
+                get filteredKategori() {
+                    return this.kategoriList.filter(k => k.admin_id == this.selectedAdmin);
+                }
+            }">
+                    <p class="text-sm text-gray-700 flex items-center">
+                        <i class="fas fa-share-square text-gray-500 mr-1"></i>
+                        <span class="font-medium">Aduan ini didisposisikan ke</span>
+                        @if($report->admin)
+                            <span class="ml-1 px-1.5 py-0.5 rounded-full bg-gray-600 text-white text-[10px] font-medium">
+                                {{ $report->admin->name }} ({{ $report->kategori->nama }})
+                            </span>
+                        @else
+                            <span class="ml-1 italic text-gray-500">Belum didisposisikan</span>
+                        @endif
 
-                <p>
-                    <i class="fas fa-tag text-gray-500 mr-1"></i>
-                    <span class="font-medium">Tracking ID:</span>
-                    <span class="font-bold">{{ $report->tracking_id }}</span>
-                </p>
+                        <button @click="openDisposisiModal = true" class="ml-2 text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </p>
 
-                <p>
-                    <i class="fas fa-folder-open text-gray-500 mr-1"></i>
-                    <span class="font-medium">Kategori Aduan</span>
-                    <span class="font-semibold">{{ $report->kategori->nama }}</span>
-                </p>
+                    <!-- Modal -->
+                    <div x-show="openDisposisiModal" x-cloak
+                        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+                            <h3 class="text-lg font-bold mb-4">Edit Disposisi</h3>
 
-                <p class="text-sm text-gray-700 flex items-center">
-                    <i class="fas fa-map-marker-alt text-gray-500 mr-1"></i>
-                    <span class="ml-1.5 font-medium">Wilayah</span>
-                    <span class="font-semibold text-gray-800 ml-1">{{ $report->wilayah->nama }}</span>
-                </p>
+                            <form action="{{ route('superadmin.reports.update', $report->id) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+
+                                {{-- Pilih Admin --}}
+                                <label class="block font-medium mb-1">Pilih Admin</label>
+                                <select x-model="selectedAdmin" name="admin_id"
+                                    class="w-full border rounded-lg px-3 py-2 mb-4 focus:ring focus:ring-blue-300" @change="
+                                    // begitu admin dipilih, otomatis pilih kategori pertama
+                                    if (filteredKategori.length > 0) {
+                                        selectedKategori = filteredKategori[0].id;
+                                    } else {
+                                        selectedKategori = '';
+                                    }
+                                ">
+                                    <option value="">-- Pilih Admin --</option>
+                                    @foreach($admins as $admin)
+                                        <option value="{{ $admin->id_user }}">{{ $admin->name }}</option>
+                                    @endforeach
+                                </select>
+
+                                {{-- Pilih Kategori --}}
+                                <label class="block font-medium mb-1">Pilih Kategori</label>
+                                <select x-model="selectedKategori" name="kategori_id"
+                                    class="w-full border rounded-lg px-3 py-2 mb-4 focus:ring focus:ring-blue-300"
+                                    :disabled="!selectedAdmin">
+                                    <template x-for="kategori in filteredKategori" :key="kategori.id">
+                                        <option :value="kategori.id" x-text="kategori.nama"></option>
+                                    </template>
+                                </select>
+
+                                <div class="flex justify-end gap-2">
+                                    <button type="button" @click="openDisposisiModal = false"
+                                        class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Batal</button>
+                                    <button type="submit"
+                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Simpan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                </div>
             </div>
 
             {{-- Kolom Kanan --}}
@@ -198,7 +399,7 @@
                             @csrf
                             <button type="submit"
                                 class="flex items-center text-sm transition-all duration-200 
-                                                                        {{ session('vote_report_' . $report->id) === 'like' ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
+                                                                                                                                                                                                                                            {{ session('vote_report_' . $report->id) === 'like' ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
                                 <i class="fas fa-thumbs-up mr-1"></i> {{ $report->likes }}
                             </button>
                         </form>
@@ -208,7 +409,7 @@
                             @csrf
                             <button type="submit"
                                 class="flex items-center text-sm transition-all duration-200 
-                                                                        {{ session('vote_report_' . $report->id) === 'dislike' ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
+                                                                                                                                                                                                                                            {{ session('vote_report_' . $report->id) === 'dislike' ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
                                 <i class="fas fa-thumbs-down mr-1"></i> {{ $report->dislikes }}
                             </button>
                         </form>
@@ -243,17 +444,61 @@
             </div>
         </div>
 
-        {{-- Judul & Isi --}}
-        <div class="mb-6">
-            <!-- Judul -->
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-2 gap-2">
-                <h2 class="text-3xl font-bold text-red-700">{{ $report->judul }}</h2>
+        {{-- Judul & Isi + Modal --}}
+        <div x-data="{ openModal: false }" class="mb-6">
+
+            <!-- Judul + Tombol Edit -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-1 gap-2">
+                <h2 class="text-xl font-bold text-red-700">{{ $report->judul }}</h2>
+                <button @click="openModal = true"
+                    class="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-700">
+                    Edit
+                </button>
             </div>
 
             <!-- Isi Laporan -->
             <div class="bg-white border rounded-lg shadow-sm p-6 max-h-96 overflow-y-scroll">
                 <p class="text-gray-800 whitespace-pre-line">{{ $report->isi }}</p>
             </div>
+
+            <!-- Modal Edit -->
+            <div x-show="openModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                x-cloak>
+                <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6">
+                    <h3 class="text-xl font-bold mb-4">Edit Laporan</h3>
+
+                    <form action="{{ route('superadmin.reports.update', $report->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <!-- Input Judul -->
+                        <div class="mb-4">
+                            <label class="block font-medium mb-1">Judul</label>
+                            <input type="text" name="judul" value="{{ $report->judul }}"
+                                class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300">
+                        </div>
+
+                        <!-- Input Isi -->
+                        <div class="mb-4">
+                            <label class="block font-medium mb-1">Isi</label>
+                            <textarea name="isi" rows="6"
+                                class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300">{{ $report->isi }}</textarea>
+                        </div>
+
+                        <!-- Tombol -->
+                        <div class="flex justify-end gap-2">
+                            <button type="button" @click="openModal = false"
+                                class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">
+                                Batal
+                            </button>
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                Simpan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
 
 
@@ -272,7 +517,7 @@
             ];
         @endphp
 
-        <div class="border-b px-6 pt-4 flex space-x-6 text-sm font-semibold text-gray-600">
+        <div class="border-b px-6 pt-2 flex space-x-6 text-sm font-semibold text-gray-600">
             @foreach ($tabs as $key => $tab)
                 <button onclick="showTab('{{ $key }}')" id="tab-{{ $key }}"
                     class="tab-button py-2 border-b-2 border-transparent text-gray-600 hover:text-blue-600 relative transition duration-300">
@@ -366,12 +611,22 @@
                             @endif
 
                             {{-- Tombol hapus tindak lanjut --}}
-                            @if (auth()->check() && auth()->user()->role === 'admin')
-                                <button
-                                    onclick="openDeleteModal('{{ route('reports.followup.delete', [$report->id, $item->id]) }}')"
-                                    class="absolute top-2 right-2 text-red-600 text-xs hover:text-red-800 border border-red-600 rounded-full p-1 z-10">
-                                    <i class="fas fa-trash-alt"></i> Hapus
-                                </button>
+                            @if (auth()->check())
+                                @if (auth()->user()->role === 'superadmin')
+                                    {{-- Superadmin bisa hapus semua tindak lanjut --}}
+                                    <button
+                                        onclick="openDeleteModal('{{ route('reports.followup.delete', [$report->id, $item->id]) }}')"
+                                        class="absolute top-2 right-2 text-red-600 text-xs hover:text-red-800 border border-red-600 rounded-full p-1 z-10">
+                                        <i class="fas fa-trash-alt"></i> Hapus
+                                    </button>
+                                @elseif (auth()->user()->role === 'admin' && $item->user && $item->user->role === 'admin')
+                                    {{-- Admin hanya bisa hapus tindak lanjut dari admin --}}
+                                    <button
+                                        onclick="openDeleteModal('{{ route('reports.followup.delete', [$report->id, $item->id]) }}')"
+                                        class="absolute top-2 right-2 text-red-600 text-xs hover:text-red-800 border border-red-600 rounded-full p-1 z-10">
+                                        <i class="fas fa-trash-alt"></i> Hapus
+                                    </button>
+                                @endif
                             @endif
                         </div>
                     @empty
@@ -379,15 +634,17 @@
                     @endforelse
                 </div>
 
-                @if (auth()->check() && in_array(auth()->user()->role, ['admin']))
+                {{-- Form Tindak Lanjut --}}
+                @if (auth()->check() && in_array(auth()->user()->role, ['admin', 'superadmin']))
                     <form action="{{ route('reports.followup', ['id' => $report->id]) }}" method="POST"
                         enctype="multipart/form-data" class="mt-6 space-y-4">
                         @csrf
                         <textarea name="pesan" class="w-full border rounded p-2" rows="4" placeholder="Tindak lanjut..."
                             required></textarea>
                         <input type="file" name="file" class="block w-full border rounded p-1">
-                        <button type="submit" class="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800">Kirim Tindak
-                            Lanjut</button>
+                        <button type="submit" class="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800">
+                            Kirim Tindak Lanjut
+                        </button>
                     </form>
                 @endif
             </div>
@@ -453,12 +710,38 @@
                                 @endif
                             @endif
 
+
                             {{-- Tombol hapus komentar --}}
-                            @if (auth()->check() && (auth()->id() === $item->user_id || auth()->user()->role === 'admin'))
-                                <button onclick="openDeleteModal('{{ route('reports.comment.delete', $item->id) }}')"
-                                    class="absolute top-2 right-2 text-red-600 text-xs hover:text-red-800 border border-red-600 rounded-full p-1 z-10">
-                                    <i class="fas fa-trash-alt"></i> Hapus
-                                </button>
+                            @if (auth()->check())
+                                @php
+                                    $authUser = auth()->user();
+                                @endphp
+
+                                @if ($authUser->role === 'superadmin')
+                                    {{-- Superadmin bisa hapus semua komentar --}}
+                                    <button onclick="openDeleteModal('{{ route('reports.comment.delete', $item->id) }}')"
+                                        class="absolute top-2 right-2 text-red-600 text-xs hover:text-red-800 border border-red-600 rounded-full p-1 z-10">
+                                        <i class="fas fa-trash-alt"></i> Hapus
+                                    </button>
+
+                                @elseif ($authUser->role === 'admin')
+                                    {{-- Admin bisa hapus komentarnya sendiri atau komentar selain superadmin --}}
+                                    @if ($authUser->id === $item->user_id || ($item->user && $item->user->role !== 'superadmin'))
+                                        <button onclick="openDeleteModal('{{ route('reports.comment.delete', $item->id) }}')"
+                                            class="absolute top-2 right-2 text-red-600 text-xs hover:text-red-800 border border-red-600 rounded-full p-1 z-10">
+                                            <i class="fas fa-trash-alt"></i> Hapus
+                                        </button>
+                                    @endif
+
+                                @else
+                                    {{-- User biasa hanya bisa hapus komentarnya sendiri --}}
+                                    @if ($authUser->id === $item->user_id)
+                                        <button onclick="openDeleteModal('{{ route('reports.comment.delete', $item->id) }}')"
+                                            class="absolute top-2 right-2 text-red-600 text-xs hover:text-red-800 border border-red-600 rounded-full p-1 z-10">
+                                            <i class="fas fa-trash-alt"></i> Hapus
+                                        </button>
+                                    @endif
+                                @endif
                             @endif
                         </div>
                     @empty
@@ -466,15 +749,17 @@
                     @endforelse
                 </div>
 
-                @if (auth()->check() && in_array(auth()->user()->role, ['user', 'admin']))
+                {{-- Form Komentar --}}
+                @if (auth()->check() && in_array(auth()->user()->role, ['user', 'admin', 'superadmin']))
                     <form action="{{ route('reports.comment', ['id' => $report->id]) }}" method="POST"
                         enctype="multipart/form-data" class="mt-6 space-y-4">
                         @csrf
                         <textarea name="pesan" class="w-full border rounded p-2" rows="4" placeholder="Tulis komentar..."
                             required></textarea>
                         <input type="file" name="file" class="block w-full border rounded p-1">
-                        <button type="submit" class="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800">Kirim
-                            Komentar</button>
+                        <button type="submit" class="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800">
+                            Kirim Komentar
+                        </button>
                     </form>
                 @else
                     <div
@@ -491,67 +776,102 @@
 
             {{-- Lampiran --}}
             <div class="tab-pane opacity-0 translate-y-4 transition-all duration-300 hidden" data-tab="lampiran">
+
+                {{-- Form Upload Lampiran Baru --}}
+                <form action="{{ route('superadmin.reports.update', $report->id) }}" method="POST"
+                    enctype="multipart/form-data" class="mb-4 flex items-center gap-2">
+                    @csrf
+                    @method('PUT')
+
+                    <input type="file" name="file[]" multiple
+                        class="border rounded-lg px-3 py-2 text-sm focus:ring focus:ring-blue-300">
+
+                    <button type="submit" class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700">
+                        <i class="fas fa-upload mr-1"></i> Upload
+                    </button>
+                </form>
+
+                {{-- List Lampiran --}}
                 @if (!empty($report->file) && is_array($report->file))
                     <div class="flex flex-wrap gap-4 mt-2">
-                        @foreach ($report->file as $file)
+                        @foreach ($report->file as $index => $file)
                             @php
                                 $filePath = asset('storage/' . ltrim($file, '/'));
                                 $fileExtension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
                             @endphp
 
-                            @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
-                                <!-- Gambar -->
-                                <div>
+                            <div class="relative border rounded-lg p-2 shadow-sm bg-gray-50" x-data="{ openDeleteModal: false }">
+                                {{-- Tombol Hapus (Buka Modal) --}}
+                                <button type="button" @click="openDeleteModal = true"
+                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center">
+                                    ✕
+                                </button>
+
+                                {{-- Preview File --}}
+                                @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
+                                    <!-- Gambar -->
                                     <img src="{{ $filePath }}"
                                         class="w-32 h-auto rounded shadow cursor-pointer hover:opacity-80 transition-opacity"
                                         onclick="openModal('{{ $filePath }}')" alt="Lampiran Gambar">
-                                </div>
-                            @elseif ($fileExtension === 'pdf')
-                                <!-- PDF -->
-                                <div>
-                                    <a href="{{ $filePath }}"
-                                        class="text-red-600 hover:bg-red-100 hover:text-red-700 p-2 rounded transition-all flex items-center"
-                                        target="_blank">
+
+                                @elseif ($fileExtension === 'pdf')
+                                    <!-- PDF -->
+                                    <a href="{{ $filePath }}" target="_blank"
+                                        class="flex items-center text-red-600 hover:bg-red-100 hover:text-red-700 p-2 rounded transition-all">
                                         <i class="fas fa-file-pdf mr-2"></i> PDF File
                                     </a>
-                                </div>
-                            @elseif (in_array($fileExtension, ['doc', 'docx']))
-                                <!-- Word -->
-                                <div>
-                                    <a href="{{ $filePath }}"
-                                        class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
-                                        target="_blank">
+
+                                @elseif (in_array($fileExtension, ['doc', 'docx']))
+                                    <!-- Word -->
+                                    <a href="{{ $filePath }}" target="_blank"
+                                        class="flex items-center text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all">
                                         <i class="fas fa-file-word mr-2"></i> Word Document
                                     </a>
-                                </div>
-                            @elseif ($fileExtension === 'zip')
-                                <!-- ZIP -->
-                                <div>
-                                    <a href="{{ $filePath }}"
-                                        class="text-yellow-600 hover:bg-yellow-100 hover:text-yellow-700 p-2 rounded transition-all flex items-center"
-                                        target="_blank">
+
+                                @elseif ($fileExtension === 'zip')
+                                    <!-- ZIP -->
+                                    <a href="{{ $filePath }}" target="_blank"
+                                        class="flex items-center text-yellow-600 hover:bg-yellow-100 hover:text-yellow-700 p-2 rounded transition-all">
                                         <i class="fas fa-file-archive mr-2"></i> ZIP Archive
                                     </a>
-                                </div>
-                            @elseif (in_array($fileExtension, ['xls', 'xlsx']))
-                                <!-- Excel -->
-                                <div>
-                                    <a href="{{ $filePath }}"
-                                        class="text-green-600 hover:bg-green-100 hover:text-green-700 p-2 rounded transition-all flex items-center"
-                                        target="_blank">
+
+                                @elseif (in_array($fileExtension, ['xls', 'xlsx']))
+                                    <!-- Excel -->
+                                    <a href="{{ $filePath }}" target="_blank"
+                                        class="flex items-center text-green-600 hover:bg-green-100 hover:text-green-700 p-2 rounded transition-all">
                                         <i class="fas fa-file-excel mr-2"></i> Excel File
                                     </a>
-                                </div>
-                            @else
-                                <!-- File lainnya -->
-                                <div>
-                                    <a href="{{ $filePath }}"
-                                        class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
-                                        target="_blank">
+
+                                @else
+                                    <!-- File lainnya -->
+                                    <a href="{{ $filePath }}" target="_blank"
+                                        class="flex items-center text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all">
                                         <i class="fas fa-file mr-2"></i> Lihat Lampiran
                                     </a>
+                                @endif
+
+                                {{-- Modal Konfirmasi Hapus --}}
+                                <div x-show="openDeleteModal" x-cloak
+                                    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                                    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+                                        <h3 class="text-lg font-bold mb-4">Konfirmasi Hapus Lampiran</h3>
+                                        <p class="text-gray-600 mb-4">Apakah kamu yakin ingin menghapus lampiran ini?</p>
+
+                                        <div class="flex justify-end gap-2">
+                                            <button type="button" @click="openDeleteModal = false"
+                                                class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Batal</button>
+
+                                            <form action="{{ route('superadmin.reports.file.delete', [$report->id, $index]) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Hapus</button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
-                            @endif
+                            </div>
                         @endforeach
                     </div>
                 @else

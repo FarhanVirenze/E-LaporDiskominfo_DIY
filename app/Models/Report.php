@@ -14,6 +14,7 @@ class Report extends Model
         'tracking_id',   // <--- Tambahkan ini
         'user_id',
         'admin_id',
+        'updated_by',
         'likes',
         'dislikes',
         'is_anonim',
@@ -84,6 +85,10 @@ class Report extends Model
         return $this->belongsTo(User::class, 'admin_id', 'id_user');
     }
 
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by', 'id_user');
+    }
     public function votes()
     {
         return $this->hasMany(Vote::class);

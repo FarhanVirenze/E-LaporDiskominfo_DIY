@@ -41,18 +41,89 @@
                             </td>
                             <td>
                                 <div class="d-flex gap-2">
+                                    <!-- Tombol Edit -->
                                     <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editAduanModal"
                                         data-id="{{ $report->id }}" data-judul="{{ $report->judul }}"
                                         data-status="{{ $report->status }}">
                                         Edit
                                     </button>
+
+                                    <!-- Tombol Hapus -->
                                     <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteAduanModal"
                                         data-id="{{ $report->id }}" data-judul="{{ $report->judul }}">
                                         Hapus
                                     </button>
+
+                                    <!-- Tombol Lihat -->
                                     <a href="{{ route('admin.reports.show', ['id' => $report->id]) }}"
                                         class="btn btn-info btn-sm">Lihat</a>
+
+                                    <!-- Tombol Disposisi -->
+                                    <button class="btn btn-success btn-sm" data-toggle="modal"
+                                        data-target="#disposisiModal-{{ $report->id }}">
+                                        Disposisi
+                                    </button>
                                 </div>
+
+                                <!-- Modal Disposisi -->
+<div class="modal fade" id="disposisiModal-{{ $report->id }}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="{{ route('admin.reports.update', $report->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-header">
+                    <h5 class="modal-title">Disposisi Aduan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    {{-- Pilih Admin --}}
+                    <div class="form-group">
+                        <label>Pilih Admin</label>
+                        <select name="admin_id" class="form-control"
+                                id="adminSelect-{{ $report->id }}">
+                            <option value="">-- Pilih Admin --</option>
+                            @foreach(\App\Models\User::where('role','admin')->get() as $admin)
+                                <option value="{{ $admin->id_user }}"
+                                    {{ $report->admin_id == $admin->id_user ? 'selected' : '' }}>
+                                    {{ $admin->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Pilih Kategori --}}
+                    <div class="form-group">
+                        <label>Pilih Kategori</label>
+                        <select name="kategori_id" class="form-control"
+                                id="kategoriSelect-{{ $report->id }}">
+                            <option value="">-- Pilih Kategori --</option>
+                            @foreach(\App\Models\KategoriUmum::all() as $kategori)
+                                <option value="{{ $kategori->id }}"
+                                    data-admin="{{ $kategori->admin_id }}"
+                                    {{ $report->kategori_id == $kategori->id ? 'selected' : '' }}>
+                                    {{ $kategori->nama }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End Modal Disposisi -->
+
+
                             </td>
                         </tr>
                     @endforeach
@@ -61,7 +132,7 @@
 
             <!-- Pagination Links -->
             <div class="d-flex justify-content-center">
-                {{ $reports->links() }} <!-- Pagination links -->
+                {{ $reports->links() }}
             </div>
         @endif
 
@@ -119,38 +190,67 @@
             </div>
         </div>
 
-        @push('scripts')
-            <script>
-                // Set data for editing
-                $('#editAduanModal').on('show.bs.modal', function (event) {
-                    var button = $(event.relatedTarget);
-                    var id = button.data('id');
-                    var status = button.data('status');
+       @push('scripts')
+<script>
+    // ========================
+    // Edit
+    // ========================
+    $('#editAduanModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var status = button.data('status');
+        var modal = $(this);
+        modal.find('#editStatus').val(status);
+        modal.find('#editAduanForm').attr('action', '/admin/kelola-aduan/' + id);
+    });
 
-                    var modal = $(this);
-                    modal.find('#editStatus').val(status); // Set status field value
-                    modal.find('#editAduanForm').attr('action', '/admin/kelola-aduan/' + id); // Set form action
-                });
+    // ========================
+    // Delete
+    // ========================
+    $('#deleteAduanModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var judul = button.data('judul');
+        var modal = $(this);
+        modal.find('#aduanJudul').text(judul);
+        modal.find('#deleteAduanForm').attr('action', '/admin/kelola-aduan/' + id);
+    });
 
-                // Set data for delete confirmation
-                $('#deleteAduanModal').on('show.bs.modal', function (event) {
-                    var button = $(event.relatedTarget);
-                    var id = button.data('id');
-                    var judul = button.data('judul');
+    // ========================
+    // Auto-hide success
+    // ========================
+    @if(session('success'))
+        setTimeout(function () {
+            $('#alert-success').fadeOut('slow');
+        }, 3000);
+    @endif
 
-                    var modal = $(this);
-                    modal.find('#aduanJudul').text(judul); // Set aduan name in the modal
-                    modal.find('#deleteAduanForm').attr('action', '/admin/kelola-aduan/' + id); // Set form action
-                });
+    // ========================
+    // Filter kategori sesuai admin (per report)
+    // ========================
+    @foreach($reports as $report)
+        $('#adminSelect-{{ $report->id }}').on('change', function () {
+            var selectedAdmin = $(this).val();
+            var kategoriSelect = $('#kategoriSelect-{{ $report->id }}');
 
-                // Auto-hide success alert after 3 seconds
-                @if(session('success'))
-                    setTimeout(function () {
-                        // Tutup alert setelah 3 detik
-                        $('#alert-success').fadeOut('slow');
-                    }, 3000);
-                @endif
-            </script>
-        @endpush
+            // sembunyikan semua kategori dulu
+            kategoriSelect.find('option').hide();
+            kategoriSelect.find('option[value=""]').show(); // opsi default
+
+            // tampilkan kategori yang sesuai admin
+            kategoriSelect.find('option[data-admin="' + selectedAdmin + '"]').show();
+
+            // otomatis pilih kategori pertama yang sesuai admin
+            var firstKategori = kategoriSelect.find('option[data-admin="' + selectedAdmin + '"]').first().val();
+            if (firstKategori) {
+                kategoriSelect.val(firstKategori);
+            } else {
+                kategoriSelect.val('');
+            }
+        }).trigger('change'); // langsung jalan saat modal dibuka
+    @endforeach
+</script>
+@endpush
+
 
 @endsection

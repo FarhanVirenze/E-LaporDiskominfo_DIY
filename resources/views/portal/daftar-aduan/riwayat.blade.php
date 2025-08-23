@@ -10,9 +10,9 @@
     @if (session('success'))
         <div id="alert-success"
             class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
-                                                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
-                                                                       bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
-                                                                       transition-all duration-500 opacity-100 animate-fade-in">
+                                                                                               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
+                                                                                               bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
+                                                                                               transition-all duration-500 opacity-100 animate-fade-in">
 
             <!-- Ikon -->
             <div id="success-icon-wrapper" class="flex-shrink-0">
@@ -127,11 +127,11 @@
 
             @component('components.riwayat-tabs')
             <div class="flex items-center justify-between mb-2 mt-2 flex-wrap gap-2">
-                <!-- Total Aduan -->
-                <p class="text-sm text-gray-600">Total: {{ $aduan->count() }} Aduan</p>
+                {{-- ✅ Total Aduan --}}
+                <p class="text-sm text-gray-600">Total: {{ $aduan->total() }} Aduan</p>
             </div>
 
-            <!-- RESPONSIVE TABLE -->
+            {{-- ✅ Tabel Desktop --}}
             <div class="overflow-x-auto bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border border-red-100">
                 <table class="min-w-full text-sm hidden md:table">
                     <thead class="bg-gradient-to-r from-red-700 to-red-500 text-white">
@@ -147,19 +147,20 @@
                     <tbody class="bg-white divide-y divide-gray-100">
                         @forelse ($aduan as $index => $item)
                             <tr class="hover:bg-blue-50 transition-colors duration-200">
-                                <td class="px-4 py-3 font-medium text-gray-700">{{ $index + 1 }}</td>
-                                <td class="px-4 py-3 text-gray-700 font-semibold">{{ $item->tracking_id }}</td>
+                                {{-- ✅ nomor urut lanjut antar halaman --}}
+                                <td class="px-4 py-3 font-medium text-gray-700">{{ $aduan->firstItem() + $index }}</td>
+                                <td class="px-4 py-3 font-semibold text-gray-700">{{ $item->tracking_id }}</td>
                                 <td class="px-4 py-3">{{ $item->judul }}</td>
                                 <td class="px-4 py-3 text-gray-600">
                                     {{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMM YYYY') }}
                                 </td>
                                 <td class="px-4 py-3">
                                     <span class="text-xs font-semibold px-3 py-1 rounded-full shadow-sm
-                                                            @if($item->status == 'Diajukan') bg-red-100 text-red-700
-                                                            @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
-                                                            @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                            @elseif($item->status == 'Selesai') bg-green-100 text-green-700
-                                                            @else bg-gray-200 text-gray-800 @endif">
+                                                                    @if($item->status == 'Diajukan') bg-red-100 text-red-700
+                                                                    @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
+                                                                    @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                                    @elseif($item->status == 'Selesai') bg-green-100 text-green-700
+                                                                    @else bg-gray-200 text-gray-800 @endif">
                                         {{ $item->status }}
                                     </span>
                                 </td>
@@ -178,30 +179,27 @@
                     </tbody>
                 </table>
 
-                <!-- TABEL MOBILE RESPONSIF -->
+                {{-- ✅ Card Mobile --}}
                 <div class="md:hidden space-y-4 p-2">
                     @forelse ($aduan as $index => $item)
                         <div
                             class="rounded-2xl overflow-hidden shadow-md border border-gray-100 bg-white hover:shadow-xl transition-all">
-
-                            <!-- Header dengan gradasi biru + status -->
                             <div
                                 class="bg-gradient-to-r from-red-700 to-red-500 p-3 px-4 text-white text-xs flex justify-between items-center">
                                 <div>
-                                    <span class="font-semibold">{{ $loop->iteration }}. {{ $item->tracking_id }}</span><br>
+                                    <span class="font-semibold">{{ $aduan->firstItem() + $index }}.
+                                        {{ $item->tracking_id }}</span><br>
                                     <span>{{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMM YYYY') }}</span>
                                 </div>
                                 <span class="text-[11px] font-semibold px-3 py-1 rounded-full shadow-sm
-                            @if($item->status == 'Diajukan') bg-red-100 text-red-700
-                            @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
-                            @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
-                            @elseif($item->status == 'Selesai') bg-green-100 text-green-700
-                            @else bg-gray-200 text-gray-800 @endif">
+                                                            @if($item->status == 'Diajukan') bg-red-100 text-red-700
+                                                            @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
+                                                            @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                            @elseif($item->status == 'Selesai') bg-green-100 text-green-700
+                                                            @else bg-gray-200 text-gray-800 @endif">
                                     {{ $item->status }}
                                 </span>
                             </div>
-
-                            <!-- Konten card -->
                             <div class="bg-white text-gray-800 p-4 flex justify-between items-center">
                                 <div class="font-semibold text-base text-gray-700">
                                     {{ $item->judul }}
@@ -215,95 +213,98 @@
                     @empty
                         <div class="p-4 text-center text-gray-500">Tidak ada aduan.</div>
                     @endforelse
+
+                    @endcomponent
+
+                    <div class="mt-10 mb-16 lg:mt-4 lg:mb-6 px-2">
+                        {{ $aduan->links() }}
+                    </div>
                 </div>
             </div>
-
-            @endcomponent
         </div>
-    </div>
-    @push('scripts')
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                const spinner = document.getElementById('success-spinner');
-                const check = document.getElementById('success-check');
+        @push('scripts')
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    const spinner = document.getElementById('success-spinner');
+                    const check = document.getElementById('success-check');
 
-                setTimeout(() => {
-                    if (spinner && check) {
-                        spinner.classList.add('hidden');
-                        check.classList.remove('hidden');
-                        check.classList.add('scale-100');
+                    setTimeout(() => {
+                        if (spinner && check) {
+                            spinner.classList.add('hidden');
+                            check.classList.remove('hidden');
+                            check.classList.add('scale-100');
+                        }
+                    }, 1000);
+
+                    const fadeOutAndRemove = el => {
+                        if (!el) return;
+                        el.classList.remove('opacity-100');
+                        el.classList.add('opacity-0');
+                        setTimeout(() => el.style.display = 'none', 500);
+                    };
+
+                    setTimeout(() => {
+                        fadeOutAndRemove(document.getElementById('alert-success'));
+                        fadeOutAndRemove(document.getElementById('alert-error'));
+                    }, 3000);
+                });
+            </script>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+            <script>
+                // ⚙️ Konfigurasi default NProgress
+                NProgress.configure({
+                    showSpinner: false,
+                    trickleSpeed: 200,
+                    minimum: 0.08
+                });
+
+                // 🔹 1. Tangkap klik semua link internal
+                document.addEventListener("click", function (e) {
+                    const link = e.target.closest("a");
+                    if (link && link.href && link.origin === window.location.origin) {
+                        NProgress.start();
+                        setTimeout(() => NProgress.set(0.9), 150);
                     }
-                }, 1000);
+                });
 
-                const fadeOutAndRemove = el => {
-                    if (!el) return;
-                    el.classList.remove('opacity-100');
-                    el.classList.add('opacity-0');
-                    setTimeout(() => el.style.display = 'none', 500);
-                };
+                // 🔹 2. Patch untuk XMLHttpRequest
+                (function (open) {
+                    XMLHttpRequest.prototype.open = function () {
+                        NProgress.start();
+                        this.addEventListener("loadend", function () {
+                            NProgress.set(1.0);
+                            setTimeout(() => NProgress.done(), 300);
+                        });
+                        open.apply(this, arguments);
+                    };
+                })(XMLHttpRequest.prototype.open);
 
-                setTimeout(() => {
-                    fadeOutAndRemove(document.getElementById('alert-success'));
-                    fadeOutAndRemove(document.getElementById('alert-error'));
-                }, 3000);
-            });
-        </script>
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
-        <script>
-            // ⚙️ Konfigurasi default NProgress
-            NProgress.configure({
-                showSpinner: false,
-                trickleSpeed: 200,
-                minimum: 0.08
-            });
-
-            // 🔹 1. Tangkap klik semua link internal
-            document.addEventListener("click", function (e) {
-                const link = e.target.closest("a");
-                if (link && link.href && link.origin === window.location.origin) {
+                // 🔹 3. Patch untuk Fetch API
+                const originalFetch = window.fetch;
+                window.fetch = function () {
                     NProgress.start();
-                    setTimeout(() => NProgress.set(0.9), 150);
-                }
-            });
-
-            // 🔹 2. Patch untuk XMLHttpRequest
-            (function (open) {
-                XMLHttpRequest.prototype.open = function () {
-                    NProgress.start();
-                    this.addEventListener("loadend", function () {
+                    return originalFetch.apply(this, arguments).finally(() => {
                         NProgress.set(1.0);
                         setTimeout(() => NProgress.done(), 300);
                     });
-                    open.apply(this, arguments);
                 };
-            })(XMLHttpRequest.prototype.open);
 
-            // 🔹 3. Patch untuk Fetch API
-            const originalFetch = window.fetch;
-            window.fetch = function () {
-                NProgress.start();
-                return originalFetch.apply(this, arguments).finally(() => {
+                // 🔹 4. Saat halaman selesai load
+                window.addEventListener("pageshow", () => {
                     NProgress.set(1.0);
                     setTimeout(() => NProgress.done(), 300);
                 });
-            };
 
-            // 🔹 4. Saat halaman selesai load
-            window.addEventListener("pageshow", () => {
-                NProgress.set(1.0);
-                setTimeout(() => NProgress.done(), 300);
-            });
+                // 🔹 5. Tangkap submit form (SAMAIN dengan klik link)
+                document.addEventListener("submit", function (e) {
+                    const form = e.target;
+                    if (form.tagName === "FORM") {
+                        NProgress.start();
+                        setTimeout(() => NProgress.set(0.9), 150);
+                    }
+                }, true);
+            </script>
 
-            // 🔹 5. Tangkap submit form (SAMAIN dengan klik link)
-            document.addEventListener("submit", function (e) {
-                const form = e.target;
-                if (form.tagName === "FORM") {
-                    NProgress.start();
-                    setTimeout(() => NProgress.set(0.9), 150);
-                }
-            }, true);
-        </script>
-
-    @endpush
+        @endpush
 @endsection

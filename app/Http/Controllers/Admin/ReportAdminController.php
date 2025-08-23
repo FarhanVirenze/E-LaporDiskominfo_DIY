@@ -8,9 +8,12 @@ use App\Models\Report;
 use App\Models\FollowUp;
 use App\Models\Comment;
 use App\Models\KategoriUmum;
+use App\Models\WilayahUmum;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ReportAdminController extends Controller
@@ -131,35 +134,44 @@ class ReportAdminController extends Controller
             'kategori',
             'wilayah',
             'user',
+            'admin',
             'followUps.user',
             'comments.user'
         ])->findOrFail($id);
 
-        // Validasi: Admin hanya bisa melihat laporan yang sesuai dengan kategori yang ia tangani
         if (auth()->check() && auth()->user()->role === 'admin') {
             if ($report->admin_id !== auth()->user()->id_user) {
                 return response()->view('errors.akses-ditolak', [], 403);
             }
         }
+        // ✅ Ubah status jadi Dibaca hanya jika sebelumnya masih Diajukan
+        if ($report->status === Report::STATUS_DIAJUKAN) {
+            $report->update(['status' => Report::STATUS_DIBACA]);
+            session()->flash('success', 'Status aduan berubah menjadi Dibaca.');
+        }
 
-        // Tambah jumlah view
         $sessionKey = 'report_viewed_' . $id;
         if (!session()->has($sessionKey)) {
             $report->increment('views');
             session()->put($sessionKey, true);
         }
 
-        // Update status jika admin membuka aduan yang belum dibaca
-        if (auth()->check() && auth()->user()->role === 'admin' && $report->status === Report::STATUS_DIAJUKAN) {
-            $report->status = Report::STATUS_DIBACA;
-            $report->save();
-            session()->flash('success', 'Status laporan diperbarui menjadi Dibaca');
-        }
-
-        $followUps = $report->followUps->filter(fn($item) => $item->user && $item->user->role === 'admin');
+        $followUps = $report->followUps->filter(function ($item) {
+            return $item->user && in_array($item->user->role, ['admin', 'superadmin']);
+        });
         $comments = $report->comments;
+        $admins = User::where('role', 'admin')->get();
+        $kategoriList = KategoriUmum::all(); // ✅ ganti biar sesuai dengan Blade
+        $wilayahList = WilayahUmum::all();   // ✅ ganti biar konsisten
 
-        return view('admin.daftar-aduan.detail.index', compact('report', 'followUps', 'comments'));
+        return view('admin.daftar-aduan.detail.index', compact(
+            'report',
+            'followUps',
+            'comments',
+            'admins',
+            'kategoriList',
+            'wilayahList'
+        ));
     }
 
     public function like($id)
@@ -194,6 +206,161 @@ class ReportAdminController extends Controller
         return back();
     }
 
+    public function update(Request $request, $id)
+    {
+        $report = Report::findOrFail($id);
+
+        $request->validate([
+            'judul' => 'nullable|string|max:255',
+            'isi' => 'nullable|string',
+            'status' => 'nullable|in:Diajukan,Dibaca,Direspon,Selesai',
+            'kategori_id' => 'nullable|exists:kategori_umum,id',
+            'wilayah_id' => 'nullable|exists:wilayah_umum,id',
+            'admin_id' => 'nullable|exists:users,id_user',
+            'lokasi' => 'nullable|string',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
+            'tracking_id' => 'nullable|string|max:255',
+            'file.*' => 'nullable|file|max:2048',
+        ]);
+
+        // Ambil data update normal
+        $data = $request->only([
+            'judul',
+            'isi',
+            'status',
+            'kategori_id',
+            'wilayah_id',
+            'admin_id',
+            'lokasi',
+            'latitude',
+            'longitude',
+            'tracking_id'
+        ]);
+
+        // 🔹 Tambahkan updated_by (selalu isi siapa yg terakhir update)
+        $data['updated_by'] = auth()->id();
+
+        // 🔹 Cek logika khusus: jika user klik Batalkan Selesai
+        if ($report->status === Report::STATUS_SELESAI && $request->status === Report::STATUS_DIBACA) {
+            if ($report->followUps->isNotEmpty()) {
+                $data['status'] = Report::STATUS_DIRESPON; // ada tindak lanjut
+            } else {
+                $data['status'] = Report::STATUS_DIBACA; // tidak ada tindak lanjut
+            }
+        }
+
+        // 🔹 Kalau admin dipilih tapi kategori kosong → isi kategori pertama admin
+        if (!empty($request->admin_id) && empty($request->kategori_id)) {
+            $admin = User::with('kategori')->where('id_user', $request->admin_id)->first();
+            if ($admin && $admin->kategori->count() > 0) {
+                $data['kategori_id'] = $admin->kategori->first()->id;
+            }
+        }
+
+        // === Handle Lampiran Baru ===
+        $files = (array) $report->file; // data lama
+        if ($request->hasFile('file')) {
+            foreach ($request->file('file') as $uploadedFile) {
+                $path = $uploadedFile->store('reports', 'public');
+                $files[] = $path;
+            }
+        }
+        $data['file'] = $files;
+
+        // === Deteksi perubahan ===
+        $changes = [];
+        foreach ($data as $key => $value) {
+            if ($report->$key != $value) {
+                $changes[$key] = [
+                    'old' => $report->$key,
+                    'new' => $value
+                ];
+            }
+        }
+
+        // Update laporan
+        $report->update($data);
+
+        // === Buat notifikasi ===
+        $messages = [];
+        foreach ($changes as $field => $change) {
+            switch ($field) {
+                case 'judul':
+                    $messages[] = "Judul laporan diubah.";
+                    break;
+                case 'isi':
+                    $messages[] = "Isi laporan diperbarui.";
+                    break;
+                case 'status':
+                    $messages[] = "Status laporan menjadi {$change['new']}.";
+                    break;
+                case 'kategori_id':
+                    $messages[] = "Kategori laporan diperbarui.";
+                    break;
+                case 'wilayah_id':
+                    $messages[] = "Wilayah laporan diperbarui.";
+                    break;
+                case 'admin_id':
+                    $messages[] = "Admin penanggung jawab diperbarui.";
+                    break;
+                case 'lokasi':
+                    $messages[] = "Lokasi laporan diubah.";
+                    break;
+                case 'latitude':
+                case 'longitude':
+                    $messages[] = "Koordinat laporan diperbarui.";
+                    break;
+                case 'tracking_id':
+                    $messages[] = "Tracking ID laporan diperbarui.";
+                    break;
+                case 'file':
+                    $messages[] = "Lampiran baru ditambahkan.";
+                    break;
+            }
+        }
+
+        // Kalau tidak ada perubahan sama sekali
+        if (empty($messages)) {
+            $messages[] = "Tidak ada perubahan pada laporan.";
+        }
+
+        // === Tentukan redirect berdasarkan perubahan ===
+        if (array_key_exists('admin_id', $changes) || array_key_exists('kategori_id', $changes)) {
+            // khusus update disposisi
+            return redirect()
+                ->route('admin.kelola-aduan.index')
+                ->with('success', implode(" ", $messages));
+        } else {
+            // update biasa
+            return redirect()
+                ->route('admin.reports.show', $id)
+                ->with('success', implode(" ", $messages));
+        }
+    }
+
+    public function deleteFile($id, $index)
+    {
+        $report = Report::findOrFail($id);
+
+        $files = (array) $report->file;
+
+        if (isset($files[$index])) {
+            $file = $files[$index];
+
+            // hapus dari storage
+            if (Storage::disk('public')->exists($file)) {
+                Storage::disk('public')->delete($file);
+            }
+
+            // hapus dari array JSON
+            unset($files[$index]);
+            $report->file = array_values($files); // reindex array
+            $report->save();
+        }
+
+        return back()->with('success', 'Lampiran berhasil dihapus.');
+    }
 
     public function dislike($id)
     {
@@ -313,11 +480,24 @@ class ReportAdminController extends Controller
      */
     public function deleteComment($id)
     {
-        $comment = Comment::findOrFail($id);
+        $comment = Comment::with('user')->findOrFail($id);
+        $user = Auth::user();
 
-        // Cek apakah user adalah pemilik komentar atau admin
-        if (Auth::id() !== $comment->user_id && Auth::user()->role !== 'admin') {
-            abort(403, 'Anda tidak diizinkan menghapus komentar ini.');
+        // Superadmin bisa hapus komentar siapa pun
+        if ($user->role === 'superadmin') {
+            // lanjut
+        }
+        // Admin bisa hapus komentarnya sendiri dan komentar user (bukan superadmin)
+        elseif ($user->role === 'admin') {
+            if ($comment->user_id !== $user->id && (!$comment->user || $comment->user->role === 'superadmin')) {
+                abort(403, 'Anda tidak diizinkan menghapus komentar ini.');
+            }
+        }
+        // User biasa hanya bisa hapus komentarnya sendiri
+        else {
+            if ($comment->user_id !== $user->id) {
+                abort(403, 'Anda tidak diizinkan menghapus komentar ini.');
+            }
         }
 
         // Hapus file jika ada
@@ -331,14 +511,25 @@ class ReportAdminController extends Controller
     }
 
     /**
-     * Hapus tindak lanjut (hanya admin yang bisa).
+     * Hapus tindak lanjut (hanya admin atau superadmin yang bisa).
      */
     public function deleteFollowUp($reportId, $followUpId)
     {
-        $followUp = FollowUp::findOrFail($followUpId);
+        $followUp = FollowUp::with('user')->findOrFail($followUpId);
+        $user = Auth::user();
 
-        // Cek apakah user adalah admin
-        if (Auth::user()->role !== 'admin') {
+        // Superadmin bisa hapus tindak lanjut dari admin maupun superadmin
+        if ($user->role === 'superadmin') {
+            // boleh lanjut
+        }
+        // Admin hanya bisa hapus tindak lanjut dari admin (bukan superadmin)
+        elseif ($user->role === 'admin') {
+            if (!$followUp->user || $followUp->user->role !== 'admin') {
+                abort(403, 'Anda tidak diizinkan menghapus tindak lanjut ini.');
+            }
+        }
+        // Role lain (user biasa) tidak boleh hapus
+        else {
             abort(403, 'Anda tidak diizinkan menghapus tindak lanjut ini.');
         }
 

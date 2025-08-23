@@ -10,8 +10,8 @@
     <!-- SUCCESS NOTIF -->
     <div id="successMessage" 
         class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
-               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-emerald-400 
-               bg-gradient-to-r from-emerald-600 to-emerald-500/90 backdrop-blur-md text-white 
+               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
+               bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
                transition-all duration-500 opacity-100 animate-fade-in">
 
         <!-- Ikon -->
@@ -187,9 +187,12 @@
                                         data-id="{{ $report->id }}" data-status="{{ $report->status }}">
                                         Edit
                                     </button>
-
+                                     <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteAduanModal"
+                                        data-id="{{ $report->id }}" data-judul="{{ $report->judul }}">
+                                        Hapus
+                                    </button>
                                     <a href="{{ route('superadmin.reports.show', ['id' => $report->id]) }}"
-                                        class="px-3 py-1 text-sm bg-red-500 hover:bg-red-600 rounded text-white">
+                                        class="px-3 py-1 text-sm bg-blue-500 hover:bg-blue-600 rounded text-white">
                                         Lihat
                                     </a>
                                 </div>
@@ -236,8 +239,32 @@
             </div>
         </div>
     </div>
-</div>
-@endsection
+    
+        <!-- Delete Aduan Modal -->
+        <div class="modal fade" id="deleteAduanModal" tabindex="-1" role="dialog" aria-labelledby="deleteAduanModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form method="POST" id="deleteAduanForm">
+                        @csrf
+                        @method('DELETE')
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteAduanModalLabel">Konfirmasi Hapus Aduan</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Apakah Anda yakin ingin menghapus aduan <strong id="aduanJudul"></strong>?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-danger">Hapus</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
 @push('scripts')
 <script>
@@ -250,6 +277,16 @@
         modal.find('#editStatus').val(status);
         modal.find('#editAduanForm').attr('action', `/superadmin/kelola-aduan/${id}`);
     });
+
+                $('#deleteAduanModal').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget);
+                    var id = button.data('id');
+                    var judul = button.data('judul');
+
+                    var modal = $(this);
+                    modal.find('#aduanJudul').text(judul); // Set aduan name in the modal
+                    modal.find('#deleteAduanForm').attr('action', '/superadmin/kelola-aduan/' + id); // Set form action
+                });
 
     @if(session('success') || session('error'))
         setTimeout(() => {
@@ -316,3 +353,4 @@
 </script>
 
 @endpush
+@endsection

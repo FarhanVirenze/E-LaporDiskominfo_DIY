@@ -8,8 +8,8 @@
         <!-- Notifikasi Sukses -->
         @if (session('success'))
             <div id="alert-success" class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
-                                               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-blue-400 
-                                               bg-gradient-to-r from-blue-600 to-blue-500/90 backdrop-blur-md text-white 
+                                               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
+                                               bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
                                                transition-all duration-500 opacity-100 animate-fade-in">
 
                 <!-- Ikon -->
