@@ -46,6 +46,12 @@ Route::post('/report/{id}/dislike', [ReportController::class, 'dislike'])->name(
 
 // User Routes
 Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:user'])->prefix('user')->name('user.')->group(function () {
+    Route::post('/followups/{followupId}/rating', [ReportController::class, 'storeFollowupRating'])
+        ->name('followups.rating.store');
+    Route::put('/followups/{followupId}/rating', [ReportController::class, 'updateFollowupRating'])
+        ->name('followups.rating.update');
+    Route::delete('/followups/{followupId}/rating/delete', [ReportController::class, 'deleteFollowupRating'])
+        ->name('followups.rating.delete');
     Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

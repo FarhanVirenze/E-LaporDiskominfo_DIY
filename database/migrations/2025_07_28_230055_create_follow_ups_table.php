@@ -9,10 +9,19 @@ return new class extends Migration {
     {
         Schema::create('follow_ups', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('report_id')->constrained('reports')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users', 'id_user')->onDelete('cascade');
+            $table->foreignId('report_id')
+                ->constrained('reports')
+                ->onDelete('cascade');
+
+            // foreign ke users.id_user (bukan users.id)
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')
+                ->references('id_user')
+                ->on('users')
+                ->onDelete('cascade');
+
             $table->text('pesan');
-            $table->string('file')->nullable(); // Bisa foto, dokumen, dll
+            $table->string('file')->nullable(); // foto / dokumen
             $table->timestamps();
         });
     }

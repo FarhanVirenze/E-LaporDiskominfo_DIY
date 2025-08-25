@@ -7,11 +7,13 @@ use Carbon\Carbon;
 use App\Models\Vote;
 use App\Models\Report;
 use App\Models\FollowUp;
+use App\Models\FollowupRating;
 use App\Models\Comment;
 use App\Models\KategoriUmum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ReportController extends Controller
@@ -143,25 +145,32 @@ class ReportController extends Controller
             'wilayah',
             'user',
             'followUps.user',
+            'followUps.ratings.user', // ⬅️ tambahin relasi rating+user
             'comments.user',
-            'admin'
+            'admin',
+            'updatedBy',
+            // ⬇️ tambahin ini supaya tiap followUp ada avg & count
+            'followUps' => function ($q) {
+                $q->withAvg('ratings', 'rating')
+                    ->withCount('ratings');
+            },
         ])->findOrFail($id);
 
-        // Validasi: Admin hanya bisa melihat laporan yang sesuai dengan kategori yang ia tangani
+        // 🔹 Validasi: Admin hanya bisa melihat laporan sesuai kategori
         if (auth()->check() && auth()->user()->role === 'admin') {
             if ($report->admin_id !== auth()->user()->id_user) {
                 return response()->view('errors.akses-ditolak', [], 403);
             }
         }
 
-        // Tambah jumlah view
+        // 🔹 Tambah jumlah view
         $sessionKey = 'report_viewed_' . $id;
         if (!session()->has($sessionKey)) {
             $report->increment('views');
             session()->put($sessionKey, true);
         }
 
-        // Update status jika admin membuka aduan yang belum dibaca
+        // 🔹 Update status jika admin membuka aduan yang belum dibaca
         if (auth()->check() && auth()->user()->role === 'admin' && $report->status === Report::STATUS_DIAJUKAN) {
             $report->status = Report::STATUS_DIBACA;
             $report->save();
@@ -174,7 +183,19 @@ class ReportController extends Controller
 
         $comments = $report->comments;
 
-        // --- BUAT TIMELINE ---
+        // 🔹 --- HITUNG RATING ---
+        $ratings = \App\Models\FollowupRating::whereIn('followup_id', $report->followUps->pluck('id'))->get();
+
+        $totalReviews = $ratings->count();
+        $averageRating = $totalReviews > 0 ? round($ratings->avg('rating'), 1) : 0;
+
+        $ratingBreakdown = $ratings->groupBy('rating')->map->count();
+        $ratingStats = [];
+        for ($i = 5; $i >= 1; $i--) {
+            $ratingStats[$i] = $ratingBreakdown->get($i, 0);
+        }
+
+        // 🔹 --- BUAT TIMELINE ---
         $timeline = [];
 
         // Aduan dibuat
@@ -194,8 +215,8 @@ class ReportController extends Controller
             ];
         }
 
-        // 🔹 Disposisi diubah (jika ada update admin_id)
-        if ($report->admin_id && $report->updated_at != $report->created_at) {
+        // Disposisi diubah (hanya jika sudah ada admin_id sebelumnya dan kemudian diganti)
+        if ($report->wasChanged('admin_id') && $report->getOriginal('admin_id') !== null) {
             $timeline[] = [
                 'time' => $report->updated_at,
                 'type' => 'reassigned',
@@ -204,7 +225,7 @@ class ReportController extends Controller
             ];
         }
 
-        // Ambil waktu pertama kali admin bertindak (dibaca/tindak lanjut)
+        // Waktu admin pertama bertindak
         $firstAdminActionTime = optional(
             $report->followUps
                 ->filter(fn($fu) => in_array($fu->user->role ?? '', ['admin', 'superadmin']))
@@ -212,7 +233,7 @@ class ReportController extends Controller
                 ->first()
         )->created_at;
 
-        // Dibaca oleh admin
+        // Dibaca admin
         if ($report->status !== Report::STATUS_DIAJUKAN) {
             $timeline[] = [
                 'time' => $firstAdminActionTime ?? $report->updated_at,
@@ -248,11 +269,19 @@ class ReportController extends Controller
             ];
         }
 
-        // Urutkan dari terbaru ke terlama
+        // Urutkan dari terbaru
         $timeline = collect($timeline)->sortByDesc('time')->values()->all();
 
-        return view('portal.daftar-aduan.detail.index', compact('report', 'followUps', 'comments', 'timeline'));
-
+        return view('portal.daftar-aduan.detail.index', compact(
+            'report',
+            'followUps',
+            'comments',
+            'timeline',
+            'averageRating',
+            'totalReviews',
+            'ratingStats',
+            'ratings'
+        ));
     }
 
     public function like($id)
@@ -361,6 +390,81 @@ class ReportController extends Controller
 
         return back()->with('success', 'Tindak lanjut berhasil dikirim' .
             ($report->status === Report::STATUS_DIRESPON ? ', Status Aduan menjadi Direspon' : ''));
+    }
+
+    public function storeFollowupRating(Request $request, $followupId)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'komentar' => 'nullable|string|max:500',
+        ]);
+
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Silakan login untuk memberi rating.');
+        }
+
+        // Cek kalau user sudah pernah kasih rating → update
+        $rating = FollowupRating::updateOrCreate(
+            [
+                'followup_id' => $followupId,
+                'user_id' => $user->id_user,
+            ],
+            [
+                'rating' => $request->rating,
+                'komentar' => $request->komentar,
+            ]
+        );
+
+        return back()->with('success', 'Rating berhasil dikirim.');
+    }
+
+    public function updateFollowupRating(Request $request, $followupId)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'komentar' => 'nullable|string|max:500',
+        ]);
+
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Silakan login untuk mengubah rating.');
+        }
+
+        $rating = FollowupRating::where('followup_id', $followupId)
+            ->where('user_id', $user->id_user)
+            ->first();
+
+        if (!$rating) {
+            return back()->with('error', 'Rating tidak ditemukan.');
+        }
+
+        $rating->update([
+            'rating' => $request->rating,
+            'komentar' => $request->komentar,
+        ]);
+
+        return back()->with('success', 'Rating berhasil diperbarui.');
+    }
+
+    public function deleteFollowupRating($followupId)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Silakan login untuk menghapus rating.');
+        }
+
+        $rating = FollowupRating::where('followup_id', $followupId)
+            ->where('user_id', $user->id_user)
+            ->first();
+
+        if (!$rating) {
+            return back()->with('error', 'Rating tidak ditemukan.');
+        }
+
+        $rating->delete();
+
+        return back()->with('success', 'Rating berhasil dihapus.');
     }
 
     /**
@@ -499,7 +603,7 @@ class ReportController extends Controller
 
         $aduan = Report::where('user_id', $user->id_user)
             ->latest()
-            ->paginate(6, ['id', 'tracking_id', 'judul', 'status', 'created_at']); // 🔹 paginate
+            ->paginate(6, ['id', 'tracking_id', 'judul', 'status', 'created_at', 'file']);
 
         return view('portal.daftar-aduan.riwayat', compact('aduan'));
     }

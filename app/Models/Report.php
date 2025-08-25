@@ -72,7 +72,7 @@ class Report extends Model
 
     public function followUps()
     {
-        return $this->hasMany(FollowUp::class, 'report_id');
+        return $this->hasMany(FollowUp::class, 'report_id', 'id');
     }
 
     public function comments()
