@@ -13,8 +13,10 @@
 
         <!-- Logo (Hanya tampil di Mobile) -->
         <div class="flex justify-center mb-2 block md:hidden">
-            <img src="{{ asset('images/logo-diy.png') }}" alt="Logo E-Lapor"
-                class="w-20 h-16 sm:w-28 sm:h-24 drop-shadow-lg">
+            <a href="{{ url('/') }}">
+                <img src="{{ asset('images/logo-diy.png') }}" alt="Logo E-Lapor"
+                    class="w-20 h-16 sm:w-28 sm:h-24 drop-shadow-lg hover:scale-105 transition-transform duration-200">
+            </a>
         </div>
 
         <!-- Name -->
@@ -73,12 +75,18 @@
         <!-- Password -->
         <div>
             <x-login-label for="password" :value="__('Password')" class="text-white text-xs sm:text-sm" />
-            <div class="{{ $wrapperClasses }}">
+            <div class="{{ $wrapperClasses }} relative">
                 <div class="{{ $iconContainer }}">
                     <i class="fas fa-lock {{ $iconClasses }}"></i>
                 </div>
-                <input id="password" name="password" type="password" class="{{ $inputClasses }}"
+                <input id="password" name="password" type="password" class="{{ $inputClasses }} pr-8"
                     placeholder="Masukkan Password" required />
+
+                <!-- Tombol Toggle Password -->
+                <button type="button" onclick="togglePassword('password', 'eyeIcon1')"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800">
+                    <i id="eyeIcon1" class="fas fa-eye"></i>
+                </button>
             </div>
             <x-input-error :messages="$errors->get('password')" class="mt-1 text-[10px] sm:text-xs !text-white" />
         </div>
@@ -87,12 +95,18 @@
         <div>
             <x-login-label for="password_confirmation" :value="__('Konfirmasi Password')"
                 class="text-white text-xs sm:text-sm" />
-            <div class="{{ $wrapperClasses }}">
+            <div class="{{ $wrapperClasses }} relative">
                 <div class="{{ $iconContainer }}">
                     <i class="fas fa-check {{ $iconClasses }}"></i>
                 </div>
                 <input id="password_confirmation" name="password_confirmation" type="password"
-                    class="{{ $inputClasses }}" placeholder="Konfirmasi Password" required />
+                    class="{{ $inputClasses }} pr-8" placeholder="Konfirmasi Password" required />
+
+                <!-- Tombol Toggle Password Konfirmasi -->
+                <button type="button" onclick="togglePassword('password_confirmation', 'eyeIcon2')"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800">
+                    <i id="eyeIcon2" class="fas fa-eye"></i>
+                </button>
             </div>
             <x-input-error :messages="$errors->get('password_confirmation')"
                 class="mt-1 text-[10px] sm:text-xs !text-white" />
@@ -115,4 +129,21 @@
             <a href="{{ route('login') }}" class="font-semibold text-blue-300 hover:text-blue-400">Masuk di sini</a>
         </p>
     </form>
+    <!-- Script toggle password -->
+    <script>
+        function togglePassword(inputId, iconId) {
+            const passwordInput = document.getElementById(inputId);
+            const eyeIcon = document.getElementById(iconId);
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </x-guest-layout>

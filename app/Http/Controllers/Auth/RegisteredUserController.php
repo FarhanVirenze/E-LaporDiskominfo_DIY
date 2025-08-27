@@ -37,14 +37,14 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
-            'name'            => $request->name,
-            'nik'             => $request->nik,
-            'nomor_telepon'   => $request->nomor_telepon,
-            'email'           => $request->email,
-            'role'            => 'user', // default role
-            'password'        => Hash::make($request->password),
-            'email_verified_at' => now(), // ✅ anggap langsung terverifikasi
-            'remember_token'    => Str::random(10), // ✅ generate token
+            'name' => $request->name,
+            'nik' => $request->nik,
+            'nomor_telepon' => $request->nomor_telepon,
+            'email' => $request->email,
+            'role' => 'user', // default role
+            'password' => Hash::make($request->password),
+            'email_verified_at' => now(),              // ✅ langsung dianggap verified
+            'remember_token' => Str::random(60),    // ✅ sama kayak admin
         ]);
 
         event(new Registered($user));

@@ -14,7 +14,10 @@
 
     <!-- Logo (Hanya tampil di Mobile) -->
     <div class="flex justify-center mb-2 block md:hidden">
-        <img src="{{ asset('images/logo-diy.png') }}" alt="Logo E-Lapor" class="w-30 h-24 drop-shadow-lg">
+        <a href="{{ url('/') }}">
+            <img src="{{ asset('images/logo-diy.png') }}" alt="Logo E-Lapor"
+                class="w-30 h-24 drop-shadow-lg hover:scale-105 transition-transform duration-200">
+        </a>
     </div>
 
     <form method="POST" action="{{ route('login') }}" class="space-y-3">
@@ -36,12 +39,18 @@
         <!-- Password -->
         <div>
             <x-login-label for="password" :value="__('Password')" class="text-white text-sm" />
-            <div class="{{ $wrapperClasses }}">
+            <div class="{{ $wrapperClasses }} relative">
                 <div class="{{ $iconContainer }}">
                     <i class="fas fa-lock {{ $iconClasses }}"></i>
                 </div>
                 <input id="password" name="password" type="password" placeholder="Masukkan Password"
-                    class="{{ $inputClasses }}" required />
+                    class="{{ $inputClasses }} pr-8" required />
+
+                <!-- Tombol Toggle Password -->
+                <button type="button" onclick="togglePassword()"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800">
+                    <i id="eyeIcon" class="fas fa-eye"></i>
+                </button>
             </div>
             <x-input-error :messages="$errors->get('password')" class="mt-1 text-xs !text-white" />
         </div>
@@ -90,4 +99,22 @@
             <a href="{{ route('register') }}" class="font-semibold text-blue-300 hover:text-blue-400">Daftar di sini</a>
         </p>
     </form>
+
+    <!-- Script toggle password -->
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </x-guest-layout>

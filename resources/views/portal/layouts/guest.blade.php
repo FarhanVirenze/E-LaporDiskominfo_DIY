@@ -9,8 +9,8 @@
 
     {{-- Fonts --}}
     <link rel="preconnect" href="https://fonts.bunny.net">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-      crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <!-- NProgress CSS -->
@@ -58,7 +58,10 @@
 
             <!-- Kiri: Logo & Deskripsi -->
             <div class="hidden md:block flex-1 text-left text-white md:pr-8">
-                <img src="{{ asset('images/logo-diy.png') }}" alt="Logo E-Lapor" class="w-36 h-32 mb-6 drop-shadow-lg">
+                <a href="{{ url('/') }}">
+                    <img src="{{ asset('images/logo-diy.png') }}" alt="Logo E-Lapor"
+                        class="w-36 h-32 mb-6 drop-shadow-lg hover:scale-105 transition-transform duration-200">
+                </a>
 
                 <h1 class="text-3xl font-bold mb-2">Selamat Datang di</h1>
                 <h2 class="text-2xl font-bold mb-4">E-Lapor DIY</h2>

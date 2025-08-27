@@ -9,15 +9,15 @@
 @section('content')
     <div
         class="w-full max-w-full 
-                                                                                                                                                                                                                md:max-w-3xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-screen-2xl 
-                                                                                                                                                                                                                mx-auto px-4 sm:px-6 lg:px-8 py-6 mt-20 mb-5">
+                                                                                                                                                                                                                                                                                                                md:max-w-3xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-screen-2xl 
+                                                                                                                                                                                                                                                                                                                mx-auto px-4 sm:px-6 lg:px-8 py-6 mt-20 mb-5">
 
         @if (session('success'))
             <div id="successMessage"
                 class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
-                                                                                                                                                                                                                                                                                                                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
-                                                                                                                                                                                                                                                                                                                                       bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
-                                                                                                                                                                                                                                                                                                                                       transition-all duration-500 opacity-100 animate-fade-in">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       transition-all duration-500 opacity-100 animate-fade-in">
 
                 <!-- Ikon -->
                 <div id="success-icon-wrapper" class="flex-shrink-0">
@@ -134,8 +134,8 @@
                     x-init="window.addEventListener('resize', () => { openTimeline = window.innerWidth >= 768; });">
 
                     <h2 class="flex items-center text-lg justify-between gap-2 px-6 py-2 rounded-full 
-                                                                                                                                                                                                                                   bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-700 hover:to-rose-600 text-white font-semibold 
-                                                                                                                                                                                                                                   shadow-lg hover:shadow-xl transition mb-5 mt-5 cursor-pointer md:cursor-default"
+                                                                                                                                                                                                                                                                                                                                   bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-700 hover:to-rose-600 text-white font-semibold 
+                                                                                                                                                                                                                                                                                                                                   shadow-lg hover:shadow-xl transition mb-5 mt-5 cursor-pointer md:cursor-default"
                         @click="if (window.innerWidth < 768) openTimeline = !openTimeline">
                         <span>Timeline Aduan</span>
                         <!-- Icon hanya tampil di mobile -->
@@ -150,13 +150,13 @@
                                 {{-- Bulatan status --}}
                                 <div
                                     class="absolute -left-5 flex items-center justify-center w-8 h-8 rounded-full
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @if($item['type'] === 'created') bg-red-500 text-white
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($item['type'] === 'assigned') bg-orange-500 text-white
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($item['type'] === 'read') bg-blue-500 text-white
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($item['type'] === 'followup') bg-purple-500 text-white
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($item['type'] === 'comment') bg-yellow-500 text-white
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($item['type'] === 'done') bg-green-500 text-white
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @else bg-gray-400 text-white @endif">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @if($item['type'] === 'created') bg-red-500 text-white
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($item['type'] === 'assigned') bg-orange-500 text-white
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($item['type'] === 'read') bg-blue-500 text-white
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($item['type'] === 'followup') bg-purple-500 text-white
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($item['type'] === 'comment') bg-yellow-500 text-white
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($item['type'] === 'done') bg-green-500 text-white
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @else bg-gray-400 text-white @endif">
                                     @if($item['type'] === 'created')
                                         <i class="fas fa-edit"></i>
                                     @elseif($item['type'] === 'assigned')
@@ -222,7 +222,7 @@
                                         @csrf
                                         <button type="submit"
                                             class="flex items-center text-sm transition-all duration-200
-                                                                                                                                                                                                                                                                                                                                                                    {{ $report->likedBy(auth()->id()) ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    {{ $report->likedBy(auth()->id()) ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
                                             <i class="fas fa-thumbs-up mr-1"></i> {{ $report->likes }}
                                         </button>
                                     </form>
@@ -232,7 +232,7 @@
                                         @csrf
                                         <button type="submit"
                                             class="flex items-center text-sm transition-all duration-200
-                                                                                                                                                                                                                                                                                                                                                                    {{ $report->dislikedBy(auth()->id()) ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    {{ $report->dislikedBy(auth()->id()) ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
                                             <i class="fas fa-thumbs-down mr-1"></i> {{ $report->dislikes }}
                                         </button>
                                     </form>
@@ -297,7 +297,7 @@
                         <!-- Overlay Gelap + Icon (z-20) -->
                         <div
                             class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 
-                                                                                                                                                                                                                                                                                                                                                    transition duration-300 bg-black/20 z-20">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    transition duration-300 bg-black/20 z-20">
                             <i class="fas fa-search-plus text-white text-3xl"></i>
                         </div>
                     </div>
@@ -326,10 +326,10 @@
                                             class="h-8 w-8 rounded-full object-cover bg-white shadow" />
                                     @else
                                         <img src="{{ $report->pelapor && $report->pelapor->foto
-                                                                                                                                                                                                                                                                                                                                                                                            ? asset('storage/' . $report->pelapor->foto)  {{-- Prioritas: foto upload --}}
-                                                                                                                                                                                                                                                                                                                                                                                            : ($report->pelapor && $report->pelapor->avatar
-                                                                                                                                                                                                                                                                                                                                                                                                ? $report->pelapor->avatar                {{-- Kedua: avatar Google --}}
-                                                                                                                                                                                                                                                                                                                                                                                                : asset('images/avatar.jpg')) }}"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ? asset('storage/' . $report->pelapor->foto)  {{-- Prioritas: foto upload --}}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            : ($report->pelapor && $report->pelapor->avatar
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ? $report->pelapor->avatar                {{-- Kedua: avatar Google --}}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                : asset('images/avatar.jpg')) }}"
                                             {{-- Fallback default --}} alt="Avatar {{ $report->nama_pengadu }}"
                                             class="h-8 w-8 rounded-full object-cover bg-white shadow" />
                                     @endif
@@ -345,11 +345,11 @@
                                         <!-- Status -->
                                         <span
                                             class="px-2 py-0.5 rounded-full text-xs font-medium
-                                                                                                                                                                                                                                                                                                                                    @if($report->status === 'Diajukan') border border-red-500 text-red-500
-                                                                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Dibaca') border border-blue-500 text-blue-500
-                                                                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Direspon') border border-yellow-500 text-yellow-600
-                                                                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Selesai') border border-green-500 text-green-500
-                                                                                                                                                                                                                                                                                                                                    @else border border-gray-400 text-gray-600 @endif">
+                                                                                                                                                                                                                                                                                                                                                                                                                                    @if($report->status === 'Diajukan') border border-red-500 text-red-500
+                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Dibaca') border border-blue-500 text-blue-500
+                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Direspon') border border-yellow-500 text-yellow-600
+                                                                                                                                                                                                                                                                                                                                                                                                                                    @elseif($report->status === 'Selesai') border border-green-500 text-green-500
+                                                                                                                                                                                                                                                                                                                                                                                                                                    @else border border-gray-400 text-gray-600 @endif">
                                             {{ $report->status }}
                                         </span>
                                         <!-- Kategori -->
@@ -397,8 +397,8 @@
                                         @if($report->admin)
                                             <span
                                                 class="inline-block px-3 py-1 rounded-full text-xs font-semibold 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                border border-transparent bg-gradient-to-r from-red-500 to-rose-500 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                text-white shadow-md hover:shadow-lg">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                border border-transparent bg-gradient-to-r from-red-500 to-rose-500 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                text-white shadow-md hover:shadow-lg">
                                                 {{ $report->admin->name }}
                                             </span>
                                         @else
@@ -422,8 +422,8 @@
                         {{-- Timeline Aduan (hanya muncul di mobile) --}}
                         <div x-data="{ openTimeline: false }" class="md:hidden">
                             <h2 class="flex items-center text-lg justify-between gap-2 px-6 py-2 rounded-full 
-                                                                                                                                                                                                                           bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-700 hover:to-rose-600 text-white font-semibold 
-                                                                                                                                                                                                                           shadow-lg hover:shadow-xl transition mb-5 mt-5 cursor-pointer"
+                                                                                                                                                                                                                                                                                                                           bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-700 hover:to-rose-600 text-white font-semibold 
+                                                                                                                                                                                                                                                                                                                           shadow-lg hover:shadow-xl transition mb-5 mt-5 cursor-pointer"
                                 @click="openTimeline = !openTimeline">
                                 <span>Timeline Aduan</span>
                                 <!-- Icon toggle -->
@@ -439,14 +439,14 @@
                                         {{-- Bulatan status --}}
                                         <div
                                             class="absolute -left-5 flex items-center justify-center w-8 h-8 rounded-full
-                                                                                                                                                                                                                                                                                                            @if($item['type'] === 'created') bg-red-500 text-white
-                                                                                                                                                                                                                                                                                                            @elseif($item['type'] === 'assigned') bg-orange-500 text-white
-                                                                                                                                                                                                                                                                                                            @elseif($item['type'] === 'reassigned') bg-amber-500 text-white
-                                                                                                                                                                                                                                                                                                            @elseif($item['type'] === 'read') bg-blue-500 text-white
-                                                                                                                                                                                                                                                                                                            @elseif($item['type'] === 'followup') bg-purple-500 text-white
-                                                                                                                                                                                                                                                                                                            @elseif($item['type'] === 'comment') bg-yellow-500 text-white
-                                                                                                                                                                                                                                                                                                            @elseif($item['type'] === 'done') bg-green-500 text-white
-                                                                                                                                                                                                                                                                                                            @else bg-gray-400 text-white @endif">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @if($item['type'] === 'created') bg-red-500 text-white
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @elseif($item['type'] === 'assigned') bg-orange-500 text-white
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @elseif($item['type'] === 'reassigned') bg-amber-500 text-white
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @elseif($item['type'] === 'read') bg-blue-500 text-white
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @elseif($item['type'] === 'followup') bg-purple-500 text-white
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @elseif($item['type'] === 'comment') bg-yellow-500 text-white
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @elseif($item['type'] === 'done') bg-green-500 text-white
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @else bg-gray-400 text-white @endif">
 
                                             @if($item['type'] === 'created')
                                                 <i class="fas fa-edit"></i>
@@ -537,14 +537,15 @@
                             <div class="tab-pane opacity-100 translate-y-0 transition-all duration-300" data-tab="tindak">
                                 <div class="max-h-96 overflow-y-auto pr-2 space-y-4">
                                     @forelse ($followUps as $item)
+                                        {{-- Card Tindak Lanjut --}}
                                         <div
-                                            class="relative group bg-gray-50 rounded-md p-7 border shadow-sm flex gap-3 items-start">
+                                            class="relative group bg-gray-50 rounded-md p-6 border shadow-sm flex flex-row gap-3 items-start">
 
                                             {{-- Avatar User --}}
-                                            <div class="flex items-center justify-center mt-4 rounded-xl">
+                                            <div class="flex-shrink-0">
                                                 @if ($item->user && $item->user->is_anonim)
                                                     <img src="{{ asset('images/avatar.jpg') }}" alt="Anonim"
-                                                        class="h-8 w-8 rounded-full object-cover bg-white shadow" />
+                                                        class="h-10 w-10 rounded-full object-cover bg-white shadow" />
                                                 @else
                                                                                 <img src="{{ $item->user && $item->user->foto
                                                     ? asset('storage/' . $item->user->foto)
@@ -552,55 +553,45 @@
                                                         ? $item->user->avatar
                                                         : asset('images/avatar.jpg')) }}"
                                                                                     alt="Avatar {{ $item->user->name ?? $item->nama_pengadu }}"
-                                                                                    class="h-8 w-8 rounded-full object-cover bg-white shadow" />
+                                                                                    class="h-10 w-10 rounded-full object-cover bg-white shadow" />
                                                 @endif
                                             </div>
 
-                                            {{-- Konten tindak lanjut --}}
-                                            <div class="flex-1 space-y-2">
-
-                                                {{-- Tombol Rating & Lihat Detail --}}
-                                                <div class="flex items-center gap-2">
+                                            {{-- Konten --}}
+                                            <div class="flex-1 min-w-0 space-y-1">
+                                                {{-- Tombol Rating / Edit --}}
+                                                <div class="flex flex-wrap items-center gap-2">
                                                     @php
                                                         $isGuest = !auth()->check();
                                                         $userRating = !$isGuest ? $item->ratings->where('user_id', auth()->id())->first() : null;
                                                     @endphp
 
-                                                    {{-- Tombol Nilai / Edit --}}
                                                     @if ($isGuest)
                                                         <button
                                                             class="relative flex items-center gap-1 px-2 py-1 text-xs rounded bg-gray-400 text-white cursor-not-allowed">
                                                             <i class="fas fa-star"></i> Nilai
-                                                            {{-- Tooltip login dulu --}}
                                                             <span
-                                                                class="absolute -top-7 left-1/2 -translate-x-1/2 
-                                                                    px-2 py-1 text-[10px] rounded bg-gray-800 text-white 
-                                                                    whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                                class="absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-1 text-[10px] rounded bg-gray-800 text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition">
                                                                 Silakan login dulu
-                                                                <span class="absolute left-1/2 -bottom-[3px] -translate-x-1/2 
-                                                                        w-0 h-0 border-l-[4px] border-r-[4px] border-t-[4px] 
-                                                                        border-transparent border-t-gray-800"></span>
                                                             </span>
                                                         </button>
                                                     @else
                                                         @if ($userRating)
-                                                            <div class="flex gap-2">
-                                                                {{-- Tombol Edit --}}
+                                                            <div class="flex flex-wrap gap-2">
                                                                 <button
                                                                     onclick="openRatingModal({{ $item->id }}, true, {{ $userRating->rating }}, '{{ $userRating->komentar }}')"
                                                                     class="flex items-center gap-1 px-2 py-1 text-xs rounded bg-blue-600 text-white hover:bg-blue-700">
                                                                     <i class="fas fa-edit"></i> Edit
                                                                 </button>
-
-                                                                {{-- Tombol Hapus --}}
-                                                                <form action="{{ route('user.followups.rating.delete', $item->id) }}"
-                                                                    method="POST"
-                                                                    onsubmit="return confirm('Yakin ingin menghapus rating ini?')">
+                                                                <form id="deleteRatingForm-{{ $item->id }}"
+                                                                    action="{{ route('user.followups.rating.delete', $item->id) }}"
+                                                                    method="POST">
                                                                     @csrf
                                                                     @method('DELETE')
-                                                                    <button type="submit"
+                                                                    <button type="button"
+                                                                        onclick="openDeleteRatingModal({{ $item->id }})"
                                                                         class="flex items-center gap-1 px-2 py-1 text-xs rounded bg-red-600 text-white hover:bg-red-700">
-                                                                        <i class="fas fa-trash"></i> Hapus
+                                                                        <i class="fas fa-trash-alt"></i> Hapus
                                                                     </button>
                                                                 </form>
                                                             </div>
@@ -616,137 +607,221 @@
                                                     @php
                                                         $avg = round($item->ratings_avg_rating ?? 0, 1);
                                                         $count = $item->ratings_count ?? 0;
-
                                                         $fullStars = floor($avg);
                                                         $halfStar = ($avg - $fullStars) >= 0.5 ? 1 : 0;
                                                         $emptyStars = 5 - ($fullStars + $halfStar);
                                                     @endphp
 
-                                                    @if ($isGuest)
-                                                        <button
-                                                            class="relative flex items-center gap-1 group cursor-not-allowed text-gray-400">
-                                                            <div class="flex items-center gap-0.5">
-                                                                @for ($i = 0; $i < 5; $i++)
-                                                                    <i class="far fa-star text-sm text-gray-300"></i>
-                                                                @endfor
-                                                                <span class="ml-1 text-xs text-gray-400">({{ $count }})
-                                                                    ulasan</span>
-                                                            </div>
-                                                            {{-- Tooltip login dulu --}}
+                                                    <button onclick="{{ $isGuest ? '' : "openRatingDetailModal($item->id)" }}"
+                                                        class="relative flex items-center gap-1 group {{ $isGuest ? 'cursor-not-allowed text-gray-400' : '' }}">
+                                                        <div class="flex items-center gap-0.5">
+                                                            @for ($i = 0; $i < $fullStars; $i++)
+                                                                <i class="fas fa-star text-sm text-yellow-400"></i>
+                                                            @endfor
+                                                            @if ($halfStar)
+                                                                <i class="fas fa-star-half-alt text-sm text-yellow-400"></i>
+                                                            @endif
+                                                            @for ($i = 0; $i < $emptyStars; $i++)
+                                                                <i class="far fa-star text-sm text-gray-300"></i>
+                                                            @endfor
+                                                            <span class="ml-1 text-xs text-gray-600">({{ $count }})
+                                                                ulasan</span>
+                                                        </div>
+                                                        @if ($isGuest)
                                                             <span
-                                                                class="absolute -top-7 left-1/2 -translate-x-1/2 
-                                                                    px-2 py-1 text-[10px] rounded bg-gray-800 text-white 
-                                                                    whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                                class="absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-1 text-[10px] rounded bg-gray-800 text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition">
                                                                 Silakan login dulu
-                                                                <span class="absolute left-1/2 -bottom-[3px] -translate-x-1/2 
-                                                                        w-0 h-0 border-l-[4px] border-r-[4px] border-t-[4px] 
-                                                                        border-transparent border-t-gray-800"></span>
                                                             </span>
-                                                        </button>
-                                                    @else
-                                                        <button onclick="openRatingDetailModal({{ $item->id }})"
-                                                            class="relative flex items-center gap-1 group">
-
-                                                            <div class="flex items-center gap-0.5">
-                                                                {{-- Bintang penuh --}}
-                                                                @for ($i = 0; $i < $fullStars; $i++)
-                                                                    <i class="fas fa-star text-sm text-yellow-400"></i>
-                                                                @endfor
-
-                                                                {{-- Bintang setengah --}}
-                                                                @if ($halfStar)
-                                                                    <i class="fas fa-star-half-alt text-sm text-yellow-400"></i>
-                                                                @endif
-
-                                                                {{-- Bintang kosong --}}
-                                                                @for ($i = 0; $i < $emptyStars; $i++)
-                                                                    <i class="far fa-star text-sm text-gray-300"></i>
-                                                                @endfor
-
-                                                                <span class="ml-1 text-xs text-gray-600">({{ $count }})
-                                                                    ulasan</span>
-                                                            </div>
-
-                                                            <!-- Custom Tooltip -->
-                                                            <span class="absolute -top-7 left-1/2 -translate-x-[90%] 
-                                                                    px-1 py-[2px] text-[9px] rounded bg-gray-800 text-white 
-                                                                    whitespace-nowrap opacity-0 group-hover:opacity-100 
-                                                                    transition-opacity duration-300">
+                                                        @else
+                                                            {{-- Tooltip untuk desktop/tablet (muncul di atas) --}}
+                                                            <span
+                                                                class="hidden sm:block absolute -top-7 left-1/2 -translate-x-1/2 px-1 py-[2px] text-[9px] rounded bg-gray-800 text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition">
                                                                 Lihat selengkapnya
-                                                                <span class="absolute left-1/2 -bottom-[3px] -translate-x-1/2 
-                                                                        w-0 h-0 border-l-[2.5px] border-r-[2.5px] border-t-[2.5px] 
-                                                                        border-transparent border-t-gray-800"></span>
                                                             </span>
-                                                        </button>
-                                                    @endif
 
-
+                                                            {{-- Tooltip untuk mobile (muncul di bawah) --}}
+                                                            <span
+                                                                class="block sm:hidden absolute top-6 left-1/2 -translate-x-1/2 px-1 py-[2px] text-[9px] rounded bg-gray-800 text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition">
+                                                                Lihat selengkapnya
+                                                            </span>
+                                                        @endif
+                                                    </button>
                                                 </div>
 
-                                                {{-- Meta info --}}
-                                                <div class="flex items-center gap-3 text-xs text-gray-500">
+                                                {{-- Nama & Info --}}
+                                                <div
+                                                    class="flex flex-wrap items-center gap-2 text-sm font-medium text-gray-800">
+                                                    <span>{{ $item->user->name ?? 'User tidak diketahui' }}</span>
+                                                </div>
+                                                <div class="flex flex-wrap items-center gap-3 text-xs text-gray-500">
                                                     <span>{{ $item->created_at->translatedFormat('d F Y, H:i') }} WIB</span>
                                                 </div>
 
-                                                {{-- Isi pesan tindak lanjut --}}
-                                                <p class="text-sm text-gray-700 leading-relaxed">
+                                                {{-- Isi Pesan --}}
+                                                <p class="text-sm text-gray-700 leading-relaxed break-words">
                                                     {{ Str::limit($item->pesan, 200) }}
                                                 </p>
+
+                                                {{-- Lampiran --}}
+                                                @if ($item->file)
+                                                    @php
+                                                        $filePath = asset('storage/' . $item->file);
+                                                        $ext = strtolower(pathinfo($item->file, PATHINFO_EXTENSION));
+                                                    @endphp
+                                                    @if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif']))
+                                                        <img src="{{ $filePath }}"
+                                                            class="w-32 h-auto rounded shadow mt-2 cursor-pointer hover:opacity-80"
+                                                            onclick="openModal('{{ $filePath }}')" alt="Lampiran">
+                                                    @elseif ($ext === 'pdf')
+                                                        <a href="{{ $filePath }}" target="_blank"
+                                                            class="flex items-center gap-2 text-red-600 hover:bg-red-100 hover:text-red-700 p-2 rounded mt-2">
+                                                            <i class="fas fa-file-pdf"></i> PDF File
+                                                        </a>
+                                                    @elseif (in_array($ext, ['doc', 'docx']))
+                                                        <a href="{{ $filePath }}" target="_blank"
+                                                            class="flex items-center gap-2 text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded mt-2">
+                                                            <i class="fas fa-file-word"></i> Word Document
+                                                        </a>
+                                                    @elseif ($ext === 'zip')
+                                                        <a href="{{ $filePath }}" target="_blank"
+                                                            class="flex items-center gap-2 text-yellow-600 hover:bg-yellow-100 hover:text-yellow-700 p-2 rounded mt-2">
+                                                            <i class="fas fa-file-archive"></i> ZIP Archive
+                                                        </a>
+                                                    @elseif (in_array($ext, ['xls', 'xlsx']))
+                                                        <a href="{{ $filePath }}" target="_blank"
+                                                            class="flex items-center gap-2 text-green-600 hover:bg-green-100 hover:text-green-700 p-2 rounded mt-2">
+                                                            <i class="fas fa-file-excel"></i> Excel File
+                                                        </a>
+                                                    @else
+                                                        <a href="{{ $filePath }}" target="_blank"
+                                                            class="flex items-center gap-2 text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded mt-2">
+                                                            <i class="fas fa-file"></i> Lihat File
+                                                        </a>
+                                                    @endif
+                                                @endif
                                             </div>
 
-                                            {{-- Lampiran File --}}
-                                            @if ($item->file)
-                                                @php
-                                                    $filePath = asset('storage/' . $item->file);
-                                                    $fileExtension = pathinfo($item->file, PATHINFO_EXTENSION);
-                                                @endphp
-
-                                                @if (in_array(strtolower($fileExtension), ['jpg', 'jpeg', 'png', 'gif']))
-                                                    <img src="{{ $filePath }}"
-                                                        class="w-32 h-auto rounded shadow mt-2 cursor-pointer hover:opacity-80 transition-opacity"
-                                                        onclick="openModal('{{ $filePath }}')" alt="Lampiran Tindak Lanjut">
-                                                @elseif ($fileExtension === 'pdf')
-                                                    <a href="{{ $filePath }}" target="_blank"
-                                                        class="flex items-center gap-2 text-red-600 hover:bg-red-100 hover:text-red-700 p-2 rounded mt-2">
-                                                        <i class="fas fa-file-pdf"></i> PDF File
-                                                    </a>
-                                                @elseif (in_array(strtolower($fileExtension), ['doc', 'docx']))
-                                                    <a href="{{ $filePath }}" target="_blank"
-                                                        class="flex items-center gap-2 text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded mt-2">
-                                                        <i class="fas fa-file-word"></i> Word Document
-                                                    </a>
-                                                @elseif ($fileExtension === 'zip')
-                                                    <a href="{{ $filePath }}" target="_blank"
-                                                        class="flex items-center gap-2 text-yellow-600 hover:bg-yellow-100 hover:text-yellow-700 p-2 rounded mt-2">
-                                                        <i class="fas fa-file-archive"></i> ZIP Archive
-                                                    </a>
-                                                @elseif (in_array(strtolower($fileExtension), ['xls', 'xlsx']))
-                                                    <a href="{{ $filePath }}" target="_blank"
-                                                        class="flex items-center gap-2 text-green-600 hover:bg-green-100 hover:text-green-700 p-2 rounded mt-2">
-                                                        <i class="fas fa-file-excel"></i> Excel File
-                                                    </a>
-                                                @else
-                                                    <a href="{{ $filePath }}" target="_blank"
-                                                        class="flex items-center gap-2 text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded mt-2">
-                                                        <i class="fas fa-file"></i> Lihat File
-                                                    </a>
-                                                @endif
+                                            {{-- Tombol hapus tindak lanjut --}}
+                                            @if (auth()->check() && in_array(auth()->user()->role, ['admin', 'superadmin']))
+                                                <button
+                                                    onclick="openDeleteModal('{{ route('reports.followup.delete', [$report->id, $item->id]) }}')"
+                                                    class="absolute top-2 right-2 text-red-600 text-xs hover:text-red-800 border border-red-600 rounded-full p-1 z-10">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
                                             @endif
                                         </div>
 
-                                        {{-- Tombol hapus tindak lanjut --}}
-                                        @if (auth()->check() && in_array(auth()->user()->role, ['admin', 'superadmin']))
-                                            <button
-                                                onclick="openDeleteModal('{{ route('reports.followup.delete', [$report->id, $item->id]) }}')"
-                                                class="absolute top-2 right-2 text-red-600 text-xs hover:text-red-800 border border-red-600 rounded-full p-1 z-10">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        @endif
+                                        {{-- Modal Detail Rating (unik per followup) --}}
+                                        <div id="ratingDetailModal-{{ $item->id }}"
+                                            class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50">
+
+                                            {{-- Wrapper scroll --}}
+                                            <div class="w-full h-full overflow-y-auto">
+                                                {{-- Konten Modal --}}
+                                                <div
+                                                    class="bg-white rounded-lg shadow-lg 
+                                                                                                                                   p-3 sm:p-4 md:p-5 
+                                                                                                                                   w-[80%] sm:w-[80%] md:w-[80%] lg:w-[75%] xl:w-[65%] 
+                                                                                                                                   max-w-xl md:max-w-2xl 
+                                                                                                                                   mx-auto my-4 sm:my-6 relative">
+
+                                                    {{-- Header --}}
+                                                    <div class="flex justify-between items-center mb-4">
+                                                        <h3 class="text-sm sm:text-base md:text-lg font-semibold">
+                                                            Detail Rating Tindak Lanjut
+                                                        </h3>
+                                                        <button onclick="closeRatingDetailModal({{ $item->id }})"
+                                                            class="text-gray-500 hover:text-gray-700 text-base sm:text-lg md:text-xl">✕</button>
+                                                    </div>
+
+                                                    {{-- Rata-rata --}}
+                                                    <div class="text-center mb-6">
+                                                        <div class="text-2xl sm:text-3xl md:text-4xl font-bold">
+                                                            {{ number_format($item->ratings_avg_rating ?? 0, 1) }}
+                                                        </div>
+                                                        <div class="flex justify-center text-yellow-400 text-lg sm:text-xl">
+                                                            @php
+                                                                $fullStars = floor($item->ratings_avg_rating ?? 0);
+                                                                $halfStar = (($item->ratings_avg_rating ?? 0) - $fullStars) >= 0.5;
+                                                                $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                                                            @endphp
+                                                            @for ($i = 1; $i <= $fullStars; $i++)
+                                                                <i class="fas fa-star"></i>
+                                                            @endfor
+                                                            @if ($halfStar)
+                                                                <i class="fas fa-star-half-alt"></i>
+                                                            @endif
+                                                            @for ($i = 1; $i <= $emptyStars; $i++)
+                                                                <i class="far fa-star text-gray-300"></i>
+                                                            @endfor
+                                                        </div>
+                                                        <p class="text-gray-500 text-xs sm:text-sm md:text-base">
+                                                            {{ $item->ratings_count ?? 0 }} reviews
+                                                        </p>
+                                                    </div>
+
+                                                    {{-- Breakdown --}}
+                                                    <div class="space-y-2 mb-6">
+                                                        @for ($star = 5; $star >= 1; $star--)
+                                                            @php
+                                                                $countStar = $item->ratings->where('rating', $star)->count();
+                                                                $percentage = $count > 0 ? ($countStar / $count) * 100 : 0;
+                                                            @endphp
+                                                            <div class="flex items-center gap-2 text-xs sm:text-sm">
+                                                                <span class="w-5">{{ $star }}★</span>
+                                                                <div class="w-full bg-gray-200 rounded h-2 sm:h-3">
+                                                                    <div class="bg-blue-500 h-2 sm:h-3 rounded"
+                                                                        style="width: {{ $percentage }}%"></div>
+                                                                </div>
+                                                                <span class="text-gray-600">{{ $countStar }}</span>
+                                                            </div>
+                                                        @endfor
+                                                    </div>
+
+                                                    {{-- Daftar Review --}}
+                                                    <div class="space-y-3 sm:space-y-4">
+                                                        <h4 class="font-semibold text-sm sm:text-base">Daftar Penilaian:</h4>
+                                                        @forelse($item->ratings as $r)
+                                                            <div class="border p-2 sm:p-3 rounded-md">
+                                                                <div class="flex justify-between items-center">
+                                                                    <span class="font-semibold text-xs sm:text-sm md:text-base">
+                                                                        {{ $r->user->name ?? 'Anonim' }}
+                                                                    </span>
+                                                                    <span class="text-[10px] sm:text-xs text-gray-500">
+                                                                        {{ $r->created_at->diffForHumans() }}
+                                                                    </span>
+                                                                </div>
+                                                                <div class="flex text-yellow-400 text-xs sm:text-sm md:text-base">
+                                                                    @for($i = 1; $i <= 5; $i++)
+                                                                        <i
+                                                                            class="fas fa-star {{ $i <= $r->rating ? 'text-yellow-400' : 'text-gray-300' }}"></i>
+                                                                    @endfor
+                                                                </div>
+                                                                <p class="text-gray-600 text-[11px] sm:text-xs md:text-sm italic">
+                                                                    {{ $r->komentar ?: 'Tidak ada komentar.' }}
+                                                                </p>
+                                                            </div>
+                                                        @empty
+                                                            <p class="text-gray-500 text-xs sm:text-sm">Belum ada penilaian.</p>
+                                                        @endforelse
+                                                    </div>
+
+                                                    {{-- Footer --}}
+                                                    <div class="flex justify-end mt-6">
+                                                        <button onclick="closeRatingDetailModal({{ $item->id }})"
+                                                            class="px-3 py-1.5 sm:px-4 sm:py-2 rounded bg-gray-200 hover:bg-gray-300 text-xs sm:text-sm md:text-base">
+                                                            Tutup
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
                                     @empty
                                         <p class="mt-4 text-gray-500">Belum ada tindak lanjut.</p>
                                     @endforelse
                                 </div>
-
                                 {{-- Form tambah tindak lanjut --}}
                                 @if (auth()->check() && in_array(auth()->user()->role, ['admin', 'superadmin']))
                                     <form action="{{ route('reports.followup', ['id' => $report->id]) }}" method="POST"
@@ -763,596 +838,578 @@
                                     </form>
                                 @endif
                             </div>
-                        </div>
 
-                        <!-- Modal Detail Rating -->
-                        <div id="ratingDetailModal"
-                            class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-                                <h3 class="text-lg font-semibold mb-4">Detail Rating Tindak Lanjut</h3>
+                            <!-- Modal Hapus Rating -->
+                            <div id="deleteRatingModal"
+                                class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                                <div
+                                    class="bg-white rounded-lg shadow-lg w-full max-w-sm sm:max-w-md md:max-w-lg p-4 sm:p-6 text-center">
 
-                                {{-- Rata-rata --}}
-                                <div class="text-center mb-6">
-                                    <div class="text-4xl font-bold">{{ number_format($averageRating, 1) }}</div>
-                                    <div class="flex justify-center text-yellow-400">
-                                        @php
-                                            $fullStars = floor($averageRating);
-                                            $halfStar = ($averageRating - $fullStars) >= 0.5;
-                                            $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
-                                        @endphp
+                                    {{-- Judul --}}
+                                    <h3 class="text-base sm:text-lg font-semibold mb-3">Hapus Rating</h3>
 
-                                        {{-- Full Stars --}}
-                                        @for ($i = 1; $i <= $fullStars; $i++)
-                                            <i class="fas fa-star text-yellow-400"></i>
-                                        @endfor
+                                    {{-- Deskripsi --}}
+                                    <p class="text-sm sm:text-base text-gray-600 mb-6">
+                                        Apakah Anda yakin ingin menghapus rating ini?
+                                    </p>
 
-                                        {{-- Half Star --}}
-                                        @if ($halfStar)
-                                            <i class="fas fa-star-half-alt text-yellow-400"></i>
-                                        @endif
-
-                                        {{-- Empty Stars --}}
-                                        @for ($i = 1; $i <= $emptyStars; $i++)
-                                            <i class="far fa-star text-gray-300"></i>
-                                        @endfor
+                                    {{-- Tombol Aksi --}}
+                                    <div class="flex justify-center gap-3 mt-4">
+                                        <button type="button" onclick="closeDeleteRatingModal()"
+                                            class="px-4 py-2 text-sm rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">
+                                            Batal
+                                        </button>
+                                        <button id="confirmDeleteRatingBtn"
+                                            class="px-4 py-2 text-sm rounded-lg bg-red-600 text-white hover:bg-red-700 transition">
+                                            Hapus
+                                        </button>
                                     </div>
-                                    <p class="text-gray-500">{{ $totalReviews }} reviews</p>
                                 </div>
+                            </div>
 
+                            <!-- Modal Rating -->
+                            <div id="ratingModal"
+                                class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">
+                                <div
+                                    class="bg-white rounded-2xl shadow-lg w-full max-w-sm sm:max-w-md lg:max-w-lg p-5 sm:p-6">
 
-                                {{-- Breakdown --}}
-                                <div class="space-y-2 mb-6">
-                                    @foreach($ratingStats as $star => $count)
-                                        @php
-                                            $percentage = $totalReviews > 0 ? ($count / $totalReviews) * 100 : 0;
-                                        @endphp
-                                        <div class="flex items-center gap-2">
-                                            <span class="w-6 text-sm">{{ $star }}★</span>
-                                            <div class="w-full bg-gray-200 rounded h-3">
-                                                <div class="bg-blue-500 h-3 rounded" style="width: {{ $percentage }}%"></div>
-                                            </div>
-                                            <span class="text-sm text-gray-600">{{ $count }} Reviews</span>
+                                    <!-- Judul -->
+                                    <h3 class="text-base sm:text-lg font-semibold mb-4 text-center">
+                                        Beri Rating Tindak Lanjut
+                                    </h3>
+
+                                    <!-- Form -->
+                                    <form id="ratingForm" method="POST">
+                                        @csrf
+
+                                        <!-- Bintang -->
+                                        <div id="starContainer" class="flex justify-center gap-1 mb-4 cursor-pointer">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <svg data-value="{{ $i }}" xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 24 24" fill="currentColor"
+                                                    class="star w-8 h-8 sm:w-10 sm:h-10 text-gray-300 transition-colors duration-200">
+                                                    <path fill-rule="evenodd"
+                                                        d="M12 17.27l5.18 3.73-1.64-6.81 5.46-4.73-7.19-.61L12 2 10.19 8.85l-7.19.61 5.46 4.73-1.64 6.81L12 17.27z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                            @endfor
                                         </div>
-                                    @endforeach
-                                </div>
 
-                                {{-- Daftar Review --}}
-                                <div class="space-y -4">
-                                    <h4 class="font-semibold">Daftar Penilaian:</h4>
-                                    @forelse($ratings as $r)
-                                        <div class="border p-3 rounded-md">
-                                            <div class="flex justify-between items-center">
-                                                <span class="font-semibold">{{ $r->user->name ?? 'Anonim' }}</span>
-                                                <span class="text-xs text-gray-500">{{ $r->created_at->diffForHumans() }}</span>
+                                        <input type="hidden" name="rating" id="ratingValue">
+
+                                        <!-- Textarea -->
+                                        <textarea name="komentar" rows="3" placeholder="Tulis komentar (opsional)"
+                                            class="w-full border rounded-lg p-2 sm:p-3 text-sm sm:text-base focus:ring focus:ring-blue-300"></textarea>
+
+                                        <!-- Tombol Aksi -->
+                                        <div class="flex justify-end gap-2 mt-4">
+                                            <button type="button" onclick="closeRatingModal()"
+                                                class="px-4 py-2 text-sm sm:text-base rounded-lg bg-gray-200 hover:bg-gray-300 transition">
+                                                Batal
+                                            </button>
+                                            <button type="submit"
+                                                class="px-4 py-2 text-sm sm:text-base rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">
+                                                Kirim
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <script>
+                                // === RATING ===
+                                const stars = document.querySelectorAll("#starContainer .star");
+                                const ratingValue = document.getElementById("ratingValue");
+                                let selectedRating = 0;
+
+                                stars.forEach(star => {
+                                    star.addEventListener("mouseover", function () {
+                                        const val = this.getAttribute("data-value");
+                                        highlightStars(val);
+                                    });
+
+                                    star.addEventListener("mouseout", function () {
+                                        highlightStars(selectedRating); // kembali ke pilihan terakhir
+                                    });
+
+                                    star.addEventListener("click", function () {
+                                        selectedRating = this.getAttribute("data-value");
+                                        ratingValue.value = selectedRating;
+                                        highlightStars(selectedRating);
+                                    });
+                                });
+
+                                function highlightStars(count) {
+                                    stars.forEach(star => {
+                                        if (star.getAttribute("data-value") <= count) {
+                                            star.classList.remove("text-gray-300");
+                                            star.classList.add("text-yellow-400");
+                                        } else {
+                                            star.classList.remove("text-yellow-400");
+                                            star.classList.add("text-gray-300");
+                                        }
+                                    });
+                                }
+
+                                function openRatingModal(followupId, isEdit = false, rating = 0, komentar = '') {
+                                    let url;
+                                    if (isEdit) {
+                                        url = "{{ route('user.followups.rating.update', ['followupId' => '__id__']) }}";
+                                    } else {
+                                        url = "{{ route('user.followups.rating.store', ['followupId' => '__id__']) }}";
+                                    }
+                                    url = url.replace('__id__', followupId);
+
+                                    document.getElementById('ratingForm').action = url;
+
+                                    // Prefill rating kalau edit
+                                    if (isEdit) {
+                                        selectedRating = rating;
+                                        ratingValue.value = rating;
+                                        highlightStars(rating);
+                                        document.querySelector('#ratingForm textarea[name="komentar"]').value = komentar;
+                                    } else {
+                                        selectedRating = 0;
+                                        ratingValue.value = '';
+                                        highlightStars(0);
+                                        document.querySelector('#ratingForm textarea[name="komentar"]').value = '';
+                                    }
+
+                                    document.getElementById('ratingModal').classList.remove('hidden');
+                                }
+
+                                function closeRatingModal() {
+                                    document.getElementById('ratingModal').classList.add('hidden');
+                                }
+
+                                function openRatingDetailModal(id) {
+                                    const modal = document.getElementById(`ratingDetailModal-${id}`);
+                                    modal.classList.remove('hidden');
+
+                                    // Reset scroll ke atas tiap buka modal
+                                    const wrapper = modal.querySelector('.overflow-y-auto');
+                                    if (wrapper) wrapper.scrollTop = 0;
+                                }
+
+                                function closeRatingDetailModal(id) {
+                                    document.getElementById(`ratingDetailModal-${id}`).classList.add('hidden');
+                                }
+
+                                // === DELETE RATING ===
+                                let ratingIdToDelete = null;
+
+                                function openDeleteRatingModal(itemId) {
+                                    ratingIdToDelete = itemId;
+                                    document.getElementById("deleteRatingModal").classList.remove("hidden");
+                                }
+
+                                function closeDeleteRatingModal() {
+                                    ratingIdToDelete = null;
+                                    document.getElementById("deleteRatingModal").classList.add("hidden");
+                                }
+
+                                document.getElementById("confirmDeleteRatingBtn").addEventListener("click", function () {
+                                    if (ratingIdToDelete) {
+                                        document.getElementById(`deleteRatingForm-${ratingIdToDelete}`).submit();
+                                    }
+                                });
+                            </script>
+
+                            {{-- Komentar --}}
+                            <div class="tab-pane hidden opacity-0 translate-y-4 transition-all duration-300"
+                                data-tab="komentar">
+                                <div class="max-h-96 overflow-y-auto pr-2">
+                                    @forelse ($comments as $item)
+                                        <div class="relative group mb-4 bg-gray-50 rounded-md p-3 border shadow-sm flex gap-3">
+
+                                            {{-- Avatar User --}}
+                                            <div class="flex items-center justify-center rounded-xl">
+                                                @if ($item->user && $item->user->is_anonim)
+                                                    {{-- Anonim -> pakai avatar default --}}
+                                                    <img src="{{ asset('images/avatar.jpg') }}" alt="Anonim"
+                                                        class="h-8 w-8 rounded-full object-cover bg-white shadow" />
+                                                @else
+                                                    <img src="{{ $item->user && $item->user->foto
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ? asset('storage/' . $item->user->foto)   {{-- Prioritas: foto upload --}}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    : ($item->user && $item->user->avatar
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ? $item->user->avatar                 {{-- Kedua: avatar Google --}}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        : asset('images/avatar.jpg')) }}"
+                                                        {{-- Fallback default --}}
+                                                        alt="Avatar {{ $item->user->name ?? $item->nama_pengadu }}"
+                                                        class="h-8 w-8 rounded-full object-cover bg-white shadow" />
+                                                @endif
                                             </div>
-                                            <div class="flex text-yellow-400">
-                                                @for($i = 1; $i <= 5; $i++)
-                                                    <i
-                                                        class="fas fa-star {{ $i <= $r->rating ? 'text-yellow-400' : 'text-gray-300' }}"></i>
-                                                @endfor
+
+                                            {{-- Isi Komentar --}}
+                                            <div class="flex-1">
+                                                <div
+                                                    class="flex flex-col md:flex-row md:items-center md:gap-2 text-xs text-gray-600">
+                                                    <strong>{{ $item->user->name ?? $item->nama_pengadu }}</strong>
+                                                    <span class="text-gray-500">
+                                                        ({{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }})
+                                                    </span>
+                                                </div>
+                                                <p class="text-gray-800 mb-2">{{ $item->pesan }}</p>
+
+                                                {{-- Lampiran File --}}
+                                                @if ($item->file)
+                                                    @php
+                                                        $filePath = asset('storage/' . $item->file);
+                                                        $fileExtension = pathinfo($item->file, PATHINFO_EXTENSION);
+                                                    @endphp
+
+                                                    @if (in_array(strtolower($fileExtension), ['jpg', 'jpeg', 'png', 'gif']))
+                                                        <img src="{{ $filePath }}"
+                                                            class="w-32 h-auto rounded shadow cursor-pointer hover:opacity-80 transition-opacity"
+                                                            onclick="openModal('{{ $filePath }}')" alt="Lampiran Komentar">
+                                                    @elseif ($fileExtension === 'pdf')
+                                                        <a href="{{ $filePath }}"
+                                                            class="text-red-600 hover:bg-red-100 hover:text-red-700 p-2 rounded transition-all flex items-center"
+                                                            target="_blank">
+                                                            <i class="fas fa-file-pdf mr-2"></i> PDF File
+                                                        </a>
+                                                    @elseif (in_array(strtolower($fileExtension), ['doc', 'docx']))
+                                                        <a href="{{ $filePath }}"
+                                                            class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
+                                                            target="_blank">
+                                                            <i class="fas fa-file-word mr-2"></i> Word Document
+                                                        </a>
+                                                    @elseif ($fileExtension === 'zip')
+                                                        <a href="{{ $filePath }}"
+                                                            class="text-yellow-600 hover:bg-yellow-100 hover:text-yellow-700 p-2 rounded transition-all flex items-center"
+                                                            target="_blank">
+                                                            <i class="fas fa-file-archive mr-2"></i> ZIP Archive
+                                                        </a>
+                                                    @elseif (in_array(strtolower($fileExtension), ['xls', 'xlsx']))
+                                                        <a href="{{ $filePath }}"
+                                                            class="text-green-600 hover:bg-green-100 hover:text-green-700 p-2 rounded transition-all flex items-center"
+                                                            target="_blank">
+                                                            <i class="fas fa-file-excel mr-2"></i> Excel File
+                                                        </a>
+                                                    @else
+                                                        <a href="{{ $filePath }}"
+                                                            class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
+                                                            target="_blank">
+                                                            <i class="fas fa-file mr-2"></i> Lihat File
+                                                        </a>
+                                                    @endif
+                                                @endif
                                             </div>
-                                            <p class="text-gray-600 text-sm italic">
-                                                {{ $r->komentar ?: 'Tidak ada komentar.' }}
-                                            </p>
+
+                                            {{-- Tombol hapus komentar --}}
+                                            @if (auth()->check() && (auth()->id() === $item->user_id || in_array(auth()->user()->role, ['admin', 'superadmin'])))
+                                                <button
+                                                    onclick="openDeleteModal('{{ route('reports.comment.delete', $item->id) }}')"
+                                                    class="absolute top-2 right-2 text-red-600 text-xs hover:text-red-800 border border-red-600 rounded-full p-1 z-10">
+                                                    <i class="fas fa-trash-alt"></i> Hapus
+                                                </button>
+                                            @endif
                                         </div>
                                     @empty
-                                        <p class="text-gray-500">Belum ada penilaian.</p>
+                                        <p class="mt-4 text-gray-500">Belum ada komentar.</p>
                                     @endforelse
                                 </div>
 
-                                <div class="flex justify-end mt-6">
-                                    <button onclick="closeRatingDetailModal()"
-                                        class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">
-                                        Tutup
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Modal Rating -->
-                        <div id="ratingModal"
-                            class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                            <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-                                <h3 class="text-lg font-semibold mb-4">Beri Rating Tindak Lanjut</h3>
-
-                                <!-- Form -->
-                                <form id="ratingForm" method="POST">
-                                    @csrf
-                                    <div id="starContainer" class="flex justify-center gap-1 mb-4 cursor-pointer">
-                                        <!-- 5 Bintang -->
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            <svg data-value="{{ $i }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                                fill="currentColor"
-                                                class="star w-10 h-10 text-gray-300 transition-colors duration-200">
-                                                <path fill-rule="evenodd"
-                                                    d="M12 17.27l5.18 3.73-1.64-6.81 5.46-4.73-7.19-.61L12 2 10.19 8.85l-7.19.61 5.46 4.73-1.64 6.81L12 17.27z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                        @endfor
-                                    </div>
-
-                                    <!-- Hidden input untuk simpan nilai rating -->
-                                    <input type="hidden" name="rating" id="ratingValue">
-
-                                    <textarea name="komentar" rows="3" placeholder="Tulis komentar (opsional)"
-                                        class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-300"></textarea>
-
-                                    <div class="flex justify-end gap-2 mt-4">
-                                        <button type="button" onclick="closeRatingModal()"
-                                            class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300">Batal</button>
+                                {{-- Form Tambah Komentar --}}
+                                @if (auth()->check() && in_array(auth()->user()->role, ['user', 'admin', 'superadmin']))
+                                    <form action="{{ route('reports.comment', ['id' => $report->id]) }}" method="POST"
+                                        enctype="multipart/form-data" class="mt-2 space-y-4">
+                                        @csrf
+                                        <textarea name="pesan" class="w-full border rounded p-2" rows="4"
+                                            placeholder="Tulis komentar..." required></textarea>
+                                        <input type="file" name="file" class="block w-full border rounded p-1">
                                         <button type="submit"
-                                            class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Kirim</button>
+                                            class="flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-red-500 to-rose-500 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition group">
+                                            <i class="fas fa-paper-plane text-white"></i>
+                                            <span>Kirim Komentar</span>
+                                        </button>
+                                    </form>
+                                @else
+                                    <div
+                                        class="mt-2 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded text-sm flex items-start gap-2">
+                                        <i class="fas fa-info-circle mt-1"></i>
+                                        <p>
+                                            Silakan <a href="{{ route('login') }}"
+                                                class="font-bold hover:underline hover:text-yellow-600">login</a>
+                                            untuk memberi komentar
+                                        </p>
                                     </div>
-                                </form>
+                                @endif
                             </div>
-                        </div>
 
-                        <script>
-                            const stars = document.querySelectorAll("#starContainer .star");
-                            const ratingValue = document.getElementById("ratingValue");
-                            let selectedRating = 0;
+                            {{-- Lampiran --}}
+                            <div class="tab-pane hidden opacity-0 translate-y-4 transition-all duration-300"
+                                data-tab="lampiran">
+                                @if (!empty($report->file) && is_array($report->file))
+                                    <div class="flex flex-wrap gap-4 mt-4">
+                                        @foreach ($report->file as $file)
+                                            @php
+                                                $filePath = asset('storage/' . ltrim($file, '/'));
+                                                $fileExtension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                                            @endphp
 
-                            stars.forEach(star => {
-                                star.addEventListener("mouseover", function () {
-                                    const val = this.getAttribute("data-value");
-                                    highlightStars(val);
-                                });
-
-                                star.addEventListener("mouseout", function () {
-                                    highlightStars(selectedRating); // kembali ke pilihan terakhir
-                                });
-
-                                star.addEventListener("click", function () {
-                                    selectedRating = this.getAttribute("data-value");
-                                    ratingValue.value = selectedRating;
-                                    highlightStars(selectedRating);
-                                });
-                            });
-
-                            function highlightStars(count) {
-                                stars.forEach(star => {
-                                    if (star.getAttribute("data-value") <= count) {
-                                        star.classList.remove("text-gray-300");
-                                        star.classList.add("text-yellow-400");
-                                    } else {
-                                        star.classList.remove("text-yellow-400");
-                                        star.classList.add("text-gray-300");
-                                    }
-                                });
-                            }
-                            function openRatingModal(followupId, isEdit = false, rating = 0, komentar = '') {
-                                let url;
-                                if (isEdit) {
-                                    url = "{{ route('user.followups.rating.update', ['followupId' => '__id__']) }}";
-                                } else {
-                                    url = "{{ route('user.followups.rating.store', ['followupId' => '__id__']) }}";
-                                }
-                                url = url.replace('__id__', followupId);
-
-                                document.getElementById('ratingForm').action = url;
-
-                                // Prefill rating kalau edit
-                                if (isEdit) {
-                                    selectedRating = rating;
-                                    ratingValue.value = rating;
-                                    highlightStars(rating);
-                                    document.querySelector('#ratingForm textarea[name="komentar"]').value = komentar;
-                                } else {
-                                    selectedRating = 0;
-                                    ratingValue.value = '';
-                                    highlightStars(0);
-                                    document.querySelector('#ratingForm textarea[name="komentar"]').value = '';
-                                }
-
-                                document.getElementById('ratingModal').classList.remove('hidden');
-                            }
-
-                            function closeRatingModal() {
-                                document.getElementById('ratingModal').classList.add('hidden');
-                            }
-
-                            function openRatingDetailModal(followupId) {
-                                // Bisa pakai AJAX kalau mau ambil rating per followup
-                                document.getElementById('ratingDetailModal').classList.remove('hidden');
-                            }
-
-                            function closeRatingDetailModal() {
-                                document.getElementById('ratingDetailModal').classList.add('hidden');
-                            }
-                        </script>
-
-                        {{-- Komentar --}}
-                        <div class="tab-pane opacity-0 translate-y-4 transition-all duration-300 hidden"
-                            data-tab="komentar">
-                            <div class="max-h-96 overflow-y-auto pr-2">
-                                @forelse ($comments as $item)
-                                    <div class="relative group mb-4 bg-gray-50 rounded-md p-3 border shadow-sm flex gap-3">
-
-                                        {{-- Avatar User --}}
-                                        <div class="flex items-center justify-center rounded-xl">
-                                            @if ($item->user && $item->user->is_anonim)
-                                                {{-- Anonim -> pakai avatar default --}}
-                                                <img src="{{ asset('images/avatar.jpg') }}" alt="Anonim"
-                                                    class="h-8 w-8 rounded-full object-cover bg-white shadow" />
-                                            @else
-                                                <img src="{{ $item->user && $item->user->foto
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ? asset('storage/' . $item->user->foto)   {{-- Prioritas: foto upload --}}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    : ($item->user && $item->user->avatar
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ? $item->user->avatar                 {{-- Kedua: avatar Google --}}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        : asset('images/avatar.jpg')) }}"
-                                                    {{-- Fallback default --}}
-                                                    alt="Avatar {{ $item->user->name ?? $item->nama_pengadu }}"
-                                                    class="h-8 w-8 rounded-full object-cover bg-white shadow" />
-                                            @endif
-                                        </div>
-
-                                        {{-- Isi Komentar --}}
-                                        <div class="flex-1">
-                                            <div
-                                                class="flex flex-col md:flex-row md:items-center md:gap-2 text-xs text-gray-600">
-                                                <strong>{{ $item->user->name ?? $item->nama_pengadu }}</strong>
-                                                <span class="text-gray-500">
-                                                    ({{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMMM YYYY, HH.mm') }})
-                                                </span>
-                                            </div>
-                                            <p class="text-gray-800 mb-2">{{ $item->pesan }}</p>
-
-                                            {{-- Lampiran File --}}
-                                            @if ($item->file)
-                                                @php
-                                                    $filePath = asset('storage/' . $item->file);
-                                                    $fileExtension = pathinfo($item->file, PATHINFO_EXTENSION);
-                                                @endphp
-
-                                                @if (in_array(strtolower($fileExtension), ['jpg', 'jpeg', 'png', 'gif']))
+                                            @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
+                                                <!-- Gambar -->
+                                                <div>
                                                     <img src="{{ $filePath }}"
                                                         class="w-32 h-auto rounded shadow cursor-pointer hover:opacity-80 transition-opacity"
-                                                        onclick="openModal('{{ $filePath }}')" alt="Lampiran Komentar">
-                                                @elseif ($fileExtension === 'pdf')
+                                                        onclick="openImageModal('{{ $filePath }}')" alt="Lampiran Gambar">
+                                                </div>
+                                            @elseif ($fileExtension === 'pdf')
+                                                <!-- PDF -->
+                                                <div>
                                                     <a href="{{ $filePath }}"
                                                         class="text-red-600 hover:bg-red-100 hover:text-red-700 p-2 rounded transition-all flex items-center"
                                                         target="_blank">
                                                         <i class="fas fa-file-pdf mr-2"></i> PDF File
                                                     </a>
-                                                @elseif (in_array(strtolower($fileExtension), ['doc', 'docx']))
+                                                </div>
+                                            @elseif (in_array($fileExtension, ['doc', 'docx']))
+                                                <!-- Word -->
+                                                <div>
                                                     <a href="{{ $filePath }}"
                                                         class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
                                                         target="_blank">
                                                         <i class="fas fa-file-word mr-2"></i> Word Document
                                                     </a>
-                                                @elseif ($fileExtension === 'zip')
+                                                </div>
+                                            @elseif ($fileExtension === 'zip')
+                                                <!-- ZIP -->
+                                                <div>
                                                     <a href="{{ $filePath }}"
                                                         class="text-yellow-600 hover:bg-yellow-100 hover:text-yellow-700 p-2 rounded transition-all flex items-center"
                                                         target="_blank">
                                                         <i class="fas fa-file-archive mr-2"></i> ZIP Archive
                                                     </a>
-                                                @elseif (in_array(strtolower($fileExtension), ['xls', 'xlsx']))
+                                                </div>
+                                            @elseif (in_array($fileExtension, ['xls', 'xlsx']))
+                                                <!-- Excel -->
+                                                <div>
                                                     <a href="{{ $filePath }}"
                                                         class="text-green-600 hover:bg-green-100 hover:text-green-700 p-2 rounded transition-all flex items-center"
                                                         target="_blank">
                                                         <i class="fas fa-file-excel mr-2"></i> Excel File
                                                     </a>
-                                                @else
+                                                </div>
+                                            @else
+                                                <!-- File lainnya -->
+                                                <div>
                                                     <a href="{{ $filePath }}"
                                                         class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
                                                         target="_blank">
-                                                        <i class="fas fa-file mr-2"></i> Lihat File
+                                                        <i class="fas fa-file mr-2"></i> Lihat Lampiran
                                                     </a>
-                                                @endif
+                                                </div>
                                             @endif
-                                        </div>
-
-                                        {{-- Tombol hapus komentar --}}
-                                        @if (auth()->check() && (auth()->id() === $item->user_id || in_array(auth()->user()->role, ['admin', 'superadmin'])))
-                                            <button onclick="openDeleteModal('{{ route('reports.comment.delete', $item->id) }}')"
-                                                class="absolute top-2 right-2 text-red-600 text-xs hover:text-red-800 border border-red-600 rounded-full p-1 z-10">
-                                                <i class="fas fa-trash-alt"></i> Hapus
-                                            </button>
-                                        @endif
+                                        @endforeach
                                     </div>
-                                @empty
-                                    <p class="mt-4 text-gray-500">Belum ada komentar.</p>
-                                @endforelse
+                                @else
+                                    <p class="mt-4 text-gray-500">Tidak ada lampiran.</p>
+                                @endif
                             </div>
 
-                            {{-- Form Tambah Komentar --}}
-                            @if (auth()->check() && in_array(auth()->user()->role, ['user', 'admin', 'superadmin']))
-                                <form action="{{ route('reports.comment', ['id' => $report->id]) }}" method="POST"
-                                    enctype="multipart/form-data" class="mt-2 space-y-4">
-                                    @csrf
-                                    <textarea name="pesan" class="w-full border rounded p-2" rows="4"
-                                        placeholder="Tulis komentar..." required></textarea>
-                                    <input type="file" name="file" class="block w-full border rounded p-1">
-                                    <button type="submit"
-                                        class="flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-red-500 to-rose-500 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition group">
-                                        <i class="fas fa-paper-plane text-white"></i>
-                                        <span>Kirim Komentar</span>
-                                    </button>
-                                </form>
-                            @else
-                                <div
-                                    class="mt-2 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded text-sm flex items-start gap-2">
-                                    <i class="fas fa-info-circle mt-1"></i>
-                                    <p>
-                                        Silakan <a href="{{ route('login') }}"
-                                            class="font-bold hover:underline hover:text-yellow-600">login</a>
-                                        untuk memberi komentar
+                            {{-- Modal Gambar --}}
+                            <div id="imageModal"
+                                class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
+                                <span class="absolute top-4 right-6 text-white text-3xl cursor-pointer"
+                                    onclick="closeImageModal()">&times;</span>
+                                <img id="modalImage" class="max-w-3xl max-h-[90vh] rounded shadow-xl">
+                            </div>
+
+                            {{-- Lokasi --}}
+                            <div class="tab-pane hidden opacity-0 translate-y-4 transition-all duration-300"
+                                data-tab="lokasi">
+                                @if ($report->lokasi && $report->latitude && $report->longitude)
+                                    <p class="text-sm text-gray-700 mt-4 mb-2"><strong>Alamat:</strong> {{ $report->lokasi }}
                                     </p>
-                                </div>
-                            @endif
-                        </div>
-
-                        {{-- Lampiran --}}
-                        <div class="tab-pane opacity-0 translate-y-4 transition-all duration-300 hidden"
-                            data-tab="lampiran">
-                            @if (!empty($report->file) && is_array($report->file))
-                                <div class="flex flex-wrap gap-4 mt-4">
-                                    @foreach ($report->file as $file)
-                                        @php
-                                            $filePath = asset('storage/' . ltrim($file, '/'));
-                                            $fileExtension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-                                        @endphp
-
-                                        @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
-                                            <!-- Gambar -->
-                                            <div>
-                                                <img src="{{ $filePath }}"
-                                                    class="w-32 h-auto rounded shadow cursor-pointer hover:opacity-80 transition-opacity"
-                                                    onclick="openImageModal('{{ $filePath }}')" alt="Lampiran Gambar">
-                                            </div>
-                                        @elseif ($fileExtension === 'pdf')
-                                            <!-- PDF -->
-                                            <div>
-                                                <a href="{{ $filePath }}"
-                                                    class="text-red-600 hover:bg-red-100 hover:text-red-700 p-2 rounded transition-all flex items-center"
-                                                    target="_blank">
-                                                    <i class="fas fa-file-pdf mr-2"></i> PDF File
-                                                </a>
-                                            </div>
-                                        @elseif (in_array($fileExtension, ['doc', 'docx']))
-                                            <!-- Word -->
-                                            <div>
-                                                <a href="{{ $filePath }}"
-                                                    class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
-                                                    target="_blank">
-                                                    <i class="fas fa-file-word mr-2"></i> Word Document
-                                                </a>
-                                            </div>
-                                        @elseif ($fileExtension === 'zip')
-                                            <!-- ZIP -->
-                                            <div>
-                                                <a href="{{ $filePath }}"
-                                                    class="text-yellow-600 hover:bg-yellow-100 hover:text-yellow-700 p-2 rounded transition-all flex items-center"
-                                                    target="_blank">
-                                                    <i class="fas fa-file-archive mr-2"></i> ZIP Archive
-                                                </a>
-                                            </div>
-                                        @elseif (in_array($fileExtension, ['xls', 'xlsx']))
-                                            <!-- Excel -->
-                                            <div>
-                                                <a href="{{ $filePath }}"
-                                                    class="text-green-600 hover:bg-green-100 hover:text-green-700 p-2 rounded transition-all flex items-center"
-                                                    target="_blank">
-                                                    <i class="fas fa-file-excel mr-2"></i> Excel File
-                                                </a>
-                                            </div>
-                                        @else
-                                            <!-- File lainnya -->
-                                            <div>
-                                                <a href="{{ $filePath }}"
-                                                    class="text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all flex items-center"
-                                                    target="_blank">
-                                                    <i class="fas fa-file mr-2"></i> Lihat Lampiran
-                                                </a>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            @else
-                                <p class="mt-4 text-gray-500">Tidak ada lampiran.</p>
-                            @endif
-                        </div>
-
-                        {{-- Modal Gambar --}}
-                        <div id="imageModal"
-                            class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
-                            <span class="absolute top-4 right-6 text-white text-3xl cursor-pointer"
-                                onclick="closeImageModal()">&times;</span>
-                            <img id="modalImage" class="max-w-3xl max-h-[90vh] rounded shadow-xl">
-                        </div>
-
-                        {{-- Lokasi --}}
-                        <div class="tab-pane opacity-0 translate-y-4 transition-all duration-300 hidden" data-tab="lokasi">
-                            @if ($report->lokasi && $report->latitude && $report->longitude)
-                                <p class="text-sm text-gray-700 mt-4 mb-2"><strong>Alamat:</strong> {{ $report->lokasi }}
-                                </p>
-                                <p class="text-sm text-gray-700 mb-2">
-                                    <strong>Lintang:</strong> {{ $report->latitude }}<br>
-                                    <strong>Bujur:</strong> {{ $report->longitude }}
-                                </p>
-                                <div id="map" class="w-full h-64 rounded shadow"></div>
-                            @else
-                                <p class="text-gray-500">Lokasi belum tersedia.</p>
-                            @endif
+                                    <p class="text-sm text-gray-700 mb-2">
+                                        <strong>Lintang:</strong> {{ $report->latitude }}<br>
+                                        <strong>Bujur:</strong> {{ $report->longitude }}
+                                    </p>
+                                    <div id="map" class="w-full h-64 rounded shadow"></div>
+                                @else
+                                    <p class="text-gray-500">Lokasi belum tersedia.</p>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 @endsection
 
-@section('include-js')
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- Mapbox CSS & JS -->
-    <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
-    <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
-    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.1/mapbox-gl-geocoder.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // Tampilkan tab default
-            showTab('tindak');
+    @section('include-js')
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <!-- Mapbox CSS & JS -->
+        <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+        <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+        <script
+            src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.1/mapbox-gl-geocoder.min.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                // Tampilkan tab default
+                showTab('tindak');
 
-            const lat = {{ $report->latitude ?? 0 }};
-            const lng = {{ $report->longitude ?? 0 }};
-            const mapElement = document.getElementById('map');
+                const lat = {{ $report->latitude ?? 0 }};
+                const lng = {{ $report->longitude ?? 0 }};
+                const mapElement = document.getElementById('map');
 
-            if (lat && lng) {
-                // ==== GLOBAL KONFIGURASI PETA ====
-                mapboxgl.accessToken = "pk.eyJ1IjoiZmFkaWxhaDI0OCIsImEiOiJja3dnZXdmMnQwbno1MnRxcXYwdjB3cG9qIn0.v4gAtavpn1GzgtD7f3qapA";
+                if (lat && lng) {
+                    // ==== GLOBAL KONFIGURASI PETA ====
+                    mapboxgl.accessToken = "pk.eyJ1IjoiZmFkaWxhaDI0OCIsImEiOiJja3dnZXdmMnQwbno1MnRxcXYwdjB3cG9qIn0.v4gAtavpn1GzgtD7f3qapA";
 
-                // Inisialisasi peta
-                const map = new mapboxgl.Map({
-                    container: mapElement,
-                    style: "mapbox://styles/mapbox/streets-v12", // bisa diganti "satellite-v9" dll
-                    center: [lng, lat],
-                    zoom: 17
-                });
-
-                // Tambahkan kontrol navigasi (zoom & rotate)
-                map.addControl(new mapboxgl.NavigationControl());
-
-                // Tambahkan marker di lokasi
-                new mapboxgl.Marker({ color: "red" })
-                    .setLngLat([lng, lat])
-                    .setPopup(new mapboxgl.Popup().setHTML(`<b>{{ $report->lokasi }}</b>`)) // popup alamat
-                    .addTo(map);
-
-                // Fungsi untuk resize map
-                function resizeMap() {
-                    map.resize();
-                }
-
-                // Resize saat halaman selesai load
-                window.addEventListener('load', () => {
-                    setTimeout(resizeMap, 500);
-                });
-
-                // Resize saat layar berubah ukuran
-                window.addEventListener('resize', () => {
-                    setTimeout(resizeMap, 200);
-                });
-
-                // Resize saat tab lokasi diklik
-                const tabLokasi = document.getElementById('tab-lokasi');
-                if (tabLokasi) {
-                    tabLokasi.addEventListener('click', () => {
-                        setTimeout(resizeMap, 300);
+                    // Inisialisasi peta
+                    const map = new mapboxgl.Map({
+                        container: mapElement,
+                        style: "mapbox://styles/mapbox/streets-v12", // bisa diganti "satellite-v9" dll
+                        center: [lng, lat],
+                        zoom: 17
                     });
+
+                    // Tambahkan kontrol navigasi (zoom & rotate)
+                    map.addControl(new mapboxgl.NavigationControl());
+
+                    // Tambahkan marker di lokasi
+                    new mapboxgl.Marker({ color: "red" })
+                        .setLngLat([lng, lat])
+                        .setPopup(new mapboxgl.Popup().setHTML(`<b>{{ $report->lokasi }}</b>`)) // popup alamat
+                        .addTo(map);
+
+                    // Fungsi untuk resize map
+                    function resizeMap() {
+                        map.resize();
+                    }
+
+                    // Resize saat halaman selesai load
+                    window.addEventListener('load', () => {
+                        setTimeout(resizeMap, 500);
+                    });
+
+                    // Resize saat layar berubah ukuran
+                    window.addEventListener('resize', () => {
+                        setTimeout(resizeMap, 200);
+                    });
+
+                    // Resize saat tab lokasi diklik
+                    const tabLokasi = document.getElementById('tab-lokasi');
+                    if (tabLokasi) {
+                        tabLokasi.addEventListener('click', () => {
+                            setTimeout(resizeMap, 300);
+                        });
+                    }
                 }
-            }
 
-            // Auto-hide pesan sukses (flash message)
-            const msg = document.getElementById('successMessage');
-            if (msg) {
-                setTimeout(() => {
-                    msg.classList.add('transition-opacity', 'duration-500');
-                    msg.style.opacity = '0';
-                    setTimeout(() => msg.remove(), 500);
-                }, 2000);
-            }
-        });
-
-        function openImageModal(src) {
-            document.getElementById('modalImage').src = src;
-            document.getElementById('imageModal').classList.remove('hidden');
-        }
-        function closeImageModal() {
-            document.getElementById('imageModal').classList.add('hidden');
-        }
-
-        // Menampilkan modal konfirmasi penghapusan
-        function openDeleteModal(deleteUrl) {
-            document.getElementById('deleteForm').action = deleteUrl;
-            document.getElementById('deleteModal').classList.remove('hidden');
-        }
-
-        // Menutup modal konfirmasi penghapusan
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').classList.add('hidden');
-        }
-
-        function showTab(tab) {
-            const buttons = document.querySelectorAll('.tab-button');
-            const panes = document.querySelectorAll('.tab-pane');
-
-            buttons.forEach(btn => {
-                btn.classList.remove('border-blue-600', 'text-blue-600');
-                btn.classList.add('border-transparent', 'text-gray-600');
+                // Auto-hide pesan sukses (flash message)
+                const msg = document.getElementById('successMessage');
+                if (msg) {
+                    setTimeout(() => {
+                        msg.classList.add('transition-opacity', 'duration-500');
+                        msg.style.opacity = '0';
+                        setTimeout(() => msg.remove(), 500);
+                    }, 2000);
+                }
             });
 
-            panes.forEach(pane => {
-                pane.classList.add('hidden', 'opacity-0', 'translate-y-4');
-                pane.classList.remove('opacity-100', 'translate-y-0');
+            function openImageModal(src) {
+                document.getElementById('modalImage').src = src;
+                document.getElementById('imageModal').classList.remove('hidden');
+            }
+            function closeImageModal() {
+                document.getElementById('imageModal').classList.add('hidden');
+            }
+
+            // Menampilkan modal konfirmasi penghapusan
+            function openDeleteModal(deleteUrl) {
+                document.getElementById('deleteForm').action = deleteUrl;
+                document.getElementById('deleteModal').classList.remove('hidden');
+            }
+
+            // Menutup modal konfirmasi penghapusan
+            function closeDeleteModal() {
+                document.getElementById('deleteModal').classList.add('hidden');
+            }
+
+            function showTab(tab) {
+                const buttons = document.querySelectorAll('.tab-button');
+                const panes = document.querySelectorAll('.tab-pane');
+
+                buttons.forEach(btn => {
+                    btn.classList.remove('border-blue-600', 'text-blue-600');
+                    btn.classList.add('border-transparent', 'text-gray-600');
+                });
+
+                panes.forEach(pane => {
+                    pane.classList.add('hidden', 'opacity-0', 'translate-y-4');
+                    pane.classList.remove('opacity-100', 'translate-y-0');
+                });
+
+                const activeBtn = document.getElementById(`tab-${tab}`);
+                activeBtn.classList.remove('text-blue-600', 'border-transparent');
+                activeBtn.classList.add('border-blue-600', 'text-blue-600');
+
+                const activePane = document.querySelector(`.tab-pane[data-tab="${tab}"]`);
+                activePane.classList.remove('hidden');
+                void activePane.offsetWidth;
+                activePane.classList.add('opacity-100', 'translate-y-0');
+                activePane.classList.remove('opacity-0', 'translate-y-4');
+            }
+        </script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
+        <script>
+            // ⚙️ Konfigurasi default NProgress
+            NProgress.configure({
+                showSpinner: false,
+                trickleSpeed: 200,
+                minimum: 0.08
             });
 
-            const activeBtn = document.getElementById(`tab-${tab}`);
-            activeBtn.classList.remove('text-blue-600', 'border-transparent');
-            activeBtn.classList.add('border-blue-600', 'text-blue-600');
+            // 🔹 1. Tangkap klik semua link internal
+            document.addEventListener("click", function (e) {
+                const link = e.target.closest("a");
+                if (link && link.href && link.origin === window.location.origin) {
+                    NProgress.start();
+                    setTimeout(() => NProgress.set(0.9), 150);
+                }
+            });
 
-            const activePane = document.querySelector(`.tab-pane[data-tab="${tab}"]`);
-            activePane.classList.remove('hidden');
-            void activePane.offsetWidth;
-            activePane.classList.add('opacity-100', 'translate-y-0');
-            activePane.classList.remove('opacity-0', 'translate-y-4');
-        }
-    </script>
+            // 🔹 2. Patch untuk XMLHttpRequest
+            (function (open) {
+                XMLHttpRequest.prototype.open = function () {
+                    NProgress.start();
+                    this.addEventListener("loadend", function () {
+                        NProgress.set(1.0);
+                        setTimeout(() => NProgress.done(), 300);
+                    });
+                    open.apply(this, arguments);
+                };
+            })(XMLHttpRequest.prototype.open);
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
-    <script>
-        // ⚙️ Konfigurasi default NProgress
-        NProgress.configure({
-            showSpinner: false,
-            trickleSpeed: 200,
-            minimum: 0.08
-        });
-
-        // 🔹 1. Tangkap klik semua link internal
-        document.addEventListener("click", function (e) {
-            const link = e.target.closest("a");
-            if (link && link.href && link.origin === window.location.origin) {
+            // 🔹 3. Patch untuk Fetch API
+            const originalFetch = window.fetch;
+            window.fetch = function () {
                 NProgress.start();
-                setTimeout(() => NProgress.set(0.9), 150);
-            }
-        });
-
-        // 🔹 2. Patch untuk XMLHttpRequest
-        (function (open) {
-            XMLHttpRequest.prototype.open = function () {
-                NProgress.start();
-                this.addEventListener("loadend", function () {
+                return originalFetch.apply(this, arguments).finally(() => {
                     NProgress.set(1.0);
                     setTimeout(() => NProgress.done(), 300);
                 });
-                open.apply(this, arguments);
             };
-        })(XMLHttpRequest.prototype.open);
 
-        // 🔹 3. Patch untuk Fetch API
-        const originalFetch = window.fetch;
-        window.fetch = function () {
-            NProgress.start();
-            return originalFetch.apply(this, arguments).finally(() => {
+            // 🔹 4. Saat halaman selesai load
+            window.addEventListener("pageshow", () => {
                 NProgress.set(1.0);
                 setTimeout(() => NProgress.done(), 300);
             });
-        };
 
-        // 🔹 4. Saat halaman selesai load
-        window.addEventListener("pageshow", () => {
-            NProgress.set(1.0);
-            setTimeout(() => NProgress.done(), 300);
-        });
+            // 🔹 5. Tangkap submit form (SAMAIN dengan klik link)
+            document.addEventListener("submit", function (e) {
+                const form = e.target;
+                if (form.tagName === "FORM") {
+                    NProgress.start();
+                    setTimeout(() => NProgress.set(0.9), 150);
+                }
+            }, true);
+        </script>
 
-        // 🔹 5. Tangkap submit form (SAMAIN dengan klik link)
-        document.addEventListener("submit", function (e) {
-            const form = e.target;
-            if (form.tagName === "FORM") {
-                NProgress.start();
-                setTimeout(() => NProgress.set(0.9), 150);
-            }
-        }, true);
-    </script>
-
-@endsection
+    @endsection

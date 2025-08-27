@@ -10,15 +10,24 @@ use Illuminate\Http\Request;
 class AduanController extends Controller
 {
     // Menampilkan semua laporan (aduan) yang ada
-    public function index()
+    public function index(Request $request)
     {
         $admin = Auth::user(); // Admin yang sedang login
 
-        // Ambil ID kategori yang ditangani oleh admin ini
-        $kategoriIds = $admin->kategori()->pluck('id');
+        // Query report hanya untuk kategori yg ditangani admin ini
+        $query = Report::whereHas('kategori', function ($q) use ($admin) {
+            $q->where('admin_id', $admin->id_user);
+        });
 
-        // Ambil laporan yang hanya termasuk dalam kategori tersebut
-        $reports = Report::whereIn('kategori_id', $kategoriIds)->paginate(5);
+        // Filter status jika ada
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Pagination + simpan query string filter
+        $reports = $query->orderByDesc('created_at')
+            ->paginate(5)
+            ->appends($request->query());
 
         return view('admin.aduan.index', compact('reports'));
     }

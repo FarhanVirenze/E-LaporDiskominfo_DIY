@@ -125,6 +125,29 @@ class ReportSuperadminController extends Controller
         }
     }
 
+    public function storeUser(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email',
+            'nik' => 'nullable|string|max:20|unique:users,nik',
+            'nomor_telepon' => 'nullable|string|max:20',
+            'role' => 'required|in:user,admin,superadmin',
+            'password' => 'required|string|min:6',
+        ]);
+
+        $validated['password'] = bcrypt($validated['password']);
+        $validated['email_verified_at'] = now();         // ✅ langsung verified
+        $validated['remember_token'] = Str::random(10);  // ✅ generate token
+
+        try {
+            User::create($validated);
+            return redirect()->back()->with('success', 'User berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menambahkan user: ' . $e->getMessage());
+        }
+    }
+
     /**
      * Menampilkan detail laporan lengkap dengan komentar & follow up.
      */

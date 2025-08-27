@@ -4,43 +4,57 @@ namespace App\Http\Controllers\Superadmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Report;
-use App\Models\User;
-use App\Models\KategoriUmum;
 use Illuminate\Http\Request;
 
 class AduanController extends Controller
 {
     // Menampilkan semua laporan (aduan) yang ada
-   public function index(Request $request)
+    public function index(Request $request)
     {
         $adminId = $request->input('admin_id');
         $kategoriId = $request->input('kategori_id');
+        $status = $request->input('status');
 
-        $admins = User::where('role', 'admin')->get();
+        $query = Report::with(['admin', 'kategori']);
 
-        $query = Report::with('admin', 'kategori');
-
+        // 🔹 Filter Admin (langsung dari report.admin_id)
         if ($adminId) {
             $query->where('admin_id', $adminId);
         }
 
+        // 🔹 Filter Kategori
         if ($kategoriId) {
             $query->where('kategori_id', $kategoriId);
         }
 
-        $reports = $query->paginate(5);
+        // 🔹 Filter Status
+        if ($status) {
+            $query->where('status', $status);
+        }
 
-        // Ambil kategori umum yang hanya digunakan dalam laporan admin terkait
+        $reports = $query->paginate(10);
+
+        // 🔹 Ambil daftar admin (untuk dropdown filter)
+        $admins = \App\Models\User::where('role', 'admin')->get();
+
+        // 🔹 Ambil kategori yang dipakai laporan (supaya dropdown kategori dinamis)
         $kategoriIds = Report::when($adminId, function ($q) use ($adminId) {
-                $q->where('admin_id', $adminId);
-            })
+            $q->where('admin_id', $adminId);
+        })
             ->select('kategori_id')
             ->distinct()
             ->pluck('kategori_id');
 
-        $kategoris = KategoriUmum::whereIn('id', $kategoriIds)->get();
+        $kategoris = \App\Models\KategoriUmum::whereIn('id', $kategoriIds)->get();
 
-        return view('superadmin.aduan.index', compact('reports', 'admins', 'kategoris', 'adminId', 'kategoriId'));
+        return view('superadmin.aduan.index', compact(
+            'reports',
+            'admins',
+            'kategoris',
+            'adminId',
+            'kategoriId',
+            'status'
+        ));
     }
 
     // Mengupdate status laporan

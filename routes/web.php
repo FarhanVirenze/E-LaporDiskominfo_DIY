@@ -34,6 +34,14 @@ Route::get('/tentang', function () {
     return view('portal.tentang.index');
 })->name('tentang');
 
+Route::get('/ketentuan-layanan', function () {
+    return view('portal.ketentuan-layanan.index');
+})->name('ketentuan.layanan');
+
+Route::get('/kebijakan-privasi', function () {
+    return view('portal.kebijakan-privasi.index');
+})->name('kebijakan.privasi');
+
 Route::post('/lacak', [ReportController::class, 'lacak'])->name('report.lacak');
 Route::get('/daftar-aduan/{id}/detail', [ReportController::class, 'show'])->name('reports.show');
 Route::post('/daftar-aduan/{id}/follow-up', [ReportController::class, 'storeFollowUp'])->name('reports.followup');
@@ -147,6 +155,10 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:superadmin'])->p
 
     // Kelola User
     Route::resource('kelola-user', \App\Http\Controllers\Superadmin\UserController::class)->except(['create', 'store', 'show']);
+
+    // Tambah User (manual karena resource UserController di atas exclude store)
+    Route::post('/kelola-user', [ReportSuperadminController::class, 'storeUser'])
+        ->name('users.store');
 
     // Kelola Aduan
     Route::resource('kelola-aduan', \App\Http\Controllers\Superadmin\AduanController::class);

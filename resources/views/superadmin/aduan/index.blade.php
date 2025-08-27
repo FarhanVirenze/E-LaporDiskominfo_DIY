@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container mt-4">
-    <h2 class="mb-4 text-2xl font-semibold text-[#37474F]">Kelola Aduan Umum</h2>
+    <h2 class="mb-4 text-2xl font-semibold text-[#37474F]">Kelola Aduan</h2>
 
    @if(session('success'))
     <!-- SUCCESS NOTIF -->
@@ -129,21 +129,39 @@
 </script>
 
     <!-- Filter Admin & Kategori -->
-    <div class="mb-4">
-        <form method="GET" action="{{ route('superadmin.kelola-aduan.index') }}" class="flex flex-wrap gap-3 items-center">
-            <div>
-                <label for="admin_id" class="text-sm text-gray-700">Filter Admin:</label>
-                <select name="admin_id" id="admin_id" onchange="this.form.submit()" class="border px-3 py-1 rounded">
-                    <option value="">-- Semua Admin --</option>
-                    @foreach($admins as $admin)
-                        <option value="{{ $admin->id_user }}" {{ request('admin_id') == $admin->id_user ? 'selected' : '' }}>
-                            {{ $admin->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-        </form>
-    </div>
+<div class="mb-4">
+    <form method="GET" action="{{ route('superadmin.kelola-aduan.index') }}" 
+          class="flex flex-wrap gap-3 items-center">
+
+        <!-- Filter Admin -->
+        <div>
+            <label for="admin_id" class="text-sm text-gray-700">Filter Admin:</label>
+            <select name="admin_id" id="admin_id" onchange="this.form.submit()" 
+                    class="border px-3 py-1 rounded">
+                <option value="">-- Semua Admin --</option>
+                @foreach($admins as $admin)
+                    <option value="{{ $admin->id_user }}" 
+                        {{ request('admin_id') == $admin->id_user ? 'selected' : '' }}>
+                        {{ $admin->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Filter Status -->
+        <div>
+            <label for="status" class="text-sm text-gray-700">Filter Status:</label>
+            <select name="status" id="status" onchange="this.form.submit()" 
+                    class="border px-3 py-1 rounded">
+                <option value="">-- Semua Status --</option>
+                <option value="Diajukan" {{ request('status') == 'Diajukan' ? 'selected' : '' }}>Diajukan</option>
+                <option value="Dibaca" {{ request('status') == 'Dibaca' ? 'selected' : '' }}>Dibaca</option>
+                <option value="Direspon" {{ request('status') == 'Direspon' ? 'selected' : '' }}>Direspon</option>
+                <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+            </select>
+        </div>
+    </form>
+</div>
 
     @if($reports->isEmpty())
         <div class="alert alert-info">Tidak ada aduan saat ini.</div>

@@ -2,13 +2,26 @@
 
 @section('content')
     <div class="container">
-        <h1 class="mb-4 mt-4 font-weight-bold">Kelola Aduan Umum</h1>
+        <h1 class="mb-4 mt-4 font-weight-bold">Kelola Aduan</h1>
 
         @if(session('success'))
             <div id="alert-success" class="alert alert-success">
                 {{ session('success') }}
             </div>
         @endif
+
+        <div class="mb-3">
+  <form method="GET" action="{{ route('admin.kelola-aduan.index') }}" class="form-inline">
+        <label for="status" class="mr-2">Filter Status:</label>
+        <select name="status" id="status" class="form-control mr-2" onchange="this.form.submit()">
+            <option value="">-- Semua Status --</option>
+            <option value="Diajukan" {{ request('status') == 'Diajukan' ? 'selected' : '' }}>Diajukan</option>
+            <option value="Dibaca" {{ request('status') == 'Dibaca' ? 'selected' : '' }}>Dibaca</option>
+            <option value="Direspon" {{ request('status') == 'Direspon' ? 'selected' : '' }}>Direspon</option>
+            <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+        </select>
+    </form>
+</div>
 
         <!-- Table to display Aduan -->
         @if($reports->isEmpty())
@@ -132,7 +145,7 @@
 
             <!-- Pagination Links -->
             <div class="d-flex justify-content-center">
-                {{ $reports->links() }}
+               {{ $reports->appends(request()->query())->links() }}
             </div>
         @endif
 
