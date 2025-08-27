@@ -130,21 +130,39 @@
             </div>
 
             <!-- Konten -->
-            <div class="p-4 bg-red-700 rounded-br-xl">
-                <p class="text-sm text-gray-200">Gagal memuat statistik pengunjung</p>
+            <div class="p-4 bg-red-700 rounded-br-xl text-white space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm">Online Visitors</span>
+                    <span class="font-bold">{{ $onlineVisitors }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm">Today's Views</span>
+                    <span class="font-bold">{{ $todayViews }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm">Last 7 Days Views</span>
+                    <span class="font-bold">{{ $weekViews }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm">Total Visitor</span>
+                    <span class="font-bold">{{ $totalVisitors }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm">Total Page Views</span>
+                    <span class="font-bold">{{ $totalViews }}</span>
+                </div>
             </div>
-        </div>
 
-        <!-- Tambahkan CSS untuk x-cloak -->
-        <style>
-            [x-cloak] {
-                display: none !important;
-            }
-        </style>
+            <!-- Tambahkan CSS untuk x-cloak -->
+            <style>
+                [x-cloak] {
+                    display: none !important;
+                }
+            </style>
 
-        {{-- Tambahan JS dari halaman --}}
-        @yield('include-js')
-        @stack('scripts')
+            {{-- Tambahan JS dari halaman --}}
+            @yield('include-js')
+            @stack('scripts')
 
 </body>
 

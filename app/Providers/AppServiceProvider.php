@@ -7,7 +7,10 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 use App\Models\Report;
+use App\Http\Middleware\RecordViewMiddleware;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // You can register services here if needed
+        // Register services here if needed
     }
 
     /**
@@ -25,9 +28,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         setlocale(LC_TIME, 'id_ID.UTF-8');
-        
+
         // Set the pagination view to use Tailwind CSS
         Paginator::useTailwind();
+
+        // Inject RecordViewMiddleware ke group 'web'
+        app('router')->pushMiddlewareToGroup('web', RecordViewMiddleware::class);
 
         // Define Gates
         Gate::define('admin', function ($user) {
@@ -42,27 +48,52 @@ class AppServiceProvider extends ServiceProvider
             return $user->role === 'user';
         });
 
-        // Share jumlah aduan baru ke semua view
+        // Share global data ke semua view
         View::composer('*', function ($view) {
             $user = Auth::user();
-            $newReportsCount = 0;
 
+            // 🔹 Jumlah aduan baru
+            $newReportsCount = 0;
             if ($user) {
                 if ($user->role === 'superadmin') {
-                    // Superadmin -> hitung semua aduan yang masih diajukan
                     $newReportsCount = Report::where('status', Report::STATUS_DIAJUKAN)->count();
                 } elseif ($user->role === 'admin') {
-                    // Admin -> hitung aduan yang kategori_umum.admin_id = admin login
                     $newReportsCount = Report::where('status', Report::STATUS_DIAJUKAN)
                         ->whereHas('kategori', function ($q) use ($user) {
                             $q->where('admin_id', $user->id_user);
                         })
                         ->count();
                 }
-                // Role 'user' -> biarkan default 0
             }
 
-            $view->with('newReportsCount', $newReportsCount);
+            // 🔹 Statistik kunjungan
+            $onlineVisitors = DB::table('views')
+                ->where('viewed_at', '>=', Carbon::now()->subMinutes(5))
+                ->distinct('visitor')
+                ->count('visitor');
+
+            $todayViews = DB::table('views')
+                ->whereDate('viewed_at', Carbon::today())
+                ->count();
+
+            $weekViews = DB::table('views')
+                ->whereBetween('viewed_at', [Carbon::now()->subDays(7), Carbon::now()])
+                ->count();
+
+            $totalVisitors = DB::table('views')
+                ->distinct('visitor')
+                ->count('visitor');
+
+            $totalViews = DB::table('views')->count();
+
+            $view->with(compact(
+                'newReportsCount',
+                'onlineVisitors',
+                'todayViews',
+                'weekViews',
+                'totalVisitors',
+                'totalViews'
+            ));
         });
     }
 }

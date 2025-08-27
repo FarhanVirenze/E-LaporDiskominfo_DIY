@@ -41,12 +41,7 @@
         }
 
         #nprogress .bar {
-            background: linear-gradient(to right,
-                    #ff1744,
-                    /* vivid red */
-                    #f50057
-                    /* pinkish red */
-                );
+            background: linear-gradient(to right, #ff1744, #f50057);
             height: 3px;
         }
 
@@ -60,6 +55,10 @@
         #nprogress .spinner-icon {
             border-top-color: #ff1744;
             border-left-color: #f50057;
+        }
+
+        [x-cloak] {
+            display: none !important;
         }
     </style>
 </head>
@@ -83,7 +82,72 @@
         @yield('content')
     </main>
 
-    {{-- Tambahan JS dari halaman --}}
+    {{-- Statistik Kunjungan Floating Button --}}
+    <div x-data="{ open: false, hover: false }" class="fixed bottom-5 left-5 z-50">
+        <!-- Tombol -->
+        <button @click="open = true" @mouseenter="hover = true" @mouseleave="hover = false"
+            class="relative flex items-center bg-red-700 text-white rounded-full shadow-lg hover:bg-red-800 transition-all duration-300 overflow-hidden"
+            :class="hover ? 'w-52 pl-12 pr-4' : 'w-14 pl-0 pr-0'" style="height: 3.5rem;">
+
+            <!-- Icon -->
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 flex justify-center items-center w-14">
+                <i class="bi bi-bar-chart-fill text-2xl"></i>
+            </div>
+
+            <!-- Text -->
+            <span x-cloak class="font-semibold text-sm whitespace-nowrap transform transition-all duration-300 ml-2"
+                :class="hover ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'">
+                Statistik Kunjungan
+            </span>
+        </button>
+
+        <!-- Panel Slide -->
+        <div x-show="open" x-cloak x-transition:enter="transform transition ease-out duration-300"
+            x-transition:enter-start="-translate-x-full opacity-0" x-transition:enter-end="translate-x-0 opacity-100"
+            x-transition:leave="transform transition ease-in duration-300"
+            x-transition:leave-start="translate-x-0 opacity-100" x-transition:leave-end="-translate-x-full opacity-0"
+            class="fixed top-1/2 left-0 -translate-y-1/2 bg-white rounded-r-xl 
+           drop-shadow-[6px_-4px_12px_rgba(0,0,0,0.35)] w-72 max-w-full z-50">
+
+            <!-- Header -->
+            <div class="flex items-center justify-between px-4 py-4 rounded-tr-xl bg-white shadow-none">
+                <div class="flex items-center gap-2 text-gray-800">
+                    <i class="bi bi-info-circle-fill text-red-600 text-xl"></i>
+                    <span class="font-semibold text-lg">Informasi Pengunjung</span>
+                </div>
+                <button @click="open = false"
+                    class="w-8 h-8 flex items-center justify-center rounded-md text-xl font-bold text-gray-800 hover:bg-gray-300 transition">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Konten Statistik -->
+            <div class="p-4 bg-red-700 rounded-br-xl text-white space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm">Online Visitors</span>
+                    <span class="font-bold">{{ $onlineVisitors }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm">Today's Views</span>
+                    <span class="font-bold">{{ $todayViews }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm">Last 7 Days Views</span>
+                    <span class="font-bold">{{ $weekViews }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm">Total Visitor</span>
+                    <span class="font-bold">{{ $totalVisitors }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm">Total Page Views</span>
+                    <span class="font-bold">{{ $totalViews }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- JS Tambahan --}}
     @yield('include-js')
     @stack('scripts')
 
