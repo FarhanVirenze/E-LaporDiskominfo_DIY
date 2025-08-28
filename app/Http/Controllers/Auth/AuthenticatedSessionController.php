@@ -43,6 +43,11 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('superadmin.dashboard');
         }
 
+        if ($user->role === 'wbs_admin') {
+            session()->flash('success', 'Anda berhasil masuk sebagai Wbs Admin.');
+            return redirect()->route('wbs_admin.dashboard');
+        }
+
         session()->flash('success', 'Anda berhasil masuk sebagai User.');
         return redirect()->route('user.aduan.riwayat');
     }
@@ -67,6 +72,8 @@ class AuthenticatedSessionController extends Controller
                 $request->session()->flash('success', 'Anda berhasil log out dari Admin.');
             } elseif ($user->role === 'superadmin') {
                 $request->session()->flash('success', 'Anda berhasil log out dari Super Admin.');
+            } elseif ($user->role === 'wbs_admin') {
+                $request->session()->flash('success', 'Anda berhasil log out dari Wbs Admin.');
             } else {
                 $request->session()->flash('success', 'Anda berhasil log out dari User.');
             }

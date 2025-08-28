@@ -27,26 +27,37 @@ class ReportSuperadminController extends Controller
             $user = auth()->user();
 
             if ($user->role === 'admin') {
-                // Ambil ID kategori yang ditugaskan ke admin
-                $kategoriIds = $user->kategori->pluck('id')->toArray();
+                // Ambil kategori non_wbs_admin yang ditugaskan ke admin
+                $kategoriIds = $user->kategori()
+                    ->where('tipe', 'non_wbs_admin')
+                    ->pluck('id')
+                    ->toArray();
 
-                // Ambil hanya laporan sesuai kategori admin
                 $reports = Report::whereIn('kategori_id', $kategoriIds)
                     ->latest()
                     ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'created_at']);
             } elseif ($user->role === 'superadmin') {
-                // Superadmin bisa melihat semua aduan
-                $reports = Report::latest()
+                // Superadmin bisa lihat semua kategori non_wbs_admin
+                $reports = Report::whereHas('kategori', function ($q) {
+                    $q->where('tipe', 'non_wbs_admin');
+                })
+                    ->latest()
                     ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'created_at']);
             } else {
-                // User biasa, hanya lihat aduan sendiri
+                // User biasa: hanya aduan sendiri, tapi tetap non_wbs_admin
                 $reports = Report::where('user_id', $user->id_user)
+                    ->whereHas('kategori', function ($q) {
+                        $q->where('tipe', 'non_wbs_admin');
+                    })
                     ->latest()
                     ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'created_at']);
             }
         } else {
-            // Pengunjung (belum login), tampilkan semua
-            $reports = Report::latest()
+            // Guest: hanya report non_wbs_admin
+            $reports = Report::whereHas('kategori', function ($q) {
+                $q->where('tipe', 'non_wbs_admin');
+            })
+                ->latest()
                 ->get(['id', 'judul', 'isi', 'nama_pengadu', 'kategori_id', 'status', 'created_at']);
         }
 

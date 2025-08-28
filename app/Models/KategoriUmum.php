@@ -9,7 +9,7 @@ class KategoriUmum extends Model
 {
     use HasFactory;
     protected $table = 'kategori_umum';
-    protected $fillable = ['nama'];
+    protected $fillable = ['nama', 'tipe'];
 
     public function reports()
     {

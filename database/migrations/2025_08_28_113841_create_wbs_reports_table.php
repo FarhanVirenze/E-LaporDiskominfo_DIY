@@ -12,7 +12,15 @@ return new class extends Migration {
     {
         Schema::create('wbs_reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users', 'id_user')->onDelete('set null');
+
+            // Tracking ID unik untuk setiap laporan
+            $table->string('tracking_id')->unique();
+
+            // Relasi ke user pelapor
+            $table->foreignId('user_id')
+                ->nullable()
+                ->constrained('users', 'id_user')
+                ->onDelete('set null');
 
             // Data Pengadu
             $table->boolean('is_anonim')->default(false);
@@ -22,8 +30,12 @@ return new class extends Migration {
 
             // Data Aduan
             $table->string('nama_terlapor');
-            $table->foreignId('wilayah_id')->constrained('wilayah')->onDelete('cascade');
-            $table->foreignId('kategori_id')->constrained('kategori')->onDelete('cascade');
+            $table->foreignId('wilayah_id')
+                ->constrained('wilayah_umum')
+                ->onDelete('cascade');
+            $table->foreignId('kategori_id')
+                ->constrained('kategori_umum')
+                ->onDelete('cascade');
             $table->timestamp('waktu_kejadian');
             $table->string('lokasi_kejadian', 100);
             $table->text('uraian');
@@ -32,11 +44,11 @@ return new class extends Migration {
             $table->json('lampiran')->nullable(); // array path upload file
 
             // Status Aduan
-            $table->enum('status', ['Diajukan', 'Dibaca', 'Diproses', 'Selesai'])->default('Diajukan');
+            $table->enum('status', ['Diajukan', 'Dibaca', 'Diproses', 'Selesai'])
+                ->default('Diajukan');
 
             $table->timestamps();
         });
-
     }
 
     /**

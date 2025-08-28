@@ -31,6 +31,7 @@ class Report extends Model
         'latitude',      // lintang
         'longitude',     // bujur
         'status',
+        'is_wbs_admin'
     ];
 
     protected $casts = [

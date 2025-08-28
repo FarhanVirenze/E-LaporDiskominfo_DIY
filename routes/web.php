@@ -11,6 +11,7 @@ use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Admin\ProfileAdminController;
 use App\Http\Controllers\Superadmin\ProfileSuperadminController;
 use App\Http\Controllers\Superadmin\KategoriAdminController;
+use App\Http\Controllers\WbsAdmin\DashboardWbsadminController;
 use App\Http\Controllers\GoogleController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,6 +43,10 @@ Route::get('/kebijakan-privasi', function () {
     return view('portal.kebijakan-privasi.index');
 })->name('kebijakan.privasi');
 
+Route::get('wbs/track', [WbsController::class, 'track'])->name('wbs.track');
+Route::get('wbs', [WbsController::class, 'index'])->name('wbs.index');
+Route::post('wbs', [WbsController::class, 'store'])->name('wbs.store');
+
 Route::post('/lacak', [ReportController::class, 'lacak'])->name('report.lacak');
 Route::get('/daftar-aduan/{id}/detail', [ReportController::class, 'show'])->name('reports.show');
 Route::post('/daftar-aduan/{id}/follow-up', [ReportController::class, 'storeFollowUp'])->name('reports.followup');
@@ -71,7 +76,8 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:user'])->prefix(
 
     // Report and WBS Routes without repeating the 'user/' prefix
     Route::resource('aduan', ReportController::class);
-    Route::resource('wbs', WbsController::class);
+    // WBS routes pakai GET & POST saja
+
 });
 
 Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -171,6 +177,15 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:superadmin'])->p
 
     // Kelola Wilayah
     Route::resource('kelola-wilayah', \App\Http\Controllers\Superadmin\WilayahUmumController::class);
+});
+
+// Wbs_admin Routes
+Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:wbs_admin'])->prefix('wbs_admin')->name('wbs_admin.')->group(function () {
+    Route::get('/dashboard', [DashboardWbsadminController::class, 'index'])
+        ->name('dashboard');
+    // Kelola Aduan (WBS Report)
+    Route::resource('kelola-aduan', \App\Http\Controllers\WbsAdmin\WbsAduanController::class)
+        ->except(['create', 'store']);
 });
 
 require __DIR__ . '/auth.php';
