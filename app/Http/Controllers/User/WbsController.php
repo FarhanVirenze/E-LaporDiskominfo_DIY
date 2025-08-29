@@ -18,20 +18,26 @@ class WbsController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $wbsReports = collect(); // default kosong
+        $wbsReports = collect();
 
         if ($user) {
             if ($user->role === 'admin') {
+                // ambil kategori yang di-handle oleh admin ini
                 $kategoriIds = $user->kategori->pluck('id')->toArray();
+
                 $wbsReports = WbsReport::with(['pelapor', 'wilayah', 'kategori'])
                     ->whereIn('kategori_id', $kategoriIds)
                     ->latest()
                     ->get();
+
             } elseif ($user->role === 'superadmin') {
+                // superadmin bisa lihat semua
                 $wbsReports = WbsReport::with(['pelapor', 'wilayah', 'kategori'])
                     ->latest()
                     ->get();
+
             } else {
+                // user biasa hanya bisa lihat laporan yang dia buat
                 $wbsReports = WbsReport::with(['pelapor', 'wilayah', 'kategori'])
                     ->where('user_id', $user->id_user)
                     ->latest()
@@ -39,9 +45,9 @@ class WbsController extends Controller
             }
         }
 
-        // ambil kategori & wilayah umum untuk form
+        // ambil kategori & wilayah umum untuk form input
         $kategoriUmum = KategoriUmum::all();
-        $wilayahUmum  = WilayahUmum::all();
+        $wilayahUmum = WilayahUmum::all();
 
         return view('portal.wbs.index', compact('wbsReports', 'user', 'kategoriUmum', 'wilayahUmum'));
     }
@@ -51,46 +57,44 @@ class WbsController extends Controller
      */
     public function store(Request $request)
     {
-        // validasi awal
+        // Validasi form
         $validated = $request->validate([
-            'is_anonim'       => 'nullable|boolean',
-            'nama_pengadu'    => 'nullable|string|max:255',
-            'email_pengadu'   => 'nullable|email|max:255',
+            'is_anonim' => 'nullable|boolean',
+            'nama_pengadu' => 'nullable|string|max:255',
+            'email_pengadu' => 'nullable|email|max:255',
             'telepon_pengadu' => 'nullable|string|max:20',
-            'nama_terlapor'   => 'required|string|max:255',
-            'wilayah_id'      => 'required|exists:wilayah_umum,id',
-            'kategori_id'     => 'required|exists:kategori_umum,id',
-            'tanggal_kejadian'=> 'required|date',
-            'waktu_kejadian'  => 'required|date_format:H:i',
+            'nama_terlapor' => 'required|string|max:255',
+            'wilayah_id' => 'required|exists:wilayah_umum,id',
+            'kategori_id' => 'required|exists:kategori_umum,id',
+            'tanggal_kejadian' => 'required|date',
+            'waktu_kejadian' => 'required|date_format:H:i',
             'lokasi_kejadian' => 'required|string|max:100',
-            'uraian'          => 'required|string',
-            'lampiran'        => 'nullable|array|max:3',
-            'lampiran.*'      => 'nullable|file|max:10240', // max 10MB/file
+            'uraian' => 'required|string',
+            'lampiran' => 'nullable|array|max:3',
+            'lampiran.*' => 'nullable|file|max:10240', // max 10MB/file
         ]);
 
-        // pastikan boolean aman
         $isAnonim = $request->boolean('is_anonim');
 
-        // kalau tidak anonim → wajib isi data pengadu
+        // Kalau tidak anonim → wajib isi data pengadu
         if (!$isAnonim) {
             $request->validate([
-                'nama_pengadu'    => 'required|string|max:255',
-                'email_pengadu'   => 'required|email|max:255',
+                'nama_pengadu' => 'required|string|max:255',
+                'email_pengadu' => 'required|email|max:255',
                 'telepon_pengadu' => 'required|string|max:20',
             ]);
         } else {
-            // kosongkan field pengadu
             $validated['nama_pengadu'] = null;
             $validated['email_pengadu'] = null;
             $validated['telepon_pengadu'] = null;
         }
 
-        // gabungkan tanggal + waktu
+        // Gabungkan tanggal + waktu kejadian
         $waktuKejadian = Carbon::parse(
-            $validated['tanggal_kejadian'].' '.$validated['waktu_kejadian']
+            $validated['tanggal_kejadian'] . ' ' . $validated['waktu_kejadian']
         );
 
-        // handle lampiran
+        // Handle upload lampiran
         $lampiranPaths = [];
         if ($request->hasFile('lampiran')) {
             $totalSize = collect($request->file('lampiran'))->sum->getSize();
@@ -106,22 +110,27 @@ class WbsController extends Controller
             }
         }
 
-        // simpan ke DB
+        // Generate tracking ID unik
+        do {
+            $trackingId = 'WBS-' . now()->format('Ymd') . '-' . Str::upper(Str::random(6));
+        } while (WbsReport::where('tracking_id', $trackingId)->exists());
+
+        // Simpan laporan
         WbsReport::create([
-            'tracking_id'     => 'WBS-'.Str::upper(Str::uuid()),
-            'user_id'         => auth()->check() ? auth()->user()->id_user : null,
-            'is_anonim'       => $isAnonim,
-            'nama_pengadu'    => $validated['nama_pengadu'],
-            'email_pengadu'   => $validated['email_pengadu'],
+            'tracking_id' => $trackingId,
+            'user_id' => auth()->check() ? auth()->user()->id_user : null,
+            'is_anonim' => $isAnonim,
+            'nama_pengadu' => $validated['nama_pengadu'],
+            'email_pengadu' => $validated['email_pengadu'],
             'telepon_pengadu' => $validated['telepon_pengadu'],
-            'nama_terlapor'   => $validated['nama_terlapor'],
-            'wilayah_id'      => $validated['wilayah_id'],
-            'kategori_id'     => $validated['kategori_id'],
-            'waktu_kejadian'  => $waktuKejadian,
+            'nama_terlapor' => $validated['nama_terlapor'],
+            'wilayah_id' => $validated['wilayah_id'],
+            'kategori_id' => $validated['kategori_id'],
+            'waktu_kejadian' => $waktuKejadian,
             'lokasi_kejadian' => $validated['lokasi_kejadian'],
-            'uraian'          => $validated['uraian'],
-            'lampiran'        => $lampiranPaths,
-            'status'          => 'Diajukan',
+            'uraian' => $validated['uraian'],
+            'lampiran' => $lampiranPaths,
+            'status' => 'Diajukan',
         ]);
 
         return redirect()

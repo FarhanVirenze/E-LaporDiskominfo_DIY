@@ -36,6 +36,10 @@ class WbsReport extends Model
         'waktu_kejadian' => 'datetime',
     ];
 
+    public static function getStatuses(): array
+    {
+        return ['Diajukan', 'Dibaca', 'Direspon', 'Selesai'];
+    }
     /**
      * Generate tracking_id otomatis saat create.
      */
@@ -76,5 +80,16 @@ class WbsReport extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id_user');
     }
+
+    public function followUps()
+    {
+        return $this->hasMany(\App\Models\WbsFollowUp::class, 'report_id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(\App\Models\WbsComment::class, 'report_id');
+    }
+
 
 }

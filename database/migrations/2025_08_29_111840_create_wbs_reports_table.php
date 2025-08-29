@@ -44,7 +44,7 @@ return new class extends Migration {
             $table->json('lampiran')->nullable(); // array path upload file
 
             // Status Aduan
-            $table->enum('status', ['Diajukan', 'Dibaca', 'Diproses', 'Selesai'])
+            $table->enum('status', ['Diajukan', 'Dibaca', 'Direspon', 'Selesai'])
                 ->default('Diajukan');
 
             $table->timestamps();

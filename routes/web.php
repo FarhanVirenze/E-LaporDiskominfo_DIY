@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ProfileAdminController;
 use App\Http\Controllers\Superadmin\ProfileSuperadminController;
 use App\Http\Controllers\Superadmin\KategoriAdminController;
 use App\Http\Controllers\WbsAdmin\DashboardWbsadminController;
+use App\Http\Controllers\WbsAdmin\WbsAduanController;
 use App\Http\Controllers\GoogleController;
 use Illuminate\Support\Facades\Route;
 
@@ -180,12 +181,40 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:superadmin'])->p
 });
 
 // Wbs_admin Routes
-Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:wbs_admin'])->prefix('wbs_admin')->name('wbs_admin.')->group(function () {
-    Route::get('/dashboard', [DashboardWbsadminController::class, 'index'])
-        ->name('dashboard');
-    // Kelola Aduan (WBS Report)
-    Route::resource('kelola-aduan', \App\Http\Controllers\WbsAdmin\WbsAduanController::class)
-        ->except(['create', 'store']);
-});
+Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:wbs_admin'])
+    ->prefix('wbs_admin')
+    ->name('wbs_admin.')
+    ->group(function () {
+        Route::get('/dashboard', [DashboardWbsadminController::class, 'index'])
+            ->name('dashboard');
+
+        // Resource untuk kelola aduan
+        Route::resource('kelola-aduan', WbsAduanController::class)
+            ->except(['create', 'store']);
+
+        // Tambahan route khusus follow up & komentar
+        Route::post('kelola-aduan/{report}/follow-up', [WbsAduanController::class, 'storeFollowUp'])
+            ->name('kelola-aduan.storeFollowUp');
+
+        Route::post('kelola-aduan/{report}/comment', [WbsAduanController::class, 'storeComment'])
+            ->name('kelola-aduan.storeComment');
+
+        Route::put('/followup/{id}', [WbsAduanController::class, 'updateFollowUp'])
+            ->name('kelola-aduan.updateFollowUp');
+
+        Route::delete('/kelola-aduan/follow-ups/{id}', [WbsAduanController::class, 'destroyFollowUp'])
+            ->name('kelola-aduan.destroyFollowUp');
+
+        // Tambahan route khusus komentar
+        Route::post('kelola-aduan/{report}/comment', [WbsAduanController::class, 'storeComment'])
+            ->name('kelola-aduan.storeComment');
+
+        Route::put('kelola-aduan/comment/{comment}', [WbsAduanController::class, 'updateComment'])
+            ->name('kelola-aduan.updateComment');
+
+        Route::delete('kelola-aduan/comment/{comment}', [WbsAduanController::class, 'destroyComment'])
+            ->name('kelola-aduan.destroyComment');
+
+    });
 
 require __DIR__ . '/auth.php';
