@@ -3,8 +3,8 @@
     <div class="hidden lg:block w-1/4 mt-4">
         <div class="space-y-2">
             <!-- Riwayat Aduan -->
-            <a href="{{ route('user.aduan.riwayat') }}" class="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors duration-200
-           {{ request()->routeIs('user.aduan.riwayat')
+            <a href="{{ route('wbs_admin.aduan.riwayat') }}" class="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors duration-200
+           {{ request()->routeIs('wbs_admin.aduan.riwayat')
     ? 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] text-white'
     : 'bg-gray-100 text-[#ef4444] hover:bg-gray-300 hover:text-[#b91c1c]' }}">
                 <i class="fa-solid fa-clock-rotate-left w-5 h-5"></i>
@@ -12,8 +12,8 @@
             </a>
 
               <!-- Riwayat Wbs -->
-            <a href="{{ route('user.aduan.riwayatwbs') }}" class="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors duration-200
-           {{ request()->routeIs('user.aduan.riwayatwbs')
+            <a href="{{ route('wbs_admin.aduan.riwayatwbs') }}" class="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors duration-200
+           {{ request()->routeIs('wbs_admin.aduan.riwayatwbs')
     ? 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] text-white'
     : 'bg-gray-100 text-[#ef4444] hover:bg-gray-300 hover:text-[#b91c1c]' }}">
                 <i class="fa-solid fa-folder-open w-5 h-5"></i>
@@ -21,8 +21,8 @@
             </a>
 
             <!-- Profil -->
-            <a href="{{ route('user.profile.edit') }}" class="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors duration-200
-           {{ request()->routeIs('user.profile.edit')
+            <a href="{{ route('wbs_admin.profile.edit') }}" class="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors duration-200
+           {{ request()->routeIs('wbs_admin.profile.edit')
     ? 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] text-white'
     : 'bg-gray-100 text-[#ef4444] hover:bg-gray-300 hover:text-[#b91c1c]' }}">
                 <i class="fa-solid fa-user w-5 h-5"></i>
@@ -30,8 +30,8 @@
             </a>
 
             <!-- Buat Aduan (desktop) -->
-            <a href="{{ route('beranda') }}" class="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors duration-200
-           {{ request()->routeIs('beranda')
+            <a href="{{ route('superadmin.beranda') }}" class="flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors duration-200
+           {{ request()->routeIs('superadmin.beranda')
     ? 'bg-gradient-to-r from-[#ef4444] to-[#b91c1c] text-white'
     : 'bg-gray-100 text-[#ef4444] hover:bg-gray-300 hover:text-[#b91c1c]' }}">
                 <i class="fa-solid fa-plus w-5 h-5"></i>
@@ -55,7 +55,7 @@
             <!-- Tombol Riwayat -->
             <button @click="open = !open"
                 class="flex flex-col items-center justify-center py-2 text-sm font-medium transition-all duration-300"
-                :class="open || '{{ request()->routeIs('user.aduan.riwayat') }}' 
+                :class="open || '{{ request()->routeIs('wbs_admin.aduan.riwayat') }}' 
             ? 'text-[#ef4444]' 
             : 'text-gray-500 hover:text-[#ef4444]'">
 
@@ -84,11 +84,11 @@
                 </div>
 
                 <!-- Item submenu -->
-                <a href="{{ route('user.aduan.riwayat') }}"
+                <a href="{{ route('wbs_admin.aduan.riwayat') }}"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#ef4444] transition">
                     Riwayat Aduan
                 </a>
-                <a href="{{ route('user.aduan.riwayatwbs') }}"
+                <a href="{{ route('wbs_admin.aduan.riwayatwbs') }}"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#ef4444] transition">
                     Riwayat WBS
                 </a>
@@ -96,7 +96,7 @@
         </div>
 
         <!-- Tombol Floating Buat Aduan -->
-        <a href="{{ route('beranda') }}"
+        <a href="{{ route('superadmin.beranda') }}"
             class="absolute -top-5 left-1/2 transform -translate-x-1/2 flex flex-col items-center group">
             <div class="bg-gradient-to-r from-red-600 to-red-500 text-white 
                 w-14 h-14 rounded-full flex items-center justify-center 
@@ -107,8 +107,8 @@
         </a>
 
         <!-- Profil -->
-        <a href="{{ route('user.profile.edit') }}" class="flex flex-col items-center justify-center py-2 text-sm font-medium
-            {{ request()->routeIs('user.profile.edit')
+        <a href="{{ route('wbs_admin.profile.edit') }}" class="flex flex-col items-center justify-center py-2 text-sm font-medium
+            {{ request()->routeIs('wbs_admin.profile.edit')
     ? 'text-[#ef4444] hover:text-[#ef4444] cursor-default'
     : 'text-gray-500 hover:text-[#ef4444]' }}">
             <i class="fa-solid fa-user text-lg"></i>

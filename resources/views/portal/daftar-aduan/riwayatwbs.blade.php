@@ -8,16 +8,16 @@
 
     <div class="w-full max-w-screen-xl mx-auto py-16 px-3 sm:px-6 text-gray-800">
         <h1 class="text-2xl font-bold text-center mt-12 text-gray-900">
-            Riwayat Aduan
+            Riwayat Aduan Wbs
         </h1>
 
         <!-- Notifikasi Sukses -->
         @if (session('success'))
             <div id="alert-success"
                 class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
-                                                                                                                                                                                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
-                                                                                                                                                                                                       bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
-                                                                                                                                                                                                       transition-all duration-500 opacity-100 animate-fade-in">
+                                                                                                                                                                                                                                               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
+                                                                                                                                                                                                                                               bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
+                                                                                                                                                                                                                                               transition-all duration-500 opacity-100 animate-fade-in">
 
                 <!-- Ikon -->
                 <div id="success-icon-wrapper" class="flex-shrink-0">
@@ -140,8 +140,8 @@
                     <div class="hidden md:flex items-center rounded-full border border-red-300 overflow-hidden">
                         {{-- Table View --}}
                         <button @click="view = 'table'" :class="view === 'table' 
-                                                        ? 'bg-red-600 text-white' 
-                                                        : 'bg-white text-gray-700 hover:bg-gray-50'"
+                                                                            ? 'bg-red-600 text-white' 
+                                                                            : 'bg-white text-gray-700 hover:bg-gray-50'"
                             class="px-4 py-2 flex items-center gap-1 transition">
                             <template x-if="view === 'table'">
                                 <i class="fas fa-check mr-1"></i>
@@ -151,8 +151,8 @@
 
                         {{-- Card View --}}
                         <button @click="view = 'card'" :class="view === 'card' 
-                                                        ? 'bg-red-600 text-white' 
-                                                        : 'bg-white text-gray-700 hover:bg-gray-50'"
+                                                                            ? 'bg-red-600 text-white' 
+                                                                            : 'bg-white text-gray-700 hover:bg-gray-50'"
                             class="px-4 py-2 flex items-center gap-1 transition border-l border-red-300">
                             <template x-if="view === 'card'">
                                 <i class="fas fa-check mr-1"></i>
@@ -170,7 +170,7 @@
                             <tr>
                                 <th class="px-4 py-3 text-left font-semibold">No</th>
                                 <th class="px-4 py-3 text-left font-semibold">No Aduan</th>
-                                <th class="px-4 py-3 text-left font-semibold">Judul</th>
+                                <th class="px-4 py-3 text-left font-semibold">Nama Terlapor</th>
                                 <th class="px-4 py-3 text-left font-semibold">Tanggal</th>
                                 <th class="px-4 py-3 text-left font-semibold">Status</th>
                                 <th class="px-4 py-3 text-left font-semibold">Aksi</th>
@@ -181,23 +181,23 @@
                                 <tr class="hover:bg-blue-50 transition-colors duration-200">
                                     <td class="px-4 py-3 font-medium text-gray-700">{{ $aduan->firstItem() + $index }}</td>
                                     <td class="px-4 py-3 font-semibold text-gray-700">{{ $item->tracking_id }}</td>
-                                    <td class="px-4 py-3">{{ $item->judul }}</td>
+                                    <td class="px-4 py-3">{{ $item->nama_terlapor }}</td>
                                     <td class="px-4 py-3 text-gray-600">
                                         {{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMM YYYY') }}
                                     </td>
                                     <td class="px-4 py-3">
                                         <span
                                             class="text-xs font-semibold px-3 py-1 rounded-full shadow-sm
-                                                                                                                                                    @if($item->status == 'Diajukan') bg-red-100 text-red-700
-                                                                                                                                                    @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
-                                                                                                                                                    @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                                                                                                    @elseif($item->status == 'Selesai') bg-green-100 text-green-700
-                                                                                                                                                    @else bg-gray-200 text-gray-800 @endif">
+                                                                                                                                                                                            @if($item->status == 'Diajukan') bg-red-100 text-red-700
+                                                                                                                                                                                            @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
+                                                                                                                                                                                            @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                                                                                                                                                            @elseif($item->status == 'Selesai') bg-green-100 text-green-700
+                                                                                                                                                                                            @else bg-gray-200 text-gray-800 @endif">
                                             {{ $item->status }}
                                         </span>
                                     </td>
                                     <td class="px-4 py-3">
-                                        <a href="{{ route('reports.show', $item->id) }}"
+                                        <a href="{{ route('user.aduan.riwayatwbs.show', $item->id) }}"
                                             class="inline-flex items-center gap-1 text-red-600 hover:text-red-800 transition-colors">
                                             <i class="fas fa-search"></i> Lihat
                                         </a>
@@ -219,8 +219,8 @@
                             $defaultImage = asset('images/image.jpg');
                             $thumbnail = $defaultImage;
 
-                            if (!empty($item->file)) {
-                                $files = is_array($item->file) ? $item->file : json_decode($item->file, true);
+                            if (!empty($item->lampiran)) {
+                                $files = is_array($item->lampiran) ? $item->lampiran : json_decode($item->file, true);
                                 if (is_array($files)) {
                                     foreach ($files as $f) {
                                         $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
@@ -250,12 +250,13 @@
                                         {{ $item->tracking_id }}</span><br>
                                     <span>{{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMM YYYY') }}</span>
                                 </div>
-                                <span class="text-[11px] font-semibold px-3 py-1 rounded-full shadow-sm
-                                                                            @if($item->status == 'Diajukan') bg-red-100 text-red-700
-                                                                            @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
-                                                                            @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                            @elseif($item->status == 'Selesai') bg-green-100 text-green-700
-                                                                            @else bg-gray-200 text-gray-800 @endif">
+                                <span
+                                    class="text-[11px] font-semibold px-3 py-1 rounded-full shadow-sm
+                                                                                                                    @if($item->status == 'Diajukan') bg-red-100 text-red-700
+                                                                                                                    @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
+                                                                                                                    @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                                                                                    @elseif($item->status == 'Selesai') bg-green-100 text-green-700
+                                                                                                                    @else bg-gray-200 text-gray-800 @endif">
                                     {{ $item->status }}
                                 </span>
                             </div>
@@ -263,9 +264,9 @@
                             {{-- Body Info --}}
                             <div class="bg-white text-gray-800 p-4 flex justify-between items-center">
                                 <div class="font-semibold text-base text-gray-700">
-                                    {{ \Illuminate\Support\Str::limit($item->judul, 40, '...') }}
+                                    {{ \Illuminate\Support\Str::limit($item->nama_terlapor, 40, '...') }}
                                 </div>
-                                <a href="{{ route('reports.show', $item->id) }}"
+                                <a href="{{ route('user.aduan.riwayatwbs.show', $item->id) }}"
                                     class="inline-flex items-center text-sm font-semibold text-red-600 hover:text-red-800 transition-colors">
                                     <i class="fas fa-search mr-1"></i> Lihat
                                 </a>
@@ -284,8 +285,8 @@
                         <div class="flex items-center rounded-full border border-red-300 overflow-hidden">
                             {{-- List View --}}
                             <button @click="view = 'list'" :class="view === 'list' 
-                                    ? 'bg-red-600 text-white' 
-                                    : 'bg-white text-gray-700 hover:bg-gray-50'"
+                                                        ? 'bg-red-600 text-white' 
+                                                        : 'bg-white text-gray-700 hover:bg-gray-50'"
                                 class="px-3 py-1.5 flex items-center gap-1 text-sm transition">
                                 <template x-if="view === 'list'">
                                     <i class="fas fa-check mr-1"></i>
@@ -295,8 +296,8 @@
 
                             {{-- Card View --}}
                             <button @click="view = 'card'" :class="view === 'card' 
-                                    ? 'bg-red-600 text-white' 
-                                    : 'bg-white text-gray-700 hover:bg-gray-50'"
+                                                        ? 'bg-red-600 text-white' 
+                                                        : 'bg-white text-gray-700 hover:bg-gray-50'"
                                 class="px-3 py-1.5 flex items-center gap-1 text-sm transition border-l border-red-300">
                                 <template x-if="view === 'card'">
                                     <i class="fas fa-check mr-1"></i>
@@ -306,11 +307,13 @@
                         </div>
                     </div>
 
-                    {{-- ✅ Mobile: List --}}
+                    {{-- ✅ Mobile: List (WBS) --}}
                     <div x-show="view === 'list'" style="display: none" class="space-y-4 p-2">
                         @forelse ($aduan as $index => $item)
                             <div
                                 class="rounded-2xl overflow-hidden shadow-md border border-gray-100 bg-white hover:shadow-xl transition-all">
+
+                                {{-- Header --}}
                                 <div
                                     class="bg-gradient-to-r from-red-700 to-red-500 p-3 px-4 text-white text-xs flex justify-between items-center">
                                     <div>
@@ -319,22 +322,27 @@
                                         <span>{{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMM YYYY') }}</span>
                                     </div>
                                     <span class="text-[11px] font-semibold px-3 py-1 rounded-full shadow-sm
-                                                                        @if($item->status == 'Diajukan') bg-red-100 text-red-700
-                                                                        @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
-                                                                        @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                        @elseif($item->status == 'Selesai') bg-green-100 text-green-700
-                                                                        @else bg-gray-200 text-gray-800 @endif">
+                                                            @if($item->status == 'Diajukan') bg-red-100 text-red-700
+                                                            @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
+                                                            @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                            @elseif($item->status == 'Selesai') bg-green-100 text-green-700
+                                                            @else bg-gray-200 text-gray-800 @endif">
                                         {{ $item->status }}
                                     </span>
                                 </div>
-                                <div class="bg-white text-gray-800 p-4 flex justify-between items-center">
-                                    <div class="font-semibold text-base text-gray-700">
-                                        {{ $item->judul }}
+
+                                {{-- Body --}}
+                                <div class="bg-white text-gray-800 p-4">
+                                    <div class="font-semibold text-sm text-gray-700 truncate">
+                                        {{ $item->nama_terlapor }}
                                     </div>
-                                    <a href="{{ route('reports.show', $item->id) }}"
-                                        class="inline-flex items-center text-sm font-semibold text-red-600 hover:text-red-800 transition-colors">
-                                        <i class="fas fa-search mr-1"></i> Lihat
-                                    </a>
+
+                                    <div class="mt-3 flex justify-end">
+                                        <a href="{{ route('user.aduan.riwayatwbs.show', $item->id) }}"
+                                            class="inline-flex items-center text-sm font-semibold text-red-600 hover:text-red-800 transition-colors">
+                                            <i class="fas fa-search mr-1"></i> Lihat
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         @empty
@@ -342,15 +350,15 @@
                         @endforelse
                     </div>
 
-                    {{-- ✅ Mobile: Card/Grid --}}
+                    {{-- ✅ Mobile: Card/Grid (WBS) --}}
                     <div x-show="view === 'card'" style="display: none" class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-2">
                         @forelse ($aduan as $index => $item)
                             @php
                                 $defaultImage = asset('images/image.jpg');
                                 $thumbnail = $defaultImage;
 
-                                if (!empty($item->file)) {
-                                    $files = is_array($item->file) ? $item->file : json_decode($item->file, true);
+                                if (!empty($item->lampiran)) {
+                                    $files = is_array($item->lampiran) ? $item->lampiran : json_decode($item->lampiran, true);
                                     if (is_array($files)) {
                                         foreach ($files as $f) {
                                             $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
@@ -365,6 +373,7 @@
 
                             <div
                                 class="rounded-2xl overflow-hidden shadow-md border border-gray-100 bg-white hover:shadow-xl transition-all">
+
                                 {{-- Foto Thumbnail --}}
                                 <div class="relative group cursor-pointer overflow-hidden rounded-t-2xl"
                                     onclick="openImageModal('{{ $thumbnail }}')">
@@ -372,7 +381,7 @@
                                         class="w-full h-40 object-cover transition duration-300 group-hover:brightness-75">
                                 </div>
 
-                                {{-- Info --}}
+                                {{-- Header Info --}}
                                 <div
                                     class="bg-gradient-to-r from-red-700 to-red-500 p-2 px-3 text-white text-xs flex justify-between items-center">
                                     <div>
@@ -381,20 +390,21 @@
                                         <span>{{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMM YYYY') }}</span>
                                     </div>
                                     <span class="text-[11px] font-semibold px-2 py-1 rounded-full shadow-sm
-                                                                        @if($item->status == 'Diajukan') bg-red-100 text-red-700
-                                                                        @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
-                                                                        @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                        @elseif($item->status == 'Selesai') bg-green-100 text-green-700
-                                                                        @else bg-gray-200 text-gray-800 @endif">
+                                                @if($item->status == 'Diajukan') bg-red-100 text-red-700
+                                                @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
+                                                @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                @elseif($item->status == 'Selesai') bg-green-100 text-green-700
+                                                @else bg-gray-200 text-gray-800 @endif">
                                         {{ $item->status }}
                                     </span>
                                 </div>
 
+                                {{-- Body Info --}}
                                 <div class="bg-white text-gray-800 p-3 flex justify-between items-center">
                                     <div class="font-semibold text-sm text-gray-700 truncate">
-                                        {{ $item->judul }}
+                                        {{ $item->nama_terlapor }}
                                     </div>
-                                    <a href="{{ route('reports.show', $item->id) }}"
+                                    <a href="{{ route('user.aduan.riwayatwbs.show', $item->id) }}"
                                         class="inline-flex items-center text-xs font-semibold text-red-600 hover:text-red-800 transition-colors">
                                         <i class="fas fa-search mr-1"></i> Lihat
                                     </a>

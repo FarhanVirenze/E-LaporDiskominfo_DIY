@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 use App\Models\Report;
+use App\Models\WbsReport;
 use App\Http\Middleware\RecordViewMiddleware;
 
 class AppServiceProvider extends ServiceProvider
@@ -63,6 +64,9 @@ class AppServiceProvider extends ServiceProvider
                             $q->where('admin_id', $user->id_user);
                         })
                         ->count();
+                } elseif ($user->role === 'wbs_admin') {
+                    // Hitung dari wbs_reports untuk WBS Admin
+                    $newReportsCount = WbsReport::where('status', 'Diajukan')->count();
                 }
             }
 

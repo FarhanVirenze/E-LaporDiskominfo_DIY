@@ -72,6 +72,7 @@ class WbsController extends Controller
             'uraian' => 'required|string',
             'lampiran' => 'nullable|array|max:3',
             'lampiran.*' => 'nullable|file|max:10240', // max 10MB/file
+            'g-recaptcha-response' => 'required|captcha'
         ]);
 
         $isAnonim = $request->boolean('is_anonim');
@@ -134,7 +135,7 @@ class WbsController extends Controller
         ]);
 
         return redirect()
-            ->route('wbs.index')
+            ->route('user.aduan.riwayatwbs')
             ->with('success', 'Laporan WBS berhasil dikirim.');
     }
 

@@ -165,14 +165,23 @@
         @endphp
 
         {{-- Preview gambar pertama --}}
-        @if ($firstImage)
+       @if ($firstImage)
+        <div class="relative">
+            {{-- Preview gambar pertama --}}
             <img src="{{ asset('storage/' . $firstImage) }}" alt="Lampiran"
-                class="w-full h-full object-cover rounded-lg shadow-sm">
-        @else
-            <div class="flex items-center justify-center h-64 text-gray-400 italic bg-gray-50 rounded-lg">
-                Tidak ada gambar (hanya file dokumen)
-            </div>
-        @endif
+                class="w-full h-52 object-cover rounded-lg shadow-sm">
+
+            {{-- Overlay Nama Pengadu / Anonim --}}
+            <span
+                class="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-red-800 text-white font-bold text-sm px-3 py-1 rounded">
+                {{ $report->is_anonim ? 'Anonim' : ($report->nama_pengadu ?? 'Tidak diketahui') }}
+            </span>
+        </div>
+    @else
+        <div class="flex items-center justify-center h-64 text-gray-400 italic bg-gray-50 rounded-lg">
+            Tidak ada gambar (hanya file dokumen)
+        </div>
+    @endif
 
         {{-- Tombol Edit Lampiran --}}
         <button @click="openModal = 'lampiran'"
@@ -264,8 +273,8 @@
                     </div>
 
                     {{-- === Tab Tindak Lanjut === --}}
-                    <div x-show="activeTab === 'followup'" class="space-y-6">
-                        <h2 class="text-lg font-semibold">Daftar Tindak Lanjut</h2>
+                  <div x-show="activeTab === 'followup'" x-cloak class="space-y-6">
+
                         <div class="space-y-4">
                             @forelse($report->followUps as $fu)
                                 <div class="relative p-4 bg-gray-50 rounded-lg shadow">
@@ -373,8 +382,7 @@
                     </div>
 
                     {{-- Komentar --}}
-                    <div x-show="activeTab === 'comment'" class="space-y-6">
-                        <h2 class="text-lg font-semibold">Daftar Komentar</h2>
+                    <div x-show="activeTab === 'comment'" x-cloak class="space-y-6">
 
                         <div class="space-y-4">
                             @forelse($report->comments as $c)

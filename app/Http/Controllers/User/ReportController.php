@@ -7,6 +7,8 @@ use Carbon\Carbon;
 use App\Models\Vote;
 use App\Models\Report;
 use App\Models\FollowUp;
+use App\Models\WbsReport;
+use App\Models\WbsComment;
 use App\Models\FollowupRating;
 use App\Models\Comment;
 use App\Models\KategoriUmum;
@@ -284,6 +286,34 @@ class ReportController extends Controller
         ));
     }
 
+    public function trackByTrackingId(Request $request)
+    {
+        $request->validate([
+            'tracking_id' => 'required|string',
+        ]);
+
+        $trackingId = $request->tracking_id;
+
+        $aduan = WbsReport::where('tracking_id', $trackingId)->first();
+
+        if (!$aduan) {
+            return redirect()
+                ->route('wbs.index', ['tab' => 'riwayat'])
+                ->with('error', 'Kode unik tidak ditemukan.')
+                ->withInput();
+        }
+
+        // Redirect ke halaman detail WBS sesuai id
+        return redirect()->route('user.aduan.riwayatwbs.show', ['id' => $aduan->id]);
+    }
+
+    public function showWbs($id)
+    {
+        $aduan = WbsReport::with(['kategori', 'wilayah'])->findOrFail($id);
+
+        return view('portal.daftar-aduan.detail.riwayatwbs', compact('aduan'));
+    }
+
     public function like($id)
     {
         $user = auth()->user();
@@ -467,6 +497,54 @@ class ReportController extends Controller
         return back()->with('success', 'Rating berhasil dihapus.');
     }
 
+    public function storeWbsComment(Request $request, $wbsId)
+    {
+        $request->validate([
+            'pesan' => 'required|string',
+            'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip|max:10240',
+        ]);
+
+        $comment = new WbsComment([
+            'report_id' => $wbsId,  // <- sesuaikan dengan nama kolom di DB
+            'user_id' => Auth::user()->id_user,
+            'pesan' => $request->pesan,
+        ]);
+
+        if ($request->hasFile('file')) {
+            $comment->file = $request->file('file')->store('wbs_comment_files', 'public');
+        }
+
+        $comment->save();
+
+        return back()->with('success', 'Komentar WBS berhasil dikirim.');
+    }
+
+    public function updateWbsComment(Request $request, WbsComment $comment)
+    {
+        // Validasi hak akses: hanya pemilik komentar atau admin/superadmin
+        if ($comment->user_id !== Auth::user()->id_user && !in_array(Auth::user()->role, ['admin', 'superadmin'])) {
+            abort(403, 'Anda tidak memiliki akses untuk mengubah komentar ini.');
+        }
+
+        // Validasi input
+        $request->validate([
+            'pesan' => 'required|string',
+            'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip|max:10240',
+        ]);
+
+        // Update pesan
+        $comment->pesan = $request->pesan;
+
+        // Jika ada file baru, simpan
+        if ($request->hasFile('file')) {
+            $comment->file = $request->file('file')->store('wbs_comment_files', 'public');
+        }
+
+        $comment->save();
+
+        return back()->with('success', 'Komentar berhasil diperbarui.');
+    }
+
     /**
      * Simpan komentar dari user.
      */
@@ -496,6 +574,35 @@ class ReportController extends Controller
         return back()->with('success', 'Komentar berhasil dikirim.');
     }
 
+    public function updateComment(Request $request, Comment $comment)
+    {
+        // Validasi hak akses: hanya pemilik komentar atau admin/superadmin
+        if ($comment->user_id !== Auth::user()->id_user && !in_array(Auth::user()->role, ['admin', 'superadmin'])) {
+            abort(403, 'Anda tidak memiliki akses untuk mengubah komentar ini.');
+        }
+
+        // Validasi input
+        $request->validate([
+            'pesan' => 'required|string',
+            'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip|max:10240',
+        ]);
+
+        // Update pesan
+        $comment->pesan = $request->pesan;
+
+        // Jika ada file baru, simpan dan hapus file lama jika ada
+        if ($request->hasFile('file')) {
+            if ($comment->file && \Storage::disk('public')->exists($comment->file)) {
+                \Storage::disk('public')->delete($comment->file);
+            }
+            $comment->file = $request->file('file')->store('comment_files', 'public');
+        }
+
+        $comment->save();
+
+        return back()->with('success', 'Komentar berhasil diperbarui.');
+    }
+
     public function getBadgeCounts($id)
     {
         $report = Report::withCount(['followUps', 'comments'])->findOrFail($id);
@@ -507,6 +614,24 @@ class ReportController extends Controller
         ]);
     }
 
+    public function deleteWbsComment($id)
+    {
+        $comment = WbsComment::findOrFail($id);
+
+        // Cek apakah user adalah pemilik komentar, admin, atau superadmin
+        if (Auth::id() !== $comment->user_id && !in_array(Auth::user()->role, ['admin', 'superadmin'])) {
+            abort(403, 'Anda tidak diizinkan menghapus komentar WBS ini.');
+        }
+
+        // Hapus file jika ada
+        if ($comment->file && \Storage::disk('public')->exists($comment->file)) {
+            \Storage::disk('public')->delete($comment->file);
+        }
+
+        $comment->delete();
+
+        return back()->with('success', 'Komentar WBS berhasil dihapus.');
+    }
     /**
      * Hapus komentar.
      */
@@ -610,12 +735,17 @@ class ReportController extends Controller
 
     public function riwayatWbs()
     {
-        // Misal: pakai model WbsReport, atau kamu bisa sesuaikan sendiri
-        $aduan = Report::where('user_id', auth()->id()) // ganti kalau beda tabel
-            ->where('kategori_id', 999) // contoh filter WBS
-            ->latest()
-            ->get(['id', 'tracking_id', 'judul', 'status', 'created_at']);
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Silakan login untuk melihat riwayat WBS.');
+        }
 
-        return view('portal.daftar-aduan.riwayat-wbs', compact('aduan'));
+        $user = auth()->user();
+
+        // Ambil semua kolom
+        $aduan = \App\Models\WbsReport::where('user_id', $user->id_user)
+            ->latest()
+            ->paginate(6); // default ambil semua field
+
+        return view('portal.daftar-aduan.riwayatwbs', compact('aduan'));
     }
 }

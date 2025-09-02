@@ -6,18 +6,107 @@
     <div class="container py-4">
         {{-- Flash Message --}}
         @if (session('success'))
-            <div id="alert-success"
-                class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
-                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
-                       bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
-                       transition-all duration-500 opacity-100 animate-fade-in">
+            <div id="alert-success" class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
+                                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
+                                                       bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
+                                                       transition-all duration-500 opacity-100 animate-fade-in">
+
+                <!-- Ikon -->
+                <div id="success-icon-wrapper" class="flex-shrink-0">
+                    <!-- Spinner -->
+                    <svg id="success-spinner" class="w-6 h-6 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="white" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                    </svg>
+
+                    <!-- Check -->
+                    <svg id="success-check" class="w-6 h-6 text-white hidden scale-75" fill="none" viewBox="0 0 24 24">
+                        <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                            d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+
+                <!-- Pesan -->
                 <span class="flex-1 font-medium tracking-wide">{{ session('success') }}</span>
+
+                <!-- Tombol Close -->
                 <button onclick="document.getElementById('alert-success').remove()"
-                    class="text-white/70 hover:text-white font-bold transition-colors">✕</button>
+                    class="text-white/70 hover:text-white font-bold transition-colors">
+                    ✕
+                </button>
+
+                <!-- Progress Bar -->
                 <div
                     class="absolute bottom-0 left-0 h-[3px] bg-white/70 w-full origin-left scale-x-0 animate-progress rounded-b-xl">
                 </div>
             </div>
+
+            <style>
+                @keyframes fade-in {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-12px) scale(0.98);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
+                }
+
+                @keyframes progress {
+                    from {
+                        transform: scaleX(0);
+                    }
+
+                    to {
+                        transform: scaleX(1);
+                    }
+                }
+
+                @keyframes pop {
+                    from {
+                        transform: scale(0.6);
+                        opacity: 0;
+                    }
+
+                    to {
+                        transform: scale(1);
+                        opacity: 1;
+                    }
+                }
+
+                .animate-fade-in {
+                    animation: fade-in 0.4s ease-out;
+                }
+
+                .animate-progress {
+                    animation: progress 3s linear forwards;
+                }
+
+                .animate-pop {
+                    animation: pop 0.3s ease-out;
+                }
+            </style>
+
+            <script>
+                // Ganti spinner jadi centang dengan animasi pop
+                setTimeout(() => {
+                    document.getElementById('success-spinner').classList.add('hidden');
+                    const check = document.getElementById('success-check');
+                    check.classList.remove('hidden');
+                    check.classList.add('animate-pop');
+                }, 800);
+
+                // Auto hide notif setelah 3.5 detik
+                setTimeout(() => {
+                    const alert = document.getElementById('alert-success');
+                    if (alert) {
+                        alert.classList.add('opacity-0', 'translate-y-2');
+                        setTimeout(() => alert.remove(), 500);
+                    }
+                }, 3500);
+            </script>
         @endif
 
         <h2 class="mb-4 text-2xl font-semibold text-[#37474F]">
@@ -143,7 +232,6 @@
                     cutout: '60%',
                 }
             });
-
             // === KATEGORI BAR ===
             new Chart(document.getElementById('kategoriChart'), {
                 type: 'bar',
@@ -153,13 +241,36 @@
                         label: 'Jumlah',
                         data: {!! json_encode($kategoriUmumData['all']['counts']) !!},
                         backgroundColor: materialPalette,
+                        borderRadius: 6,
+                        maxBarThickness: 40
                     }]
                 },
                 options: {
-                    ...chartOptions,
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y', // horizontal bar
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { usePointStyle: true }
+                    },
                     scales: {
-                        x: { ticks: { color: '#37474F' }, grid: { display: false } },
-                        y: { beginAtZero: true, ticks: { color: '#37474F' } }
+                        x: {
+                            beginAtZero: true,
+                            ticks: { color: '#37474F', precision: 0 },
+                            grid: { color: '#E0E0E0', borderDash: [4, 4] }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#37474F',
+                                autoSkip: false,
+                                callback: function (value, index) {
+                                    let label = this.getLabelForValue(value);
+                                    // potong label kalau lebih dari 20 karakter
+                                    return label.length > 20 ? label.substr(0, 20) + '…' : label;
+                                }
+                            },
+                            grid: { display: false }
+                        }
                     }
                 }
             });

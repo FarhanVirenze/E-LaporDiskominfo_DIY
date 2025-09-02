@@ -1,4 +1,4 @@
-@extends('portal.layouts.appnofooter')
+@extends('wbs_admin.layouts.appnofooter')
 
 @section('include-css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
@@ -131,7 +131,7 @@
         <div class="py-12" x-data="{ view: 'table' }"> {{-- ✅ Alpine toggle view --}}
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                @component('components.riwayat-tabs')
+                @component('components.riwayatwbsadmin-tabs')
                 <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
                     {{-- ✅ Total Aduan (hanya desktop) --}}
                     <p class="text-sm text-gray-600 hidden md:block">Total: {{ $aduan->total() }} Aduan</p>

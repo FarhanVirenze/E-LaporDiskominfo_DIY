@@ -1,367 +1,575 @@
 @extends('portal.layouts.app')
 
 @section('content')
-<div class="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8 text-gray-800">
-    <h1 class="text-2xl sm:text-3xl font-bold text-center mt-14 mb-6 text-gray-900">
-        WHISTLEBLOWING SYSTEM (WBS)
-    </h1>
+    <div class="relative w-full overflow-hidden">
 
-    {{-- Jika belum login (guest) --}}
-    @guest
-        <div class="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg mb-6">
-            Untuk mengirim Aduan, Anda harus
-            <a href="{{ route('login') }}"
-                class="font-semibold text-blue-700 hover:text-blue-900 hover:underline transition">
-                login
-            </a>
-            terlebih dahulu.
-        </div>
-
-        <div class="bg-blue-100 border border-blue-300 text-blue-900 rounded-lg p-6 mb-6">
-            <h2 class="text-lg sm:text-xl font-bold mb-2">Apa itu Whistleblowing System (WBS)?</h2>
-            <p class="text-sm leading-relaxed mb-3">
-                <span class="font-semibold">Whistleblowing System (WBS)</span> adalah mekanisme pelaporan pelanggaran
-                yang dilakukan secara rahasia dan aman oleh masyarakat atau pihak internal instansi.
-                Sistem ini digunakan untuk melaporkan tindakan yang melanggar hukum, kode etik, atau peraturan lainnya.
-            </p>
-            <p class="text-sm leading-relaxed">
-                Pelapor dijamin <span class="font-semibold">kerahasiaannya</span>, dan dapat memilih untuk tetap
-                <span class="font-semibold">anonim</span>. Semua laporan akan diproses oleh pihak yang berwenang dengan
-                prinsip kehati-hatian dan profesionalisme.
-            </p>
-        </div>
-
-        <div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-6">
-            <h2 class="text-lg sm:text-xl font-bold mb-2">Kategori Pelanggaran dalam WBS</h2>
-            <ul class="list-disc list-inside space-y-1 text-sm">
-                <li>Gratifikasi</li>
-                <li>Penyimpangan dari Tugas dan Fungsi</li>
-                <li>Benturan Kepentingan</li>
-                <li>Melanggar Peraturan dan Perundangan yang Berlaku</li>
-                <li>Tindak Pidana Korupsi</li>
-            </ul>
-            <p class="text-sm mt-3">
-                Silakan pilih salah satu kategori tersebut saat mengisi formulir aduan agar laporan Anda dapat ditangani
-                secara tepat.
-            </p>
-        </div>
-    @endguest
-
-    {{-- Jika sudah login (auth) tampilkan konten lama --}}
-    @auth
-    {{-- Tab Navigasi --}}
-    <div class="flex justify-center mb-2 mt-4 border-b border-gray-200 overflow-x-auto">
-        <a href="{{ route('wbs.index') }}" class="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base font-semibold whitespace-nowrap {{ request()->get('tab') !== 'riwayat'
-        ? 'bg-red-700 text-white border-b-4 border-red-900'
-        : 'text-gray-600 hover:text-red-700' }}">
-            Formulir WBS
-        </a>
-        <a href="{{ route('wbs.index', ['tab' => 'riwayat']) }}" class="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base font-semibold whitespace-nowrap {{ request()->get('tab') === 'riwayat'
-        ? 'bg-red-700 text-white border-b-4 border-red-900'
-        : 'text-gray-600 hover:text-red-700' }}">
-            Pantau Aduan WBS
-        </a>
-    </div>
-
-    {{-- Toast Notification --}}
-    <div x-data="{ show: true, progress: 100 }" x-init="
-                        let interval = setInterval(() => {
-                            if (progress <= 0) { 
-                                show = false; 
-                                clearInterval(interval); 
-                            } else {
-                                progress -= 2; // makin kecil = makin cepat habis (100/2 = 50 steps)
-                            }
-                        }, 60); // total kira-kira 3 detik
-                    " x-show="show" x-transition:enter="transition ease-out duration-300 transform"
-        x-transition:enter-start="translate-x-5 opacity-0" x-transition:enter-end="translate-x-0 opacity-100"
-        x-transition:leave="transition ease-in duration-300 transform"
-        x-transition:leave-start="translate-x-0 opacity-100" x-transition:leave-end="translate-x-5 opacity-0"
-        class="fixed top-5 right-5 z-50 space-y-3">
-
-        {{-- Success Toast --}}
-        @if (session('success'))
-            <div
-                class="relative flex flex-col max-w-sm w-full bg-blue-100 border border-blue-300 text-blue-800 rounded-lg shadow-lg">
-                <div class="flex items-center justify-between p-4">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-circle-check text-blue-600"></i>
-                        <span class="font-medium">{{ session('success') }}</span>
-                    </div>
-                    <button @click="show = false" class="ml-3 text-blue-600 hover:text-blue-800">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
+        {{-- Carousel Full Layer --}}
+        <div x-data="carousel()" x-init="init()"
+            class="relative w-full h-[800px] md:h-[800px] lg:h-[800px] xl:h-[1000px] overflow-hidden">
+            {{-- Slides Wrapper --}}
+            <div class="flex w-full h-full transition-transform duration-700 ease-in-out"
+                :style="`transform: translateX(-${current * 100}%);`">
+                {{-- Slide 1 --}}
+                <div class="flex-none w-full h-full relative">
+                    <img src="{{ asset('images/korupsi.jpg') }}" alt="WBS 1" class="w-full h-full object-cover">
                 </div>
-                {{-- Progress Bar --}}
-                <div class="h-1 bg-blue-200 rounded-b-lg overflow-hidden">
-                    <div class="h-full bg-blue-600 transition-all duration-75" :style="`width: ${progress}%;`"></div>
+                {{-- Slide 2 --}}
+                <div class="flex-none w-full h-full relative">
+                    <img src="{{ asset('images/kekerasan.jpg') }}" alt="WBS 2" class="w-full h-full object-cover">
+                </div>
+                {{-- Slide 3 --}}
+                <div class="flex-none w-full h-full relative">
+                    <img src="{{ asset('images/penyusup.jpg') }}" alt="WBS 3" class="w-full h-full object-cover">
                 </div>
             </div>
-        @endif
 
-        {{-- Error Toast --}}
-        @if (session('error'))
             <div
-                class="relative flex flex-col max-w-sm w-full bg-red-100 border border-red-300 text-red-800 rounded-lg shadow-lg">
-                <div class="flex items-center justify-between p-4">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-triangle-exclamation text-red-600"></i>
-                        <span class="font-medium">{{ session('error') }}</span>
-                    </div>
-                    <button @click="show = false" class="ml-3 text-red-600 hover:text-red-800">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-                {{-- Progress Bar --}}
-                <div class="h-1 bg-red-200 rounded-b-lg overflow-hidden">
-                    <div class="h-full bg-red-600 transition-all duration-75" :style="`width: ${progress}%;`"></div>
-                </div>
-            </div>
-        @endif
+                class="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-20 text-center space-y-4 md:space-y-6 bg-black/60">
 
-        {{-- Error Validation --}}
-        @if ($errors->any())
-            <div
-                class="relative flex flex-col max-w-sm w-full bg-red-100 border border-red-300 text-red-800 rounded-lg shadow-lg">
-                <div class="flex items-start justify-between p-4">
-                    <div class="flex flex-col gap-1">
-                        <div class="flex items-center gap-2 mb-1">
-                            <i class="fa-solid fa-circle-xmark text-red-600"></i>
-                            <span class="font-semibold">Terjadi kesalahan:</span>
-                        </div>
-                        <ul class="list-disc list-inside text-sm space-y-1">
-                            @foreach ($errors->all() as $err)
-                                <li>{{ $err }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    <button @click="show = false" class="ml-3 text-red-600 hover:text-red-800 shrink-0">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-                {{-- Progress Bar --}}
-                <div class="h-1 bg-red-200 rounded-b-lg overflow-hidden">
-                    <div class="h-full bg-red-600 transition-all duration-75" :style="`width: ${progress}%;`"></div>
-                </div>
-            </div>
-        @endif
+                <!-- Judul Utama -->
+                <h2
+                    class="text-white font-sans font-extrabold text-3xl md:text-5xl lg:text-6xl mb-1 leading-snug tracking-tight">
+                    Whistleblowing System (WBS)
+                </h2>
 
-    </div>
-
-    {{-- Konten Tab --}}
-    @if (request()->get('tab') === 'riwayat')
-        {{-- Form Pantau Aduan --}}
-        <div class="bg-white shadow rounded-lg p-6 sm:p-8 max-w-lg mx-auto text-center">
-            <h2 class="text-xl font-bold text-gray-800 mb-2">Pantau Aduan</h2>
-            <p class="text-gray-600 mb-6 text-sm">
-                Cari tahu kemajuan Aduan dengan memasukkan Kode Unik Aduan Anda.
-            </p>
-
-            <form action="{{ route('wbs.track') }}" method="GET" class="space-y-4">
-                <input type="text" name="tracking_id" placeholder="Masukkan Kode Unik Aduan"
-                    class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 text-center">
-
-                <button type="submit"
-                    class="w-full bg-red-700 text-white px-4 py-2 rounded-full shadow hover:bg-red-800 font-semibold">
-                    PANTAU
-                </button>
-            </form>
-        </div>
-    @else
-        {{-- Formulir WBS --}}
-        <div class="bg-white shadow rounded-lg p-4 sm:p-6 lg:p-8">
-            <form action="{{ route('wbs.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-                @csrf
-
-                {{-- Data Diri Pengadu --}}
-                <h2 class="text-lg sm:text-xl font-bold text-gray-800 mb-2 border-b pb-2">Data Diri Pengadu</h2>
-                <ul class="text-sm text-gray-600 mb-4 list-disc list-inside space-y-1">
-                    <li>Anda dapat menggunakan nama samaran sebagai isian nama.</li>
-                    <li>** Isikan email dan/atau nomor telepon yang dapat dihubungi.</li>
-                    <li>Kami menjamin kerahasiaan data diri pengadu.</li>
-                    <li>Anda dapat memberi centang pada <span class="font-semibold">Kirim sebagai Anonim</span> jika Anda
-                        memilih untuk tidak memberikan data diri Anda.</li>
-                </ul>
-
-                <div x-data="{ anonim: {{ old('is_anonim') ? 'true' : 'false' }} }" class="space-y-4">
-                    {{-- Checkbox Anonim --}}
-                    <div class="flex items-center space-x-2">
-                        <input type="checkbox" name="is_anonim" value="1" id="is_anonim" x-model="anonim"
-                            class="rounded border-gray-300">
-                        <label for="is_anonim" class="text-sm text-gray-700">Kirim Sebagai Anonim</label>
-                    </div>
-
-                    {{-- Form Identitas --}}
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="!anonim">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Nama *</label>
-                            <input type="text" name="nama_pengadu" placeholder="Masukkan Nama"
-                                value="{{ old('nama_pengadu', $user->name ?? '') }}"
-                                class="w-full border-gray-300 rounded-lg shadow-sm" {{ $user ? 'readonly' : '' }}>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Email **</label>
-                            <input type="email" name="email_pengadu" placeholder="Masukkan Email"
-                                value="{{ old('email_pengadu', $user->email ?? '') }}"
-                                class="w-full border-gray-300 rounded-lg shadow-sm" {{ $user ? 'readonly' : '' }}>
-                        </div>
-
-                        <div class="sm:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700">No. Telepon **</label>
-                            <input type="text" name="telepon_pengadu" placeholder="Masukkan No. Telepon"
-                                value="{{ old('telepon_pengadu', $user->nomor_telepon ?? '') }}"
-                                class="w-full border-gray-300 rounded-lg shadow-sm" {{ $user ? 'readonly' : '' }}>
-                        </div>
-
-                        @if($user && !empty($user->nik))
-                            <div class="sm:col-span-2">
-                                <label class="block text-sm font-medium text-gray-700">NIK</label>
-                                <input type="text" name="nik" placeholder="Nomor Induk Kependudukan"
-                                    value="{{ old('nik', $user->nik) }}" class="w-full border-gray-300 rounded-lg shadow-sm"
-                                    readonly>
-                            </div>
-                        @endif
-                        @endauth
-                    </div>
-                </div>
-
-                {{-- Data Aduan --}}
-                <h2 class="text-lg sm:text-xl font-bold text-gray-800 mb-2 border-b pb-2">Data Aduan</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {{-- Nama yang Diadukan --}}
-                    <div x-data="{ text: '', max: 50 }">
-                        <label class="block text-sm font-medium text-gray-700">Nama yang Diadukan *</label>
-                        <input type="text" name="nama_terlapor" x-model="text" maxlength="50"
-                            placeholder="John Doe, selaku Kepala Bidang tertentu"
-                            class="w-full border-gray-300 rounded-lg shadow-sm">
-                        <p class="text-xs text-gray-500 mt-1" x-text="text.length + '/' + max"></p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Wilayah *</label>
-                        <select name="wilayah_id" class="w-full border-gray-300 rounded-lg shadow-sm">
-                            <option value="">-- Pilih Wilayah --</option>
-                            @foreach($wilayahUmum as $wilayah)
-                                <option value="{{ $wilayah->id }}">{{ $wilayah->nama }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Kategori Pelanggaran *</label>
-                        <select name="kategori_id" class="w-full border-gray-300 rounded-lg shadow-sm">
-                            <option value="">-- Pilih Kategori --</option>
-                            @forelse(App\Models\KategoriUmum::where('tipe', 'wbs_admin')->get() as $kategori)
-                                <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
-                            @empty
-                                <option value="" disabled>Tidak ada kategori WBS Admin tersedia</option>
-                            @endforelse
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Tanggal Kejadian *</label>
-                        <input type="date" name="tanggal_kejadian" value="{{ old('tanggal_kejadian') }}"
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Waktu Kejadian *</label>
-                        <input type="time" name="waktu_kejadian" value="{{ old('waktu_kejadian') }}"
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500">
-                    </div>
-
-                    {{-- Tempat Kejadian --}}
-                    <div class="sm:col-span-2" x-data="{ text: '', max: 100 }">
-                        <label class="block text-sm font-medium text-gray-700">Tempat Kejadian Pelanggaran *</label>
-                        <input type="text" name="lokasi_kejadian" x-model="text" maxlength="100"
-                            placeholder="Tulis sedetail mungkin, contoh: Ruang Sidang Kantor X, Jl. Makmur no.25, Depok, Sleman"
-                            class="w-full border-gray-300 rounded-lg shadow-sm">
-                        <p class="text-xs text-gray-500 mt-1" x-text="text.length + '/' + max"></p>
-                    </div>
-                    {{-- Uraian Aduan --}}
-                    <div class="sm:col-span-2" x-data="{ text: '', max: 2000 }">
-                        <label class="block text-sm font-medium text-gray-700">Uraian Aduan *</label>
-                        <textarea name="uraian" rows="5" x-model="text" maxlength="2000"
-                            placeholder="Tulis kronologi kejadian dan informasi lainnya selengkap mungkin sejauh yang Anda ketahui"
-                            class="w-full border-gray-300 rounded-lg shadow-sm"></textarea>
-                        <p class="text-xs text-gray-500 mt-1" x-text="text.length + '/' + max"></p>
-                    </div>
-                </div>
-
-                {{-- Lampiran --}}
-                <h2 class="text-lg sm:text-xl font-bold text-gray-800 mb-2 border-b pb-2">Lampiran</h2>
-                <p class="text-sm text-gray-600 mb-3">
-                    • Maksimal 3 file, masing-masing maksimal 10 MB.<br>
-                    • Jenis file: dokumen, gambar, audio, video, arsip.<br>
-                    • Total ukuran semua file tidak boleh lebih dari 30 MB.
+                <!-- Kalimat Penjelas Singkat -->
+                <p class="text-white text-sm md:text-xl font-medium font-extrabold tracking-wide max-w-2xl">
+                    Platform yang digunakan untuk melaporkan pelanggaran secara cepat, aman, dan rahasia, sehingga setiap
+                    aduan dapat ditindaklanjuti dengan tepat.
                 </p>
 
-                <!-- Tombol tambah -->
-                <button type="button" id="add-upload" class="mb-3 px-4 py-2 text-white rounded shadow font-semibold 
-                   bg-gradient-to-r from-blue-500 to-cyan-600
-                   hover:from-blue-700 hover:to-cyan-600 transition duration-300">
-                    + Tambah Lampiran
-                </button>
+                <!-- Tagline ala Alert Merah -->
+                <div
+                    class="inline-flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-2 sm:py-2 rounded-xl
+                                                                                                         bg-gradient-to-r from-red-700 to-red-700 shadow-md">
 
-                <!-- Wrapper untuk input file -->
-                <div id="lampiran-wrapper" class="space-y-2"></div>
-
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        const wrapper = document.getElementById('lampiran-wrapper');
-                        const addBtn = document.getElementById('add-upload');
-
-                        addBtn.addEventListener('click', function () {
-                            const inputs = wrapper.querySelectorAll('.lampiran-item');
-                            if (inputs.length >= 3) {
-                                alert('Maksimal 3 lampiran saja.');
-                                return;
-                            }
-
-                            const div = document.createElement('div');
-                            div.className = "lampiran-item flex items-center gap-2";
-
-                            const input = document.createElement('input');
-                            input.type = 'file';
-                            input.name = 'lampiran[]';
-                            input.className = 'border-gray-300 rounded-lg shadow-sm w-[80%] sm:flex-1';
-
-                            const removeBtn = document.createElement('button');
-                            removeBtn.type = 'button';
-                            removeBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
-                            removeBtn.className = 'shrink-0 px-3 py-2 text-red-600 hover:text-red-800 rounded';
-                            removeBtn.addEventListener('click', function () {
-                                div.remove();
-                            });
-
-                            div.appendChild(input);
-                            div.appendChild(removeBtn);
-                            wrapper.appendChild(div);
-                        });
-                    });
-                </script>
-
-                {{-- Persetujuan --}}
-                <div class="space-y-2 text-sm text-gray-700">
-                    <div>
-                        <input type="checkbox" class="rounded border-gray-300">
-                        Dengan mengisi form ini, saya menyetujui
-                        <a href="#" class="text-red-600 underline">Ketentuan Layanan</a> dan
-                        <a href="#" class="text-red-600 underline">Kebijakan Privasi</a>.
+                    <!-- Icon -->
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-red-800">
+                            <i class="fas fa-exclamation-triangle text-white text-sm sm:text-lg"></i>
+                        </div>
                     </div>
-                    <div>
-                        <input type="checkbox" class="rounded border-gray-300">
-                        Saya menyatakan bahwa data yang saya isikan benar adanya.
+
+                    <!-- Text -->
+                    <div class="text-center">
+                        <p class="text-[11px] sm:text-sm md:text-lg font-semibold text-white tracking-wide">
+                            Laporkan Pelanggaran, <span class="italic font-normal">Aman & Terjamin Rahasia!</span>
+                        </p>
                     </div>
                 </div>
+            </div>
 
-                {{-- Tombol --}}
-                <button type="submit"
-                    class="w-full bg-red-700 text-white px-4 py-2 rounded-lg shadow hover:bg-red-800 font-semibold">
-                    Adukan
-                </button>
-            </form>
+            {{-- Navigasi Prev / Next --}}
+            <button @click="prev()" class="absolute left-2 sm:left-5 top-1/2 transform -translate-y-1/2 
+                                                       bg-white bg-opacity-50 hover:bg-opacity-80 rounded-full 
+                                                       p-1.5 sm:p-3 shadow-lg transition">
+                <i class="fa-solid fa-chevron-left text-gray-800 text-base sm:text-xl"></i>
+            </button>
+
+            <button @click="next()" class="absolute right-2 sm:right-5 top-1/2 transform -translate-y-1/2 
+                                                       bg-white bg-opacity-50 hover:bg-opacity-80 rounded-full 
+                                                       p-1.5 sm:p-3 shadow-lg transition">
+                <i class="fa-solid fa-chevron-right text-gray-800 text-base sm:text-xl"></i>
+            </button>
+
+            {{-- Dot Navigation --}}
+            <div class="absolute bottom-5 w-full flex justify-center space-x-2">
+                <template x-for="i in slides" :key="i">
+                    <button @click="goTo(i-1)" :class="{'bg-white': current===i-1, 'bg-white/50': current!==i-1 }"
+                        class="w-4 h-4 rounded-full transition-all duration-300 hover:bg-white/80"></button>
+                </template>
+            </div>
+
+            <!-- Konten di atas wave -->
+            <svg class="absolute bottom-0 w-full h-32 md:h-40 lg:h-48" viewBox="0 0 1440 320" preserveAspectRatio="none">
+                <path fill="#fff" fill-opacity="1" d="
+                                                                                                                        M0,192 
+                                                                                                                        C240,64 360,288 720,160 
+                                                                                                                        C1080,32 1200,288 1440,128 
+                                                                                                                        L1440,320 
+                                                                                                                        L0,320 
+                                                                                                                        Z">
+                </path>
+            </svg>
         </div>
-    @endif
-</div>
+
+        {{-- Carousel Script --}}
+        <script>
+            function carousel() {
+                return {
+                    current: 0,
+                    slides: 3,
+                    init() { setInterval(() => { this.next() }, 5000); },
+                    next() {
+                        this.current = (this.current - 1 + this.slides) % this.slides;
+                    },
+                    prev() {
+                        this.current = (this.current + 1) % this.slides;
+                    },
+                    goTo(i) { this.current = i; }
+                }
+            }
+        </script>
+
+        {{-- Konten WBS --}}
+        <div class="w-full mx-auto py-10 text-gray-800 -mt-16 relative z-10">
+
+            @guest
+                <div class="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg mb-6">
+                    Untuk mengirim Aduan, Anda harus
+                    <a href="{{ route('login') }}"
+                        class="font-semibold text-blue-700 hover:text-blue-900 hover:underline transition">
+                        login
+                    </a> terlebih dahulu.
+                </div>
+
+                <div class="bg-blue-100 border border-blue-300 text-blue-900 rounded-lg p-6 mb-6">
+                    <h2 class="text-xl font-bold mb-2">Apa itu Whistleblowing System (WBS)?</h2>
+                    <p class="text-sm leading-relaxed mb-3"><span class="font-semibold">Whistleblowing System (WBS)</span>
+                        adalah mekanisme pelaporan pelanggaran secara rahasia.</p>
+                    <p class="text-sm leading-relaxed">Pelapor dijamin <span class="font-semibold">kerahasiaannya</span> dan
+                        bisa tetap <span class="font-semibold">anonim</span>.</p>
+                </div>
+
+                <div class="bg-yellow-50 border border-yellow-200 text-yellow-900 rounded-lg p-6">
+                    <h2 class="text-xl font-bold mb-2">Kategori Pelanggaran</h2>
+                    <ul class="list-disc list-inside space-y-1 text-sm">
+                        <li>Gratifikasi</li>
+                        <li>Penyimpangan dari Tugas dan Fungsi</li>
+                        <li>Benturan Kepentingan</li>
+                        <li>Melanggar Peraturan dan Perundangan</li>
+                        <li>Tindak Pidana Korupsi</li>
+                    </ul>
+                </div>
+            @endguest
+
+            {{-- Auth --}}
+            @auth
+                {{-- Tabs --}}
+                <div class="flex justify-center mb-2 mt-4 border-b border-gray-200 overflow-x-auto">
+                    <a href="?tab=formulir"
+                        class="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base font-semibold whitespace-nowrap {{ request()->get('tab') !== 'riwayat' ? 'bg-red-700 text-white border-b-4 border-red-900' : 'text-gray-600 hover:text-red-700' }}">Formulir
+                        WBS</a>
+                    <a href="?tab=riwayat"
+                        class="px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base font-semibold whitespace-nowrap {{ request()->get('tab') === 'riwayat' ? 'bg-red-700 text-white border-b-4 border-red-900' : 'text-gray-600 hover:text-red-700' }}">Pantau
+                        Aduan WBS</a>
+                </div>
+
+                {{-- Toast Notifications --}}
+                <div x-data="{ show: true, progress: 100 }"
+                    x-init="let interval = setInterval(() => { if(progress<=0){show=false;clearInterval(interval)} else{progress-=2}},60);"
+                    x-show="show" x-transition:enter="transition ease-out duration-300 transform"
+                    x-transition:enter-start="translate-x-5 opacity-0" x-transition:enter-end="translate-x-0 opacity-100"
+                    x-transition:leave="transition ease-in duration-300 transform"
+                    x-transition:leave-start="translate-x-0 opacity-100" x-transition:leave-end="translate-x-5 opacity-0"
+                    class="fixed top-16 right-5 z-60 space-y-3 pointer-events-auto">
+
+                    @if(session('success'))
+                        <div
+                            class="relative flex flex-col max-w-sm w-full bg-blue-100 border border-blue-300 text-blue-800 rounded-lg shadow-lg">
+                            <div class="flex items-center justify-between p-4">
+                                <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-blue-600"></i> <span
+                                        class="font-medium">{{ session('success') }}</span></div>
+                                <button @click="show=false" class="ml-3 text-blue-600 hover:text-blue-800"><i
+                                        class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <div class="h-1 bg-blue-200 rounded-b-lg overflow-hidden">
+                                <div class="h-full bg-blue-600 transition-all duration-75" :style="`width: ${progress}%;`"></div>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div
+                            class="relative flex flex-col max-w-sm w-full bg-red-100 border border-red-300 text-red-800 rounded-lg shadow-lg">
+                            <div class="flex items-center justify-between p-4">
+                                <div class="flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-red-600"></i>
+                                    <span class="font-medium">{{ session('error') }}</span>
+                                </div>
+                                <button @click="show=false" class="ml-3 text-red-600 hover:text-red-800"><i
+                                        class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <div class="h-1 bg-red-200 rounded-b-lg overflow-hidden">
+                                <div class="h-full bg-red-600 transition-all duration-75" :style="`width: ${progress}%;`"></div>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if($errors->any())
+                        <div
+                            class="relative flex flex-col max-w-sm w-full bg-red-100 border border-red-300 text-red-800 rounded-lg shadow-lg">
+                            <div class="flex items-start justify-between p-4">
+                                <div class="flex flex-col gap-1">
+                                    <div class="flex items-center gap-2 mb-1"><i class="fa-solid fa-circle-xmark text-red-600"></i>
+                                        <span class="font-semibold">Terjadi kesalahan:</span>
+                                    </div>
+                                    <ul class="list-disc list-inside text-sm space-y-1">@foreach($errors->all() as $err)<li>
+                                        {{ $err }}
+                                    </li>@endforeach</ul>
+                                </div>
+                                <button @click="show=false" class="ml-3 text-red-600 hover:text-red-800 shrink-0"><i
+                                        class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <div class="h-1 bg-red-200 rounded-b-lg overflow-hidden">
+                                <div class="h-full bg-red-600 transition-all duration-75" :style="`width: ${progress}%;`"></div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+                @if (request()->get('tab') === 'riwayat')
+                    <div class="relative shadow-lg rounded-none sm:rounded-xl overflow-hidden mx-auto text-center bg-cover bg-center p-8 sm:p-12"
+                        style="background-image: url('/images/red.jpg'); max-width: 1250px;">
+
+                        <!-- Overlay gelap transparan untuk kontras teks -->
+                        <div class="absolute inset-0 bg-black/10"></div>
+
+                        <div class="relative z-10 flex flex-col items-center justify-center space-y-4 md:space-y-6">
+                            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white leading-tight">
+                                Lacak Aduan Wbs
+                            </h2>
+                            <p class="text-white/80 text-sm sm:text-base md:text-lg max-w-xl">
+                                Cari tahu Aduan Wbs dengan memasukkan Kode Unik Aduan Anda.
+                            </p>
+
+                            <form action="{{ route('user.aduan.riwayatwbs.track') }}" method="POST"
+                                class="w-full sm:w-4/5 md:w-3/4 lg:w-2/3 flex flex-col items-center space-y-4 pb-6 mx-auto">
+                                @csrf
+                                <input type="text" name="tracking_id" placeholder="Masukkan Kode Unik Aduan"
+                                    class="w-full bg-white text-gray-900 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 text-center py-2 px-4 sm:py-3 sm:px-6 @error('tracking_id') border-red-500 @enderror"
+                                    value="{{ old('tracking_id') }}" required>
+
+                                <!-- Error message -->
+                                @error('tracking_id')
+                                    <p class="relative z-20 mt-2 text-red-500 text-sm text-center">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+
+                                <button type="submit"
+                                    class="w-full bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white font-semibold py-2 sm:py-3 rounded-full shadow-md transition-all duration-300">
+                                    Lacak
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <!-- Layer Partikel -->
+                    <div id="particles-js" class="absolute inset-0 z-0 pointer-events-none"></div>
+                    {{-- Formulir WBS --}}
+                    <div class="relative bg-cover bg-center shadow-2xl rounded-3xl p-6 md:p-10 lg:p-16 max-w-7xl mx-auto"
+                        style="background-image: url('/images/red.jpg');">
+
+                        {{-- Overlay semi-transparan untuk kontras --}}
+                        <div class="absolute inset-0 bg-black/10 rounded-2xl"></div>
+
+                        <form action="{{ route('wbs.store') }}" method="POST" enctype="multipart/form-data"
+                            class="relative space-y-8 z-10">
+                            @csrf
+
+                            {{-- Data Diri Pengadu --}}
+                            <section class="space-y-4">
+                                <h2 class="text-2xl font-bold text-white border-b border-white/50 pb-2">Data Diri Pengadu</h2>
+                                <ul class="text-sm text-white/80 list-disc list-inside space-y-1">
+                                    <li>Bisa menggunakan nama samaran.</li>
+                                    <li>Isikan email dan/atau nomor telepon yang bisa dihubungi.</li>
+                                    <li>Kerahasiaan data dijamin.</li>
+                                    <li>Centang <span class="font-semibold">Kirim sebagai Anonim</span> untuk menyembunyikan
+                                        identitas.</li>
+                                </ul>
+
+                                <div x-data="{ anonim: {{ old('is_anonim') ? 'true' : 'false' }} }" class="space-y-4">
+                                    {{-- Checkbox Anonim --}}
+                                    <div class="flex items-center gap-2">
+                                        <input type="checkbox" name="is_anonim" value="1" id="is_anonim" x-model="anonim"
+                                            class="w-5 h-5 text-red-500 border-gray-300 rounded focus:ring-red-400">
+                                        <label for="is_anonim" class="text-white font-medium text-sm">Kirim Sebagai
+                                            Anonim</label>
+                                    </div>
+
+                                    {{-- Form Identitas --}}
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="!anonim">
+                                        <div>
+                                            <label class="block text-sm font-medium text-white">Nama *</label>
+                                            <input type="text" name="nama_pengadu" placeholder="Masukkan Nama"
+                                                value="{{ old('nama_pengadu', $user->name ?? '') }}"
+                                                class="w-full border border-white/50 rounded-lg shadow-sm px-3 py-2 bg-white/90 text-black focus:ring-2 focus:ring-red-400 focus:border-red-400"
+                                                {{ $user ? 'readonly' : '' }}>
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-white">Email **</label>
+                                            <input type="email" name="email_pengadu" placeholder="Masukkan Email"
+                                                value="{{ old('email_pengadu', $user->email ?? '') }}"
+                                                class="w-full border border-white/50 rounded-lg shadow-sm px-3 py-2 bg-white/90 text-black focus:ring-2 focus:ring-red-400 focus:border-red-400"
+                                                {{ $user ? 'readonly' : '' }}>
+                                        </div>
+
+                                        <div class="sm:col-span-2">
+                                            <label class="block text-sm font-medium text-white">No. Telepon **</label>
+                                            <input type="text" name="telepon_pengadu" placeholder="Masukkan No. Telepon"
+                                                value="{{ old('telepon_pengadu', $user->nomor_telepon ?? '') }}"
+                                                class="w-full border border-white/50 rounded-lg shadow-sm px-3 py-2 bg-white/90 text-black focus:ring-2 focus:ring-red-400 focus:border-red-400"
+                                                {{ $user ? 'readonly' : '' }}>
+                                        </div>
+
+                                        @if($user && !empty($user->nik))
+                                            <div class="sm:col-span-2">
+                                                <label class="block text-sm font-medium text-white">NIK</label>
+                                                <input type="text" name="nik" placeholder="Nomor Induk Kependudukan"
+                                                    value="{{ old('nik', $user->nik) }}"
+                                                    class="w-full border border-white/50 rounded-lg shadow-sm px-3 py-2 bg-gray-100 text-black"
+                                                    readonly>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </section>
+
+                            {{-- Data Aduan --}}
+                            <section class="space-y-4">
+                                <h2 class="text-2xl font-bold text-white border-b border-white/50 pb-2">Data Aduan</h2>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                                    {{-- Nama Terlapor --}}
+                                    <div x-data="{ text: '', max: 50 }">
+                                        <label class="block text-sm font-medium text-white">Nama yang Diadukan *</label>
+                                        <input type="text" name="nama_terlapor" x-model="text" maxlength="50"
+                                            placeholder="John Doe, Kepala Bidang tertentu"
+                                            class="w-full border border-white/50 rounded-lg shadow-sm px-3 py-2 bg-white/90 text-black focus:ring-2 focus:ring-red-400 focus:border-red-400">
+                                        <p class="text-xs text-white/70 mt-1" x-text="text.length + '/' + max"></p>
+                                    </div>
+
+                                    {{-- Wilayah --}}
+                                    <div>
+                                        <label class="block text-sm font-medium text-white">Wilayah *</label>
+                                        <select name="wilayah_id"
+                                            class="w-full border border-white/50 rounded-lg shadow-sm px-3 py-2 bg-white/90 text-black focus:ring-2 focus:ring-red-400 focus:border-red-400">
+                                            <option value="">-- Pilih Wilayah --</option>
+                                            @foreach($wilayahUmum as $wilayah)
+                                                <option value="{{ $wilayah->id }}">{{ $wilayah->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    {{-- Kategori --}}
+                                    <div>
+                                        <label class="block text-sm font-medium text-white">Kategori Pelanggaran *</label>
+                                        <select name="kategori_id"
+                                            class="w-full border border-white/50 rounded-lg shadow-sm px-3 py-2 bg-white/90 text-black focus:ring-2 focus:ring-red-400 focus:border-red-400">
+                                            <option value="">-- Pilih Kategori --</option>
+                                            @forelse(App\Models\KategoriUmum::where('tipe', 'wbs_admin')->get() as $kategori)
+                                                <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
+                                            @empty
+                                                <option value="" disabled>Tidak ada kategori WBS Admin tersedia</option>
+                                            @endforelse
+                                        </select>
+                                    </div>
+
+                                    {{-- Tanggal --}}
+                                    <div>
+                                        <label class="block text-sm font-medium text-white">Tanggal Kejadian *</label>
+                                        <input type="date" name="tanggal_kejadian" value="{{ old('tanggal_kejadian') }}"
+                                            class="w-full border border-white/50 rounded-lg shadow-sm px-3 py-2 bg-white/90 text-black focus:ring-2 focus:ring-red-400 focus:border-red-400">
+                                    </div>
+
+                                    {{-- Waktu --}}
+                                    <div>
+                                        <label class="block text-sm font-medium text-white">Waktu Kejadian *</label>
+                                        <input type="time" name="waktu_kejadian" value="{{ old('waktu_kejadian') }}"
+                                            class="w-full border border-white/50 rounded-lg shadow-sm px-3 py-2 bg-white/90 text-black focus:ring-2 focus:ring-red-400 focus:border-red-400">
+                                    </div>
+
+                                    {{-- Tempat Kejadian --}}
+                                    <div class="sm:col-span-2" x-data="{ text: '', max: 100 }">
+                                        <label class="block text-sm font-medium text-white">Tempat Kejadian Pelanggaran
+                                            *</label>
+                                        <input type="text" name="lokasi_kejadian" x-model="text" maxlength="100"
+                                            placeholder="Ruang Sidang Kantor X, Jl. Makmur no.25, Depok, Sleman"
+                                            class="w-full border border-white/50 rounded-lg shadow-sm px-3 py-2 bg-white/90 text-black focus:ring-2 focus:ring-red-400 focus:border-red-400">
+                                        <p class="text-xs text-white/70 mt-1" x-text="text.length + '/' + max"></p>
+                                    </div>
+
+                                    {{-- Uraian Aduan --}}
+                                    <div class="sm:col-span-2" x-data="{ text: '', max: 2000 }">
+                                        <label class="block text-sm font-medium text-white">Uraian Aduan *</label>
+                                        <textarea name="uraian" rows="3" x-model="text" maxlength="2000"
+                                            placeholder="Tulis kronologi dan informasi lengkap"
+                                            class="w-full border border-white/50 rounded-lg shadow-sm px-3 py-2 bg-white/90 text-black focus:ring-2 focus:ring-red-400 focus:border-red-400"></textarea>
+                                        <p class="text-xs text-white/70 mt-1" x-text="text.length + '/' + max"></p>
+                                    </div>
+
+                                </div>
+                            </section>
+
+                            {{-- Lampiran --}}
+                            <section class="space-y-4">
+                                <h2 class="text-2xl font-bold text-white border-b border-white/50 pb-2">Lampiran</h2>
+                                <p class="text-sm text-white/80">
+                                    Maksimal 3 file, masing-masing maksimal 10 MB. Jenis file: dokumen, gambar, audio, video,
+                                    arsip.
+                                    Total ukuran tidak boleh lebih dari 30 MB.
+                                </p>
+
+                                {{-- Tombol tambah --}}
+                                <button type="button" id="add-upload"
+                                    class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-700 text-white rounded-lg shadow font-semibold hover:from-red-600 hover:to-red-800 transition duration-300">
+                                    + Tambah Lampiran
+                                </button>
+
+                                {{-- Wrapper input dinamis --}}
+                                <div id="lampiran-wrapper" class="space-y-2"></div>
+                            </section>
+
+                            {{-- Script --}}
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                                    const wrapper = document.getElementById("lampiran-wrapper");
+                                    const addBtn = document.getElementById("add-upload");
+                                    let count = 0;
+                                    const maxFiles = 3;
+
+                                    addBtn.addEventListener("click", () => {
+                                        if (count < maxFiles) {
+                                            count++;
+
+                                            // Container input + hapus
+                                            const div = document.createElement("div");
+                                            div.classList.add("flex", "items-center", "space-x-2");
+
+                                            // Input file
+                                            const input = document.createElement("input");
+                                            input.type = "file";
+                                            input.name = "lampiran[]";
+                                            input.classList.add(
+                                                "flex-1",
+                                                "border-gray-300",
+                                                "rounded-lg",
+                                                "shadow-sm",
+                                                "text-sm",
+                                                "text-white",
+                                                "bg-white/10",
+                                                "file:mr-3",
+                                                "file:py-1.5",
+                                                "file:px-3",
+                                                "file:rounded-md",
+                                                "file:border-0",
+                                                "file:text-sm",
+                                                "file:font-semibold",
+                                                "file:bg-red-600",
+                                                "file:text-white",
+                                                "hover:file:bg-red-700",
+                                                "cursor-pointer"
+                                            );
+
+                                            // Tombol hapus dengan ikon trash
+                                            const removeBtn = document.createElement("button");
+                                            removeBtn.type = "button";
+                                            removeBtn.innerHTML = '<i class="fas fa-trash"></i>'; // pakai Font Awesome
+                                            removeBtn.classList.add(
+                                                "p-2",
+                                                "bg-red-600/80",
+                                                "hover:bg-red-700",
+                                                "text-white",
+                                                "rounded-lg",
+                                                "shadow",
+                                                "transition",
+                                                "duration-200"
+                                            );
+
+                                            removeBtn.addEventListener("click", () => {
+                                                div.remove();
+                                                count--;
+                                            });
+
+                                            div.appendChild(input);
+                                            div.appendChild(removeBtn);
+                                            wrapper.appendChild(div);
+                                        } else {
+                                            alert("Maksimal 3 lampiran saja.");
+                                        }
+                                    });
+                                });
+                            </script>
+
+                            {{-- Persetujuan --}}
+                            <section class="space-y-2 text-sm text-white/80">
+                                <div class="flex items-start gap-2">
+                                    <input type="checkbox" class="w-4 h-4 mt-1 rounded border-gray-300">
+                                    <p>
+                                        Dengan mengisi form ini, saya menyetujui
+                                        <a href="{{ route('ketentuan.layanan') }}"
+                                            class="text-blue-300 hover:text-blue-400 hover:underline transition">
+                                            Ketentuan Layanan
+                                        </a>
+                                        dan
+                                        <a href="{{ route('kebijakan.privasi') }}"
+                                            class="text-blue-300 hover:text-blue-400 hover:underline transition">
+                                            Kebijakan Privasi
+                                        </a>.
+                                    </p>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <input type="checkbox" class="w-4 h-4 mt-1 rounded border-gray-300">
+                                    <p>Saya menyatakan data yang saya isikan benar adanya.</p>
+                                </div>
+                            </section>
+
+                            {{-- === reCAPTCHA di sini === --}}
+                            <div class="mt-4">
+                                {!! \Anhskohbo\NoCaptcha\Facades\NoCaptcha::renderJs() !!}
+                                {!! \Anhskohbo\NoCaptcha\Facades\NoCaptcha::display() !!}
+                                @error('g-recaptcha-response')
+                                    <span class="text-red-500 text-sm mt-2 block">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            {{-- Tombol Submit --}}
+                            <button type="submit"
+                                class="w-full bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white py-3 rounded-xl shadow font-semibold transition duration-300">
+                                Adukan
+                            </button>
+                        </form>
+                    </div>
+                @endif
+            @endauth
+        </div>
+
+        {{-- Particles.js --}}
+        <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+        <script>
+            particlesJS("particles-js", {
+                particles: {
+                    number: { value: 60, density: { enable: true, value_area: 800 } },
+                    color: { value: "#0F3D3E" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.3 },
+                    size: { value: 5, random: true },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#0F3D3E",
+                        opacity: 0.2,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: false,
+                        out_mode: "bounce"
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "repulse" },
+                        onclick: { enable: true, mode: "push" }
+                    },
+                    modes: {
+                        repulse: { distance: 100 },
+                        push: { particles_nb: 4 }
+                    }
+                },
+                retina_detect: true
+            });
+        </script>
 @endsection

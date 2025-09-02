@@ -10,9 +10,12 @@ use App\Http\Controllers\User\WbsController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Admin\ProfileAdminController;
 use App\Http\Controllers\Superadmin\ProfileSuperadminController;
+use App\Http\Controllers\WbsAdmin\ProfileWbsadminController;
 use App\Http\Controllers\Superadmin\KategoriAdminController;
 use App\Http\Controllers\WbsAdmin\DashboardWbsadminController;
 use App\Http\Controllers\WbsAdmin\WbsAduanController;
+use App\Http\Controllers\Superadmin\PetaController;
+use App\Http\Controllers\Admin\PetaAdminController;
 use App\Http\Controllers\GoogleController;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +55,9 @@ Route::post('/lacak', [ReportController::class, 'lacak'])->name('report.lacak');
 Route::get('/daftar-aduan/{id}/detail', [ReportController::class, 'show'])->name('reports.show');
 Route::post('/daftar-aduan/{id}/follow-up', [ReportController::class, 'storeFollowUp'])->name('reports.followup');
 Route::post('/daftar-aduan/{id}/comment', [ReportController::class, 'storeComment'])->name('reports.comment');
+// Route untuk update komentar
+Route::patch('/daftar-aduan/comment/{comment}', [ReportController::class, 'updateComment'])
+    ->name('reports.comment.update');
 Route::get('/reports/{id}/badges', [ReportController::class, 'getBadgeCounts'])->name('reports.badges');
 Route::delete('/daftar-aduan/komentar/{id}', [ReportController::class, 'deleteComment'])->name('reports.comment.delete');
 Route::delete('reports/{reportId}/followup/{id}', [ReportController::class, 'deleteFollowUp'])->name('reports.followup.delete');
@@ -72,8 +78,31 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:user'])->prefix(
     Route::put('password', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::patch('/profile/reset-foto', [ProfileController::class, 'resetFoto'])->name('profile.resetFoto');
 
-    Route::get('/riwayat-aduan', [ReportController::class, 'riwayat'])->name('aduan.riwayat');
-    Route::get('/riwayat-aduan-wbs', [ReportController::class, 'riwayatWbs'])->name('aduan.riwayatWbs');
+    Route::get('/riwayat-aduan', [ReportController::class, 'riwayat'])
+        ->name('aduan.riwayat');
+
+    Route::get('/riwayat-aduan-wbs', [ReportController::class, 'riwayatWbs'])
+        ->name('aduan.riwayatwbs');
+
+    Route::get('/riwayat-aduan-wbs/{id}', [ReportController::class, 'showWbs'])
+        ->name('aduan.riwayatwbs.show');
+
+    // Route POST untuk tracking
+    Route::post('/riwayat-aduan-wbs/track', [ReportController::class, 'trackByTrackingId'])
+        ->name('aduan.riwayatwbs.track');
+
+    // Simpan komentar WBS
+    Route::post('/wbs/{id}/comment', [ReportController::class, 'storeWbsComment'])
+        ->name('wbs.comment.store')
+        ->middleware('auth');
+
+    // Hapus komentar WBS
+    Route::delete('/wbs/comment/{id}', [ReportController::class, 'deleteWbsComment'])
+        ->name('wbs.comment.delete')
+        ->middleware('auth');
+
+    Route::put('/wbs/comment/{comment}', [ReportController::class, 'updateWbsComment'])
+        ->name('wbs.comment.update');
 
     // Report and WBS Routes without repeating the 'user/' prefix
     Route::resource('aduan', ReportController::class);
@@ -100,6 +129,8 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:admin'])->prefix
     Route::post('/report/{id}/dislike', [ReportAdminController::class, 'dislike'])->name('report.dislike');
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/peta', [PetaAdminController::class, 'index'])->name('peta.index');
 
     Route::get('/', function () {
         return view('admin.welcome', [
@@ -178,6 +209,9 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:superadmin'])->p
 
     // Kelola Wilayah
     Route::resource('kelola-wilayah', \App\Http\Controllers\Superadmin\WilayahUmumController::class);
+
+    // Kelola Peta Aduan
+    Route::get('peta', [PetaController::class, 'index'])->name('peta.index');
 });
 
 // Wbs_admin Routes
@@ -187,6 +221,12 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:wbs_admin'])
     ->group(function () {
         Route::get('/dashboard', [DashboardWbsadminController::class, 'index'])
             ->name('dashboard');
+
+        Route::get('profile', [ProfileWbsadminController::class, 'edit'])->name('profile.edit');
+        Route::patch('profile', [ProfileWbsadminController::class, 'update'])->name('profile.update');
+        Route::delete('profile', [ProfileWbsadminController::class, 'destroy'])->name('profile.destroy');
+        Route::put('password', [ProfileWbsadminController::class, 'updatePassword'])->name('password.update');
+        Route::patch('/profile/reset-foto', [ProfileWbsadminController::class, 'resetFoto'])->name('profile.resetFoto');
 
         // Resource untuk kelola aduan
         Route::resource('kelola-aduan', WbsAduanController::class)
@@ -215,6 +255,12 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:wbs_admin'])
         Route::delete('kelola-aduan/comment/{comment}', [WbsAduanController::class, 'destroyComment'])
             ->name('kelola-aduan.destroyComment');
 
+        // === Tambahan: Riwayat Aduan & Riwayat WBS ===
+        Route::get('aduan/riwayat', [WbsAduanController::class, 'riwayat'])
+            ->name('aduan.riwayat');
+
+        Route::get('aduan/riwayat-wbs', [WbsAduanController::class, 'riwayatWbs'])
+            ->name('aduan.riwayatwbs');
     });
 
 require __DIR__ . '/auth.php';

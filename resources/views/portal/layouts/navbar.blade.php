@@ -105,6 +105,22 @@
                         </a>
                     </li>
                 @endif
+
+                 @if (Auth::user()->role === 'wbs_admin')
+                    <!-- Kelola Wbs Admin -->
+                    <li>
+                        <a href="{{ route('wbs_admin.dashboard') }}" class="group flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                                                                                                                                                  {{ request()->routeIs('wbs_admin.dashboard')
+                    ? 'bg-gradient-to-b from-[#FF5252] to-[#B71C1C] text-white'
+                    : 'hover:bg-red-100 hover:text-red-600 text-gray-800' }}">
+                            <i
+                                class="fas fa-user-cog text-[17px] w-5 {{ request()->routeIs('wbs_admin.dashboard') ? 'text-white' : 'text-gray-500 group-hover:text-red-600' }}"></i>
+                            <span
+                                class="{{ request()->routeIs('wbs_admin.dashboard') ? 'text-white' : 'group-hover:text-red-600' }}">Kelola
+                                Wbs Admin</span>
+                        </a>
+                    </li>
+                @endif
             @endauth
 
         </ul>
@@ -249,6 +265,21 @@
                                 <span
                                     class="{{ request()->routeIs('superadmin.dashboard') ? 'text-white' : 'group-hover:text-red-600' }}">Kelola
                                     Superadmin</span>
+                            </a>
+                        </li>
+                    @endif
+                    
+                    @if (Auth::user()->role === 'wbs_admin')
+                        <li>
+                            <a href="{{ route('wbs_admin.dashboard') }}" class="group flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
+                                                                                                                                                                                                              {{ request()->routeIs('wbs_admin.dashboard')
+                        ? 'bg-gradient-to-b from-[#FF5252] to-[#B71C1C] text-white'
+                        : 'hover:bg-red-100 hover:text-red-600 text-gray-800' }}">
+                                <i
+                                    class="fas fa-user-cog text-[17px] w-5 {{ request()->routeIs('wbs_admin.dashboard') ? 'text-white' : 'text-gray-500 group-hover:text-red-600' }}"></i>
+                                <span
+                                    class="{{ request()->routeIs('wsb_admin.dashboard') ? 'text-white' : 'group-hover:text-red-600' }}">Kelola
+                                    Wbs Admin</span>
                             </a>
                         </li>
                     @endif

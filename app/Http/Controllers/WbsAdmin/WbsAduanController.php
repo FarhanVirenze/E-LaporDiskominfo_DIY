@@ -4,6 +4,7 @@ namespace App\Http\Controllers\WbsAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\WbsReport;
+use App\Models\Report;
 use App\Models\WbsFollowUp;
 use App\Models\WbsComment;
 use Illuminate\Support\Facades\Auth;
@@ -279,5 +280,36 @@ class WbsAduanController extends Controller
 
         return redirect()->route('wbs_admin.kelola-aduan.index')
             ->with('success', 'Laporan berhasil dihapus.');
+    }
+
+    public function riwayat()
+    {
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Silakan login untuk melihat riwayat aduan.');
+        }
+
+        $user = auth()->user();
+
+        $aduan = Report::where('user_id', $user->id_user)
+            ->latest()
+            ->paginate(6, ['id', 'tracking_id', 'judul', 'status', 'created_at', 'file']);
+
+        return view('wbs_admin.detail.riwayat', compact('aduan'));
+    }
+
+    public function riwayatWbs()
+    {
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Silakan login untuk melihat riwayat WBS.');
+        }
+
+        $user = auth()->user();
+
+        // Ambil semua kolom
+        $aduan = WbsReport::where('user_id', $user->id_user)
+            ->latest()
+            ->paginate(6); // default ambil semua field
+
+        return view('wbs_admin.detail.riwayatwbs', compact('aduan'));
     }
 }

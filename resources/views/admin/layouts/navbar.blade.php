@@ -2,8 +2,8 @@
 <div class="flex min-h-screen bg-gray-100 text-white">
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="bg-white w-72 flex flex-col fixed inset-y-0 left-0 z-50 text-gray-800 
-               transform transition-transform duration-300 -translate-x-full">
+    <aside id="sidebar" class="bg-white w-72 flex flex-col fixed inset-y-0 left-0 z-50 text-gray-800
+           transform transition-transform duration-300 -translate-x-full lg:translate-x-0">
 
         <!-- Sidebar Header -->
         <div class="bg-gradient-to-b from-red-700 to-red-800 text-white flex items-center justify-between px-6"
@@ -44,18 +44,19 @@
                 @php
                     $menus = [
                         ['route' => 'admin.kelola-aduan.*', 'icon' => 'fa-comments', 'label' => 'Kelola Aduan', 'url' => route('admin.kelola-aduan.index')],
+                        ['route' => 'admin.peta.*', 'icon' => 'fa-map-marked-alt', 'label' => 'Peta Aduan', 'url' => route('admin.peta.index')],
                     ];
                 @endphp
 
                 @foreach($menus as $menu)
                     <a href="{{ $menu['url'] }}"
                         class="flex items-center justify-between px-4 py-[10px] rounded-lg transition font-medium
-                            {{ request()->routeIs($menu['route']) ? 'bg-gradient-to-b from-red-700 to-red-800 text-white' : 'hover:bg-red-100 hover:text-red-700 text-gray-800' }}">
+                                            {{ request()->routeIs($menu['route']) ? 'bg-gradient-to-b from-red-700 to-red-800 text-white' : 'hover:bg-red-100 hover:text-red-700 text-gray-800' }}">
 
                         <div class="flex items-center gap-4">
                             <i
                                 class="fas {{ $menu['icon'] }} text-[17px] w-5 
-                                    {{ request()->routeIs($menu['route']) ? 'text-white' : 'hover:text-red-700 text-gray-500' }}"></i>
+                                                    {{ request()->routeIs($menu['route']) ? 'text-white' : 'hover:text-red-700 text-gray-500' }}"></i>
                             <span>{{ $menu['label'] }}</span>
                         </div>
 
@@ -82,7 +83,7 @@
             <div class="flex items-center gap-4 w-full">
                 <!-- Toggle Sidebar -->
                 <button id="toggleSidebar"
-                    class="bg-gradient-to-b from-red-700 to-red-800 text-white text-xl p-2 rounded-md shadow-md focus:outline-none">
+                    class="lg:invisible bg-gradient-to-b from-red-700 to-red-800 text-white text-xl p-2 rounded-md shadow-md focus:outline-none">
                     <i class="fas fa-bars"></i>
                 </button>
 
@@ -136,11 +137,11 @@
 
                                             <!-- Menu Profil -->
                                             <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium
-                                                                                {{ request()->routeIs('admin.profile.edit')
+                                                                                                                                                {{ request()->routeIs('admin.profile.edit')
                         ? 'bg-gradient-to-b from-red-700 to-red-800 text-white'
                         : 'text-gray-800 hover:bg-red-100 hover:text-red-700' }}">
                                                 <i class="fas fa-user text-[16px] w-5 
-                                                                                {{ request()->routeIs('admin.profile.edit')
+                                                                                                                                                {{ request()->routeIs('admin.profile.edit')
                         ? 'text-white'
                         : 'text-gray-500 group-hover:text-red-700' }}"></i>
                                                 <span>Profil</span>
@@ -149,8 +150,9 @@
                                             <!-- Menu Logout -->
                                             <form method="POST" action="{{ route('logout') }}">
                                                 @csrf
-                                                <button type="submit" class="w-full text-left flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium 
-                                                                                    text-gray-800 hover:bg-red-100 hover:text-red-700">
+                                                <button type="submit"
+                                                    class="w-full text-left flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium 
+                                                                                                                                                    text-gray-800 hover:bg-red-100 hover:text-red-700">
                                                     <i
                                                         class="fas fa-sign-out-alt text-[16px] w-5 text-gray-500 group-hover:text-red-700"></i>
                                                     <span>Logout</span>
@@ -217,11 +219,11 @@
 
                             <!-- Menu Profil -->
                             <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium
-                                            {{ request()->routeIs('admin.profile.edit')
+                                                                            {{ request()->routeIs('admin.profile.edit')
                 ? 'bg-gradient-to-b from-red-700 to-red-800 text-white'
                 : 'text-gray-800 hover:bg-red-100 hover:text-red-600' }}">
                                 <i class="fas fa-user text-[16px] w-5
-                                            {{ request()->routeIs('admin.profile.edit')
+                                                                            {{ request()->routeIs('admin.profile.edit')
                 ? 'text-white'
                 : 'text-gray-500 group-hover:text-red-600' }}"></i>
                                 <span>Profil</span>
@@ -230,8 +232,9 @@
                             <!-- Menu Logout -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="w-full text-left flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium 
-                                                text-gray-800 hover:bg-red-100 hover:text-red-600">
+                                <button type="submit"
+                                    class="w-full text-left flex items-center gap-3 px-4 py-[10px] rounded-lg transition font-medium 
+                                                                                text-gray-800 hover:bg-red-100 hover:text-red-600">
                                     <i class="fas fa-sign-out-alt text-[16px] w-5 text-gray-500 group-hover:text-red-600"></i>
                                     <span>Logout</span>
                                 </button>
@@ -280,18 +283,18 @@
     // Atur default saat load
     window.addEventListener('DOMContentLoaded', () => {
         if (window.innerWidth >= 1024) {
-            openSidebar(); // desktop default open
-        } else {
-            closeSidebar(); // mobile default closed
+            sidebar.classList.remove('-translate-x-full');
+            mainContent.classList.add('lg:ml-72');
         }
     });
 
-    // Auto adjust saat resize
     window.addEventListener('resize', () => {
         if (window.innerWidth >= 1024) {
-            openSidebar();
+            sidebar.classList.remove('-translate-x-full');
+            mainContent.classList.add('lg:ml-72');
         } else {
-            closeSidebar();
+            sidebar.classList.add('-translate-x-full');
+            mainContent.classList.remove('lg:ml-72');
         }
     });
 </script>
