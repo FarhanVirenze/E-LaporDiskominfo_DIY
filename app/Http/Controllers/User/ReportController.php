@@ -12,7 +12,6 @@ use App\Models\WbsComment;
 use App\Models\FollowupRating;
 use App\Models\Comment;
 use App\Models\KategoriUmum;
-use App\Services\VisionService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,8 +72,7 @@ class ReportController extends Controller
     {
         return view('user.aduan.create');
     }
-
-    public function store(Request $request, VisionService $vision)
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'judul' => 'required|string|min:20|max:150',
@@ -82,7 +80,7 @@ class ReportController extends Controller
             'kategori_id' => 'required|exists:kategori_umum,id',
             'wilayah_id' => 'required|exists:wilayah_umum,id',
             'file' => 'required|array|max:3',
-            'file.*' => 'file|mimes:jpg,jpeg,png|max:10240', // hanya gambar biar bisa discan Vision
+            'file.*' => 'file|mimes:jpg,jpeg,png|max:10240', // hanya gambar
             'lokasi' => 'required|string|max:255',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
@@ -93,19 +91,8 @@ class ReportController extends Controller
         $filePaths = [];
         if ($request->hasFile('file')) {
             foreach ($request->file('file') as $uploadedFile) {
-                // Simpan sementara
+                // Simpan file ke storage
                 $path = $uploadedFile->store('report_files', 'public');
-                $fullPath = Storage::disk('public')->path($path);
-
-                // 🔎 Scan dengan Google Vision
-                $result = $vision->detectUnsafeContent($fullPath);
-
-                if ($vision->isUnsafe($result)) {
-                    // Hapus file kalau unsafe
-                    Storage::disk('public')->delete($path);
-                    return back()->with('error', 'File yang diupload mengandung konten terlarang (pornografi/SARA/kekerasan).');
-                }
-
                 $filePaths[] = $path;
             }
         }
