@@ -12,6 +12,8 @@ use App\Models\WbsComment;
 use App\Models\FollowupRating;
 use App\Models\Comment;
 use App\Models\KategoriUmum;
+use App\Services\VisionService;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -72,10 +74,7 @@ class ReportController extends Controller
         return view('user.aduan.create');
     }
 
-    /**
-     * Simpan laporan baru.
-     */
-    public function store(Request $request)
+    public function store(Request $request, VisionService $vision)
     {
         $validated = $request->validate([
             'judul' => 'required|string|min:20|max:150',
@@ -83,7 +82,7 @@ class ReportController extends Controller
             'kategori_id' => 'required|exists:kategori_umum,id',
             'wilayah_id' => 'required|exists:wilayah_umum,id',
             'file' => 'required|array|max:3',
-            'file.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip|max:10240',
+            'file.*' => 'file|mimes:jpg,jpeg,png|max:10240', // hanya gambar biar bisa discan Vision
             'lokasi' => 'required|string|max:255',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
@@ -91,22 +90,36 @@ class ReportController extends Controller
             'g-recaptcha-response' => 'required|captcha',
         ]);
 
-        // Simpan file
+        $filePaths = [];
         if ($request->hasFile('file')) {
-            $filePaths = [];
             foreach ($request->file('file') as $uploadedFile) {
-                $filePaths[] = $uploadedFile->store('report_files', 'public');
+                // Simpan sementara
+                $path = $uploadedFile->store('report_files', 'public');
+                $fullPath = Storage::disk('public')->path($path);
+
+                // 🔎 Scan dengan Google Vision
+                $result = $vision->detectUnsafeContent($fullPath);
+
+                if ($vision->isUnsafe($result)) {
+                    // Hapus file kalau unsafe
+                    Storage::disk('public')->delete($path);
+                    return back()->with('error', 'File yang diupload mengandung konten terlarang (pornografi/SARA/kekerasan).');
+                }
+
+                $filePaths[] = $path;
             }
-            $validated['file'] = $filePaths;
         }
 
+        $validated['file'] = $filePaths;
         $validated['is_anonim'] = $request->boolean('is_anonim');
         $validated['status'] = Report::STATUS_DIAJUKAN;
 
+        // 🔹 Isi data pelapor
         if (!$validated['is_anonim']) {
             $user = auth()->user();
-            if (!$user)
+            if (!$user) {
                 return back()->with('error', 'Pengguna tidak terautentikasi.');
+            }
 
             $validated['user_id'] = $user->id_user;
             $validated['nama_pengadu'] = $user->name;
@@ -121,7 +134,7 @@ class ReportController extends Controller
             $validated['nik'] = null;
         }
 
-        // Ambil admin_id dari kategori_umum
+        // 🔹 Tentukan admin_id dari kategori
         $kategori = KategoriUmum::find($validated['kategori_id']);
         if ($kategori && $kategori->admin_id) {
             $validated['admin_id'] = $kategori->admin_id;
@@ -129,9 +142,11 @@ class ReportController extends Controller
             return back()->with('error', 'Kategori belum memiliki admin yang ditugaskan.');
         }
 
+        // 🔹 Simpan laporan
         try {
             Report::create($validated);
-            return redirect()->route('user.aduan.riwayat')->with('success', 'Laporan berhasil dikirim.');
+            return redirect()->route('user.aduan.riwayat')
+                ->with('success', 'Laporan berhasil dikirim.');
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal menyimpan laporan: ' . $e->getMessage());
         }
