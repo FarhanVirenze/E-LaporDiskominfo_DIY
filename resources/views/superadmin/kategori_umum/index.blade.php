@@ -5,7 +5,7 @@
 @section('content')
 <div class="container mt-4">
     <!-- Judul -->
-    <h2 class="mb-4 text-2xl font-semibold text-[#37474F] text-center sm:text-left">
+    <h2 class="mb-4 text-2xl font-semibold text-[#37474F] text-left sm:text-left">
         Kelola Kategori
     </h2>
 
