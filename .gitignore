@@ -21,3 +21,8 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Biarkan storage di-ignore, tapi kecualikan storage/app/public
+/storage/*
+!/storage/app/
+!/storage/app/public/
