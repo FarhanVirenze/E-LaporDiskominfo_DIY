@@ -9,15 +9,16 @@
             {{-- Background Layer --}}
             <div class="w-full h-full relative bg-gradient-to-tr from-red-700 via-red-600 to-orange-500">
                 <div class="absolute inset-0 bg-black/10"></div>
-                <div class="absolute inset-0 grid grid-cols-4 gap-10 justify-items-center items-center opacity-25">
-                    <i class="fas fa-file-alt text-white text-7xl"></i>
-                    <i class="fas fa-exclamation-triangle text-yellow-300 text-7xl"></i>
-                    <i class="fas fa-eye text-orange-200 text-7xl"></i>
-                    <i class="fas fa-handshake text-white text-7xl"></i>
-                    <i class="fas fa-user-shield text-yellow-200 text-7xl"></i>
-                    <i class="fas fa-gavel text-orange-300 text-7xl"></i>
-                    <i class="fas fa-search text-white text-7xl"></i>
-                    <i class="fas fa-comment-dots text-yellow-100 text-7xl"></i>
+                <div
+                    class="absolute inset-0 grid grid-cols-4 gap-6 sm:gap-8 md:gap-10 justify-items-center items-center opacity-25">
+                    <i class="fas fa-file-alt text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl"></i>
+                    <i class="fas fa-exclamation-triangle text-yellow-300 text-4xl sm:text-6xl md:text-7xl lg:text-8xl"></i>
+                    <i class="fas fa-eye text-orange-200 text-3xl sm:text-5xl md:text-6xl lg:text-7xl"></i>
+                    <i class="fas fa-handshake text-white text-4xl sm:text-6xl md:text-7xl lg:text-8xl"></i>
+                    <i class="fas fa-user-shield text-yellow-200 text-4xl sm:text-6xl md:text-7xl lg:text-8xl"></i>
+                    <i class="fas fa-gavel text-orange-300 text-3xl sm:text-5xl md:text-6xl lg:text-7xl"></i>
+                    <i class="fas fa-search text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl"></i>
+                    <i class="fas fa-comment-dots text-yellow-100 text-4xl sm:text-6xl md:text-7xl lg:text-8xl"></i>
                 </div>
             </div>
 
