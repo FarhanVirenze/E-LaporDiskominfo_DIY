@@ -3,113 +3,53 @@
 @section('content')
     <div class="relative w-full overflow-hidden">
 
-        {{-- Carousel Full Layer --}}
-        <div x-data="carousel()" x-init="init()"
-            class="relative w-full h-[800px] md:h-[800px] lg:h-[800px] xl:h-[1000px] overflow-hidden">
-            {{-- Slides Wrapper --}}
-            <div class="flex w-full h-full transition-transform duration-700 ease-in-out"
-                :style="`transform: translateX(-${current * 100}%);`">
-                {{-- Slide 1 --}}
-                <div class="flex-none w-full h-full relative">
-                    <img src="{{ asset('images/korupsi.jpg') }}" alt="WBS 1" class="w-full h-full object-cover">
-                </div>
-                {{-- Slide 2 --}}
-                <div class="flex-none w-full h-full relative">
-                    <img src="{{ asset('images/kekerasan.jpg') }}" alt="WBS 2" class="w-full h-full object-cover">
-                </div>
-                {{-- Slide 3 --}}
-                <div class="flex-none w-full h-full relative">
-                    <img src="{{ asset('images/penyusup.jpg') }}" alt="WBS 3" class="w-full h-full object-cover">
+        {{-- Hero Section --}}
+        <div class="relative w-full h-[800px] md:h-[800px] lg:h-[800px] xl:h-[1000px] overflow-hidden font-sans">
+
+            {{-- Background Layer --}}
+            <div class="w-full h-full relative bg-gradient-to-tr from-red-700 via-red-600 to-orange-500">
+                <div class="absolute inset-0 bg-black/10"></div>
+                <div class="absolute inset-0 grid grid-cols-4 gap-10 justify-items-center items-center opacity-25">
+                    <i class="fas fa-file-alt text-white text-7xl"></i>
+                    <i class="fas fa-exclamation-triangle text-yellow-300 text-7xl"></i>
+                    <i class="fas fa-eye text-orange-200 text-7xl"></i>
+                    <i class="fas fa-handshake text-white text-7xl"></i>
+                    <i class="fas fa-user-shield text-yellow-200 text-7xl"></i>
+                    <i class="fas fa-gavel text-orange-300 text-7xl"></i>
+                    <i class="fas fa-search text-white text-7xl"></i>
+                    <i class="fas fa-comment-dots text-yellow-100 text-7xl"></i>
                 </div>
             </div>
 
+            {{-- Konten Tengah --}}
             <div
-                class="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-20 text-center space-y-4 md:space-y-6 bg-black/60">
-
-                <!-- Judul Utama -->
+                class="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-20 text-center space-y-4 md:space-y-6 bg-black/50">
                 <h2
-                    class="text-white font-sans font-extrabold text-3xl md:text-5xl lg:text-6xl mb-1 leading-snug tracking-tight">
+                    class="text-white font-extrabold text-3xl md:text-5xl lg:text-6xl leading-snug tracking-tight drop-shadow-lg">
                     Whistleblowing System (WBS)
                 </h2>
-
-                <!-- Kalimat Penjelas Singkat -->
-                <p class="text-white text-sm md:text-xl font-medium font-extrabold tracking-wide max-w-2xl">
-                    Platform yang digunakan untuk melaporkan pelanggaran secara cepat, aman, dan rahasia, sehingga setiap
-                    aduan dapat ditindaklanjuti dengan tepat.
+                <p class="text-white text-sm md:text-xl font-medium tracking-wide max-w-2xl">
+                    Platform untuk melaporkan pelanggaran secara cepat, aman, dan rahasia, sehingga setiap aduan dapat
+                    ditindaklanjuti dengan tepat.
                 </p>
-
-                <!-- Tagline ala Alert Merah -->
                 <div
-                    class="inline-flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-2 sm:py-2 rounded-xl
-                                                                                                         bg-gradient-to-r from-red-700 to-red-700 shadow-md">
-
-                    <!-- Icon -->
-                    <div class="flex-shrink-0">
-                        <div class="flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-red-800">
-                            <i class="fas fa-exclamation-triangle text-white text-sm sm:text-lg"></i>
-                        </div>
+                    class="inline-flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 shadow-lg">
+                    <div class="flex items-center justify-center w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-red-800">
+                        <i class="fas fa-exclamation-triangle text-white text-sm sm:text-lg"></i>
                     </div>
-
-                    <!-- Text -->
-                    <div class="text-center">
-                        <p class="text-[11px] sm:text-sm md:text-lg font-semibold text-white tracking-wide">
-                            Laporkan Pelanggaran, <span class="italic font-normal">Aman & Terjamin Rahasia!</span>
-                        </p>
-                    </div>
+                    <p class="text-[11px] sm:text-sm md:text-lg font-semibold text-white tracking-wide">
+                        Laporkan Pelanggaran, <span class="italic font-normal">Aman & Terjamin Rahasia!</span>
+                    </p>
                 </div>
             </div>
 
-            {{-- Navigasi Prev / Next --}}
-            <button @click="prev()" class="absolute left-2 sm:left-5 top-1/2 transform -translate-y-1/2 
-                                                       bg-white bg-opacity-50 hover:bg-opacity-80 rounded-full 
-                                                       p-1.5 sm:p-3 shadow-lg transition">
-                <i class="fa-solid fa-chevron-left text-gray-800 text-base sm:text-xl"></i>
-            </button>
-
-            <button @click="next()" class="absolute right-2 sm:right-5 top-1/2 transform -translate-y-1/2 
-                                                       bg-white bg-opacity-50 hover:bg-opacity-80 rounded-full 
-                                                       p-1.5 sm:p-3 shadow-lg transition">
-                <i class="fa-solid fa-chevron-right text-gray-800 text-base sm:text-xl"></i>
-            </button>
-
-            {{-- Dot Navigation --}}
-            <div class="absolute bottom-5 w-full flex justify-center space-x-2">
-                <template x-for="i in slides" :key="i">
-                    <button @click="goTo(i-1)" :class="{'bg-white': current===i-1, 'bg-white/50': current!==i-1 }"
-                        class="w-4 h-4 rounded-full transition-all duration-300 hover:bg-white/80"></button>
-                </template>
-            </div>
-
-            <!-- Konten di atas wave -->
+            {{-- Wave --}}
             <svg class="absolute bottom-0 w-full h-32 md:h-40 lg:h-48" viewBox="0 0 1440 320" preserveAspectRatio="none">
-                <path fill="#fff" fill-opacity="1" d="
-                                                                                                                        M0,192 
-                                                                                                                        C240,64 360,288 720,160 
-                                                                                                                        C1080,32 1200,288 1440,128 
-                                                                                                                        L1440,320 
-                                                                                                                        L0,320 
-                                                                                                                        Z">
+                <path fill="#fff" fill-opacity="1"
+                    d="M0,192 C240,64 360,288 720,160 C1080,32 1200,288 1440,128 L1440,320 L0,320 Z">
                 </path>
             </svg>
         </div>
-
-        {{-- Carousel Script --}}
-        <script>
-            function carousel() {
-                return {
-                    current: 0,
-                    slides: 3,
-                    init() { setInterval(() => { this.next() }, 5000); },
-                    next() {
-                        this.current = (this.current - 1 + this.slides) % this.slides;
-                    },
-                    prev() {
-                        this.current = (this.current + 1) % this.slides;
-                    },
-                    goTo(i) { this.current = i; }
-                }
-            }
-        </script>
 
         {{-- Konten WBS --}}
         <div class="w-full mx-auto py-10 text-gray-800 -mt-16 relative z-10">
