@@ -1031,45 +1031,54 @@
         let jogjaPlaces = [];
         let jogjaDataLoaded = false;
 
-        // ==== DATA MANUAL TAMBAHAN ====
+        // ==== DATA MANUAL TAMBAHAN (Fallback) ====
         const manualPlaces = [
-            {
-                name: "Diskominfo DIY",
-                address: "Jl. Brigjen Katamso No. 3, Yogyakarta",
-                lat: -7.801389,
-                lon: 110.368056,
-                category: "office"
-            },
-            {
-                name: "Diskominfo Bantul",
-                address: "Jl. Lingkar Timur, Manding, Trirenggo, Bantul",
-                lat: -7.912229,
-                lon: 110.335879,
-                category: "office"
-            },
-            {
-                name: "Diskominfo Sleman",
-                address: "Jl. Parasamya, Beran Lor, Tridadi, Sleman",
-                lat: -7.716879,
-                lon: 110.356150,
-                category: "office"
-            }
+            { name: "Diskominfo DIY", address: "Jl. Brigjen Katamso No. 3, Yogyakarta", lat: -7.801389, lon: 110.368056 },
+            { name: "Diskominfo Bantul", address: "Jl. Lingkar Timur, Manding, Trirenggo, Bantul", lat: -7.912229, lon: 110.335879 },
+            { name: "Diskominfo Sleman", address: "Jl. Parasamya, Beran Lor, Tridadi, Sleman", lat: -7.716879, lon: 110.356150 }
         ];
 
-        // ==== FALLBACK DATA MANUAL ====
+        // ==== FALLBACK MANUAL ====
         function useManualData() {
             jogjaPlaces = manualPlaces;
             jogjaDataLoaded = true;
-            console.warn("Menggunakan data manual (OSM gagal / timeout).");
+            console.warn("Menggunakan data manual (Photon gagal / timeout).");
             console.log("Data manual:", jogjaPlaces);
         }
 
-        function loadJogjaData() {
+        // ==== HELPER UNTUK SUSUN ALAMAT ====
+        function normalizeJoin(parts) {
+            return parts
+                .map(x => (x || '').toString().trim())
+                .filter(Boolean)
+                .filter((v, i, a) => a.indexOf(v) === i) // hapus duplikat
+                .join(', ');
+        }
+
+        function buildAddress(props) {
+            const housenumber = props.housenumber || props.house_number || props.houseno;
+            const street = [props.street, housenumber].filter(Boolean).join(' ');
+
+            const locality =
+                props.suburb || props.neighbourhood || props.neighborhood ||
+                props.quarter || props.hamlet || props.village;
+
+            const cityTown = props.city || props.town || props.municipality || props.county;
+            const state = props.state;
+            const postcode = props.postcode;
+            const country = props.country || (props.countrycode ? props.countrycode.toUpperCase() : '');
+
+            const parts = [street, locality, cityTown, state, postcode, country].filter(Boolean);
+
+            return parts.length > 0 ? normalizeJoin(parts) : null;
+        }
+
+        // ==== LOAD DATA DARI PHOTON API ====
+        async function loadJogjaData() {
             const cached = localStorage.getItem("jogjaPlaces");
             const cacheTime = Number(localStorage.getItem("jogjaPlaces_time"));
             const oneDay = 24 * 60 * 60 * 1000;
 
-            // Ambil dari cache kalau masih valid, lalu gabungkan dengan manualPlaces
             if (cached && cacheTime && (Date.now() - cacheTime) < oneDay) {
                 jogjaPlaces = [...JSON.parse(cached), ...manualPlaces];
                 jogjaDataLoaded = true;
@@ -1077,168 +1086,158 @@
                 return;
             }
 
-            const areaQuery = `area["name"="Daerah Istimewa Yogyakarta"]->.searchArea;`;
-
-            // Beberapa query kecil
-            const queries = [
-                `
-                                                                                                                                                [out:json][timeout:20];
-                                                                                                                                                ${areaQuery}
-                                                                                                                                                (node["place"](area.searchArea); way["place"](area.searchArea););
-                                                                                                                                                out center tags;
-                                                                                                                                                `,
-                `
-                                                                                                                                                [out:json][timeout:20];
-                                                                                                                                                ${areaQuery}
-                                                                                                                                                (node["highway"~"motorway|trunk|primary|secondary|tertiary|residential"](area.searchArea););
-                                                                                                                                                out center tags;
-                                                                                                                                                `,
-                `
-                                                                                                                                                [out:json][timeout:20];
-                                                                                                                                                ${areaQuery}
-                                                                                                                                                (node["amenity"](area.searchArea); way["amenity"](area.searchArea););
-                                                                                                                                                out center tags;
-                                                                                                                                                `,
-                `
-                                                                                                                                                [out:json][timeout:20];
-                                                                                                                                                ${areaQuery}
-                                                                                                                                                (node["shop"](area.searchArea); way["shop"](area.searchArea););
-                                                                                                                                                out center tags;
-                                                                                                                                                `,
-                `
-                                                                                                                                                [out:json][timeout:20];
-                                                                                                                                                ${areaQuery}
-                                                                                                                                                (node["office"](area.searchArea); way["office"](area.searchArea););
-                                                                                                                                                out center tags;
-                                                                                                                                                `
-            ];
-
-            const fetchQuery = (query) => {
-                return fetch("https://overpass.kumi.systems/api/interpreter", {
-                    method: "POST",
-                    body: query
-                }).then(res => res.json());
-            };
+            // Bounding box DIY (SW lon,lat ; NE lon,lat)
+            const bbox = "110.002,-8.223,110.867,-7.565";
+            const url = `https://photon.komoot.io/api/?q=*&bbox=${bbox}`;
 
             const timeoutId = setTimeout(() => {
                 console.warn("Timeout — menggunakan data manual");
                 useManualData();
-            }, 10000);
+            }, 15000);
 
-            Promise.all(queries.map(q => fetchQuery(q)))
-                .then(results => {
-                    clearTimeout(timeoutId);
+            try {
+                const res = await fetch(url);
+                clearTimeout(timeoutId);
 
-                    // Gabungkan semua hasil
-                    let allElements = results.flatMap(r => r.elements);
+                const data = await res.json();
+                const unique = [];
+                const seenCoord = new Set();
+                const seenNameAddr = new Set();
 
-                    // Buang duplikat berdasarkan lat+lon
-                    let unique = [];
-                    let seen = new Set();
-                    for (let el of allElements) {
-                        const lat = el.lat || el.center?.lat;
-                        const lon = el.lon || el.center?.lon;
-                        if (!lat || !lon) continue;
-                        const key = `${lat},${lon}`;
-                        if (!seen.has(key)) {
-                            seen.add(key);
-                            unique.push({
-                                name: el.tags?.name || "Tanpa Nama",
-                                address: [
-                                    el.tags?.['addr:street'],
-                                    el.tags?.['addr:housenumber'],
-                                    el.tags?.['addr:city']
-                                ].filter(Boolean).join(', '),
-                                lat,
-                                lon
-                            });
-                        }
-                    }
+                const diyCounties = [
+                    "Sleman", "Bantul", "Gunung Kidul", "Gunungkidul", "Kulon Progo", "Yogyakarta"
+                ];
 
-                    // Gabungkan hasil OSM dengan manualPlaces
-                    jogjaPlaces = [...unique, ...manualPlaces];
-                    jogjaDataLoaded = true;
+                for (let f of data.features) {
+                    const [lon, lat] = f.geometry.coordinates;
+                    const props = f.properties;
 
-                    // Simpan ke cache
-                    localStorage.setItem("jogjaPlaces", JSON.stringify(unique));
-                    localStorage.setItem("jogjaPlaces_time", Date.now());
+                    // nama wajib
+                    const name = props.name || props.street || props.suburb || props.village;
+                    if (!name) continue;
 
-                    console.log(`Loaded ${jogjaPlaces.length} lokasi (gabungan OSM + manual)`);
-                })
-                .catch(err => {
-                    clearTimeout(timeoutId);
-                    console.error("Gagal ambil data:", err);
-                    useManualData();
-                });
+                    // alamat wajib
+                    const address = buildAddress(props);
+                    if (!address) continue;
+
+                    // filter pastikan masih dalam DIY
+                    const state = props.state || "";
+                    const county = props.county || "";
+                    if (!(state.includes("Yogyakarta") || diyCounties.some(c => county.includes(c)))) continue;
+
+                    // dedup koordinat (≈1.1m)
+                    const coordKey = `${lat.toFixed(5)},${lon.toFixed(5)}`;
+                    const nameAddrKey = `${name.toLowerCase().trim()}|${address.toLowerCase().trim()}`;
+
+                    if (seenCoord.has(coordKey) || seenNameAddr.has(nameAddrKey)) continue;
+
+                    seenCoord.add(coordKey);
+                    seenNameAddr.add(nameAddrKey);
+
+                    unique.push({ name, address, lat, lon });
+                }
+
+                jogjaPlaces = [...unique, ...manualPlaces];
+                jogjaDataLoaded = true;
+
+                localStorage.setItem("jogjaPlaces", JSON.stringify(unique));
+                localStorage.setItem("jogjaPlaces_time", Date.now());
+
+                console.log(`Loaded ${jogjaPlaces.length} lokasi (Photon + manual)`);
+
+            } catch (err) {
+                clearTimeout(timeoutId);
+                console.error("Gagal ambil data dari Photon:", err);
+                useManualData();
+            }
         }
 
-        // ==== DEBOUNCE FUNCTION ====
-        function debounce(func, wait) {
-            let timeout;
-            return function (...args) {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(this, args), wait);
-            };
-        }
-
-        // ==== AUTOCOMPLETE PENCARIAN (Radius dari Lokasi User) ====
-        function setupAutocomplete(userLat, userLon, radiusKm = 50) {
+        // ==== AUTOCOMPLETE DARI PHOTON + MANUAL (DEDUP NAMA & KOORDINAT) ====
+        function setupAutocomplete() {
             const searchInput = document.getElementById('searchLocation');
             const suggestionsBox = document.getElementById('searchSuggestions');
 
-            // Hitung jarak (Haversine)
-            function distanceKm(lat1, lon1, lat2, lon2) {
-                const R = 6371; // km
-                const dLat = (lat2 - lat1) * Math.PI / 180;
-                const dLon = (lon2 - lon1) * Math.PI / 180;
-                const a =
-                    Math.sin(dLat / 2) ** 2 +
-                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                    Math.sin(dLon / 2) ** 2;
-                return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
-            }
-
-            searchInput.addEventListener('input', debounce(function () {
+            searchInput.addEventListener('input', debounce(async function () {
                 const query = this.value.trim().toLowerCase();
                 suggestionsBox.innerHTML = '';
 
-                if (!jogjaDataLoaded) {
-                    suggestionsBox.innerHTML = '<li class="px-4 py-2 text-gray-500">Memuat data lokasi...</li>';
-                    suggestionsBox.classList.remove('hidden');
-                    return;
-                }
-
-                if (query.length < 2) {
+                if (query.length < 2) { // minimal 2 huruf baru search
                     suggestionsBox.classList.add('hidden');
                     return;
                 }
 
-                const matches = jogjaPlaces
-                    .filter(p => {
-                        const inRadius = distanceKm(userLat, userLon, p.lat, p.lon) <= radiusKm;
-                        if (!inRadius) return false;
-                        const nameMatch = p.name?.toLowerCase().includes(query);
-                        const addressMatch = p.address?.toLowerCase().includes(query);
-                        return nameMatch || addressMatch;
-                    })
-                    .sort((a, b) => {
-                        const aStarts = a.name?.toLowerCase().startsWith(query) || a.address?.toLowerCase().startsWith(query);
-                        const bStarts = b.name?.toLowerCase().startsWith(query) || b.address?.toLowerCase().startsWith(query);
-                        if (aStarts === bStarts) {
-                            return a.name.localeCompare(b.name);
+                let matches = [];
+
+                try {
+                    // bounding box DIY: SW lon,lat ; NE lon,lat
+                    const bbox = "110.002,-8.223,110.867,-7.565";
+                    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&bbox=${bbox}&limit=15`;
+
+                    const res = await fetch(url);
+                    const data = await res.json();
+
+                    // hasil Photon
+                    matches = data.features.map(f => {
+                        const [lon, lat] = f.geometry.coordinates;
+                        const props = f.properties;
+                        const address = buildAddress(props) || props.name || query;
+
+                        return {
+                            name: props.name || props.street || props.suburb || props.village || query,
+                            address,
+                            lat,
+                            lon
+                        };
+                    });
+                } catch (err) {
+                    console.warn("Photon error, pakai data manual saja", err);
+                }
+
+                // tambahkan data manual
+                const manualMatches = manualPlaces.filter(p =>
+                    (p.name && p.name.toLowerCase().includes(query)) ||
+                    (p.address && p.address.toLowerCase().includes(query))
+                );
+
+                // gabungkan Photon + manual
+                const combinedRaw = [...matches, ...manualMatches];
+
+                // hapus duplikat (nama & koordinat)
+                const seenNames = new Map();
+                const seenCoords = new Set();
+                const combined = [];
+
+                for (let p of combinedRaw) {
+                    const nameKey = p.name.toLowerCase().trim();
+                    const coordKey = `${p.lat.toFixed(5)},${p.lon.toFixed(5)}`;
+
+                    if (seenCoords.has(coordKey)) continue;
+
+                    if (seenNames.has(nameKey)) {
+                        const existing = seenNames.get(nameKey);
+                        if ((p.address || '').length > (existing.address || '').length) {
+                            seenNames.set(nameKey, p);
+                            const idx = combined.findIndex(x => x.name.toLowerCase().trim() === nameKey);
+                            if (idx !== -1) combined[idx] = p;
                         }
-                        return aStarts ? -1 : 1;
-                    })
-                    .slice(0, 100);
+                        continue;
+                    }
 
-                if (matches.length === 0) {
+                    seenCoords.add(coordKey);
+                    seenNames.set(nameKey, p);
+                    combined.push(p);
+                }
+
+                if (combined.length === 0) {
                     suggestionsBox.classList.add('hidden');
                     return;
                 }
 
-                matches.forEach(place => {
+                // tampilkan hasil
+                suggestionsBox.innerHTML = '';
+                combined.forEach(place => {
                     const li = document.createElement('li');
-                    li.innerHTML = `<strong>${place.name}</strong><br><small class="text-gray-500">${place.address || ''}</small>`;
+                    li.innerHTML = `<strong>${place.name}</strong><br><small class="text-gray-500">${place.address}</small>`;
                     li.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer';
 
                     li.addEventListener('click', () => {
@@ -1250,7 +1249,9 @@
                         if (map) {
                             map.flyTo({ center: [place.lon, place.lat], zoom: 15 });
                             if (!marker) {
-                                marker = new mapboxgl.Marker().setLngLat([place.lon, place.lat]).addTo(map);
+                                marker = new mapboxgl.Marker({ color: "#e02424" })
+                                    .setLngLat([place.lon, place.lat])
+                                    .addTo(map);
                             } else {
                                 marker.setLngLat([place.lon, place.lat]);
                             }
@@ -1263,14 +1264,22 @@
                 });
 
                 suggestionsBox.classList.remove('hidden');
-            }, 200));
+            }, 400));
 
-            // Tutup suggestion jika klik di luar
             document.addEventListener('click', e => {
                 if (!suggestionsBox.contains(e.target) && e.target !== searchInput) {
                     suggestionsBox.classList.add('hidden');
                 }
             });
+        }
+
+        // ==== DEBOUNCE FUNCTION ====
+        function debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
         }
 
         // ==== MODAL PETA ====
@@ -1297,7 +1306,9 @@
                         const { lng, lat } = e.lngLat;
 
                         if (!marker) {
-                            marker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
+                            marker = new mapboxgl.Marker({ color: "#e02424" })
+                                .setLngLat([lng, lat])
+                                .addTo(map);
                         } else {
                             marker.setLngLat([lng, lat]);
                         }
@@ -1305,14 +1316,21 @@
                         document.getElementById('latitudeField').value = lat.toFixed(6);
                         document.getElementById('longitudeField').value = lng.toFixed(6);
 
-                        // Ambil alamat dari Mapbox
-                        fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${mapboxgl.accessToken}&language=id`)
+                        // Ambil alamat via Photon reverse
+                        fetch(`https://photon.komoot.io/reverse?lat=${lat}&lon=${lng}`)
                             .then(res => res.json())
                             .then(data => {
-                                document.getElementById('alamatField').value =
-                                    data.features?.[0]?.place_name || '';
+                                const props = data.features?.[0]?.properties || {};
+                                const name = props.name || '';
+                                const street = props.street || '';
+                                const city = props.city || '';
+                                const state = props.state || '';
+                                const country = props.country || '';
+
+                                const fullAddress = [name, street, city, state, country].filter(Boolean).join(', ');
+                                document.getElementById('alamatField').value = fullAddress;
                             })
-                            .catch(err => console.error('Geocoding error:', err));
+                            .catch(err => console.error('Reverse geocoding error:', err));
                     });
                 }
             };
@@ -1324,14 +1342,14 @@
             loadJogjaData();
             setupMapModal();
 
-            // Langsung minta izin lokasi
+            // Lokasi user
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     pos => {
                         const lat = pos.coords.latitude;
                         const lon = pos.coords.longitude;
                         console.log("Lokasi user:", lat, lon);
-                        setupAutocomplete(lat, lon, 50); // radius default 50 km
+                        setupAutocomplete(lat, lon, 50);
                     },
                     err => {
                         console.warn("Gagal ambil lokasi user, pakai pusat Jogja");
