@@ -693,7 +693,7 @@
                     <div class="space-y-4">
                         <!-- Input Judul -->
                         <div class="flex flex-col leading-none">
-                            <input type="text" name="judul" maxlength="150" placeholder="Judul Aduan Singkat Minimal (20 Kata)"
+                            <input type="text" name="judul" maxlength="150" placeholder="Judul Aduan Singkat Minimal (10 Kata)"
                                 value="{{ old('judul') }}"
                                 class="w-full border rounded-lg px-4 py-3 md:py-4 bg-white text-gray-900" required>
                             <span id="judulCounter" class="text-sm text-white/90 mt-2 block">
@@ -706,7 +706,7 @@
 
                         <!-- Textarea Isi -->
                         <div class="flex flex-col leading-none">
-                            <textarea name="isi" placeholder="Kronologi Lengkap Aduan Minimal (40 Kata)" rows="2" maxlength="1000"
+                            <textarea name="isi" placeholder="Kronologi Lengkap Aduan Minimal (20 Kata)" rows="2" maxlength="1000"
                                 class="w-full border rounded-lg px-4 py-3 md:py-4 bg-white text-gray-900"
                                 required>{{ old('isi') }}</textarea>
                             <span id="isiCounter" class="text-sm text-white/90 mt-2 block">

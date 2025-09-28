@@ -72,8 +72,8 @@ class ReportController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul' => 'required|string|min:20|max:150',
-            'isi' => 'required|string|min:40|max:1000',
+            'judul' => 'required|string|min:10|max:150',
+            'isi' => 'required|string|min:20|max:1000',
             'kategori_id' => 'required|exists:kategori_umum,id',
             'wilayah_id' => 'required|exists:wilayah_umum,id',
             'file' => 'required|array|max:3',
@@ -797,10 +797,7 @@ class ReportController extends Controller
         $user = auth()->user();
 
         // Ambil semua aduan user, termasuk yang anonim
-        $aduan = WbsReport::where(function ($query) use ($user) {
-            $query->where('user_id', $user->id_user)
-                ->orWhere('is_anonim', true);
-        })
+        $aduan = WbsReport::where('user_id', $user->id_user)
             ->latest()
             ->paginate(6);
 

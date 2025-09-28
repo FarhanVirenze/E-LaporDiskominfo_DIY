@@ -77,12 +77,12 @@ class ReportSuperadminController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul' => 'required|string|min:20|max:150',
-            'isi' => 'required|string|min:120|max:1000',
+            'judul' => 'required|string|min:10|max:150',
+            'isi' => 'required|string|min:20|max:1000',
             'kategori_id' => 'required|exists:kategori_umum,id',
             'wilayah_id' => 'required|exists:wilayah_umum,id',
             'file' => 'required|array|max:3',
-            'file.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip|max:10240',
+            'file.*' => 'file|mimes:jpg,jpeg,png|max:10240',
             'lokasi' => 'required|string|max:255',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',

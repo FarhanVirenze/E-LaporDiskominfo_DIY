@@ -20,14 +20,6 @@
             <div class="space-y-2">
                 <p class="text-[11px] uppercase text-red-600 font-bold tracking-wide mb-2">Main</p>
 
-                <a href="{{ route('beranda') }}"
-                    class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
-            {{ request()->routeIs('beranda') ? 'bg-gradient-to-b from-red-700 to-red-800 text-white' : 'hover:bg-red-100 hover:text-red-700 text-gray-800' }}">
-                    <i
-                        class="fas fa-home text-[17px] w-5 {{ request()->routeIs('superadmin.beranda') ? 'text-white' : 'hover:text-red-700 text-gray-500' }}"></i>
-                    <span>Beranda</span>
-                </a>
-
                 <a href="{{ route('wbs_admin.dashboard') }}"
                     class="flex items-center gap-4 px-4 py-[10px] rounded-lg transition font-medium
             {{ request()->routeIs('wbs_admin.dashboard') ? 'bg-gradient-to-b from-red-700 to-red-800 text-white' : 'hover:bg-red-100 hover:text-red-700 text-gray-800' }}">

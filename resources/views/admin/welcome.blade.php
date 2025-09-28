@@ -466,7 +466,7 @@
                     <div class="space-y-4">
                         <!-- Input Judul -->
                         <div class="flex flex-col leading-none">
-                            <input type="text" name="judul" maxlength="150" placeholder="Judul Aduan Singkat Minimal (20 Kata)"
+                            <input type="text" name="judul" maxlength="150" placeholder="Judul Aduan Singkat Minimal (10 Kata)"
                                 class="w-full border rounded-lg px-4 py-3 md:py-4 bg-white text-gray-900" required>
                             <span class="text-sm text-white/90 mt-2 block">0/150</span>
                         </div>
@@ -475,7 +475,7 @@
                         @enderror
                         <!-- Textarea Isi -->
                         <div class="flex flex-col leading-none">
-                            <textarea name="isi" placeholder="Kronologi Lengkap Aduan Minimal (40 Kata)" rows="2" maxlength="1000"
+                            <textarea name="isi" placeholder="Kronologi Lengkap Aduan Minimal (20 Kata)" rows="2" maxlength="1000"
                                 class="w-full border rounded-lg px-4 py-3 md:py-4 bg-white text-gray-900"
                                 required></textarea>
                             <span class="text-sm text-white/90 mt-2 block">0/1000</span>
@@ -533,8 +533,7 @@
                                         Jenis file yang dapat dilampirkan: <strong>.jpg</strong>,
                                         <strong>.jpeg</strong>,
                                         <strong>.png</strong>,
-                                        <strong>.pdf</strong>, <strong>.doc</strong>, <strong>.docx</strong>,
-                                        <strong>.xls</strong>, <strong>.xlsx</strong>, <strong>.zip</strong>.<br>
+                                        <strong>.pdf</strong>, <strong>.doc</strong>, <strong>.docx</strong>.<br>
                                         Maksimal <strong>3 file</strong>, masing-masing <strong>tidak melebihi 10MB
                                             (10.240KB)</strong>.
                                     </p>
