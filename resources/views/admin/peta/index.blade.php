@@ -12,6 +12,7 @@
                 <option value="Dibaca">Dibaca</option>
                 <option value="Direspon">Direspon</option>
                 <option value="Selesai">Selesai</option>
+                <option value="Arsip">Arsip</option>
             </select>
 
             <select id="filterWilayah" class="border rounded p-2">
@@ -94,14 +95,16 @@
                 "Diajukan": "red",
                 "Dibaca": "orange",
                 "Direspon": "blue",
-                "Selesai": "green"
+                "Selesai": "green",
+                 "Arsip": "stone"
             };
 
             const statusBadge = {
                 "Diajukan": "bg-red-200 text-red-800",
                 "Dibaca": "bg-blue-200 text-blue-800",
                 "Direspon": "bg-yellow-200 text-yellow-800",
-                "Selesai": "bg-green-200 text-green-800"
+                "Selesai": "bg-green-200 text-green-800",
+                "Arsip": "bg-stone-700 text-white"
             };
 
             let markers = [];
@@ -123,31 +126,33 @@
                     if (Array.isArray(report.file) && report.file.length > 0) {
                         const imageFiles = report.file.filter(f => /\.(jpg|jpeg|png|gif)$/i.test(f));
                         imageFiles.forEach(img => {
-                            const imgUrl = img.startsWith('http') ? img : "{{ asset('storage') }}/" + img;
+                            // langsung ambil dari public
+                            const imgUrl = img.startsWith('http') ? img : "{{ asset('') }}" + img;
+
                             imagesHtml += `
-                                                    <div class="relative group cursor-pointer overflow-hidden rounded-lg w-full mb-2"
-                                                         onclick="openImageModal('${imgUrl}')">
-                                                        <img src="${imgUrl}" alt="Foto Aduan" class="w-full h-32 object-cover transition duration-300 group-hover:brightness-75 rounded">
-                                                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition duration-300 z-10"></div>
-                                                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 z-20">
-                                                            <i class="fas fa-search-plus text-white text-2xl"></i>
-                                                        </div>
-                                                        <span class="absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded-full ${statusBadge[report.status] || 'bg-gray-200 text-gray-800'}">
-                                                            ${report.status}
-                                                        </span>
-                                                    </div>`;
+                <div class="relative group cursor-pointer overflow-hidden rounded-lg w-full mb-2"
+                     onclick="openImageModal('${imgUrl}')">
+                    <img src="${imgUrl}" alt="Foto Aduan" class="w-full h-32 object-cover transition duration-300 group-hover:brightness-75 rounded">
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition duration-300 z-10"></div>
+                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 z-20">
+                        <i class="fas fa-search-plus text-white text-2xl"></i>
+                    </div>
+                    <span class="absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded-full ${statusBadge[report.status] || 'bg-gray-200 text-gray-800'}">
+                        ${report.status}
+                    </span>
+                </div>`;
                         });
                     }
 
                     const popupHtml = `
-                        <div class="flex flex-col">
-                            <b class="mb-1">${report.judul}</b>
-                            ${imagesHtml}
-                            <div class="text-xs text-gray-700 mt-1">${report.lokasi}</div>
-                            <div class="text-xs mt-1"><b>Kategori:</b> ${report.kategori?.nama || "-"}</div>
-                            <div class="text-xs"><b>Wilayah:</b> ${report.wilayah?.nama || "-"}</div>
-                        </div>
-                    `;
+                            <div class="flex flex-col">
+                                <b class="mb-1">${report.judul}</b>
+                                ${imagesHtml}
+                                <div class="text-xs text-gray-700 mt-1">${report.lokasi}</div>
+                                <div class="text-xs mt-1"><b>Kategori:</b> ${report.kategori?.nama || "-"}</div>
+                                <div class="text-xs"><b>Wilayah:</b> ${report.wilayah?.nama || "-"}</div>
+                            </div>
+                        `;
 
 
                     const marker = new mapboxgl.Marker({ color: statusColors[report.status] || "gray" })

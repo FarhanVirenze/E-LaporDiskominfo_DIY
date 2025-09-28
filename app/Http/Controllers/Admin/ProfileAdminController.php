@@ -30,9 +30,27 @@ class ProfileAdminController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $validated = $request->validated();
-
         $user = $request->user();
 
+        // 🔹 Upload foto langsung ke public/foto-profil
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $destinationPath = public_path('foto-profil');
+
+            // Buat folder jika belum ada
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            // Pindahkan file ke folder public/foto-profil
+            $file->move($destinationPath, $filename);
+
+            // Simpan path relatif agar bisa dipanggil asset()
+            $user->foto = 'foto-profil/' . $filename;
+        }
+
+        // 🔹 Update data user
         $user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -40,12 +58,29 @@ class ProfileAdminController extends Controller
             'nomor_telepon' => $validated['nomor_telepon'] ?? null,
         ]);
 
+        // 🔹 Reset email_verified_at jika email berubah
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
-            $user->save();
         }
 
-        return Redirect::route('admin.profile.edit')->with('status', 'profile-updated');
+        $user->save();
+
+        return Redirect::route('admin.profile.edit')->with('status', 'Profile updated successfully.');
+    }
+
+    public function resetFoto(Request $request)
+    {
+        $user = auth()->user();
+
+        // 🔹 Hapus file foto lama langsung dari public
+        if ($user->foto && file_exists(public_path($user->foto))) {
+            unlink(public_path($user->foto));
+        }
+
+        $user->foto = null;
+        $user->save();
+
+        return redirect()->route('admin.profile.edit')->with('status', 'Foto berhasil direset.');
     }
 
     /**

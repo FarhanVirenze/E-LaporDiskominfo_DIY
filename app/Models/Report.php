@@ -18,6 +18,7 @@ class Report extends Model
         'likes',
         'dislikes',
         'is_anonim',
+        'is_arsip',      // <--- Tambahkan kolom baru
         'nama_pengadu',
         'email_pengadu',
         'telepon_pengadu',
@@ -36,6 +37,7 @@ class Report extends Model
 
     protected $casts = [
         'is_anonim' => 'boolean',
+        'is_arsip' => 'boolean',    // <--- Tambahkan casting boolean
         'latitude' => 'float',
         'longitude' => 'float',
         'file' => 'array',
@@ -45,6 +47,7 @@ class Report extends Model
     public const STATUS_DIBACA = 'Dibaca';
     public const STATUS_DIRESPON = 'Direspon';
     public const STATUS_SELESAI = 'Selesai';
+    public const STATUS_ARSIP = 'Arsip';  // <--- Tambahkan konstanta Arsip
 
     public static function getStatuses()
     {
@@ -53,6 +56,7 @@ class Report extends Model
             self::STATUS_DIBACA,
             self::STATUS_DIRESPON,
             self::STATUS_SELESAI,
+            self::STATUS_ARSIP, // <--- Tambahkan Arsip
         ];
     }
 
@@ -90,6 +94,7 @@ class Report extends Model
     {
         return $this->belongsTo(User::class, 'updated_by', 'id_user');
     }
+
     public function votes()
     {
         return $this->hasMany(Vote::class);
@@ -107,7 +112,7 @@ class Report extends Model
 
     public function pelapor()
     {
-        return $this->belongsTo(User::class, 'nama_pengadu', 'name');
+        return $this->belongsTo(User::class, 'user_id', 'id_user');
     }
 
     // (Opsional) Generate tracking_id otomatis jika belum diset
@@ -120,6 +125,11 @@ class Report extends Model
                     $acak = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT); // 4 digit
                     $report->tracking_id = $tanggal . $acak; // Total 10 digit
                 } while (self::where('tracking_id', $report->tracking_id)->exists());
+            }
+
+            // Jika is_arsip true → set status Arsip
+            if (!isset($report->status)) {
+                $report->status = $report->is_arsip ? self::STATUS_ARSIP : self::STATUS_DIAJUKAN;
             }
         });
     }

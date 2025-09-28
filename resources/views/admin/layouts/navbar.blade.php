@@ -103,7 +103,7 @@
 
                                                 <!-- Avatar -->
                                                 @if (Auth::user()->foto)
-                                                    <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="Avatar"
+                                                    <img src="{{ asset(Auth::user()->foto) }}" alt="Avatar"
                                                         class="h-8 w-8 object-cover rounded-full border-2 border-white shadow" />
                                                 @else
                                                     <img src="{{ asset('images/avatar.jpg') }}" alt="Avatar"
@@ -120,7 +120,7 @@
                                             <div class="px-4 pt-3 pb-2 text-sm text-gray-700">
                                                 <div class="flex flex-col items-center text-center">
                                                     @if (Auth::user()->foto)
-                                                        <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="Avatar"
+                                                        <img src="{{ asset(Auth::user()->foto) }}" alt="Avatar"
                                                             class="h-14 w-14 rounded-full object-cover border border-gray-300 mb-2 bg-white" />
                                                     @else
                                                         <img src="{{ asset('images/avatar.jpg') }}" alt="Avatar"
@@ -188,7 +188,7 @@
                             <button
                                 class="flex items-center bg-white/20 px-1 py-1 text-sm rounded-full border border-white/50 hover:bg-red-200/30 transition-all space-x-3 shadow-sm backdrop-blur-md">
                                 @if (Auth::user()->foto)
-                                    <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="User Avatar"
+                                    <img src="{{ asset(Auth::user()->foto) }}" alt="User Avatar"
                                         class="h-11 w-11 rounded-full object-cover border-2 border-white shadow-sm" />
                                 @else
                                     <img src="{{ asset('images/avatar.jpg') }}" alt="Default Avatar"
@@ -202,7 +202,7 @@
                             <div class="px-4 pt-3 pb-2 text-sm text-gray-700">
                                 <div class="flex flex-col items-center text-center">
                                     @if (Auth::user()->foto)
-                                        <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="Avatar"
+                                        <img src="{{ asset(Auth::user()->foto) }}" alt="Avatar"
                                             class="h-14 w-14 rounded-full object-cover border border-gray-300 mb-2 bg-white" />
                                     @else
                                         <img src="{{ asset('images/avatar.jpg') }}" alt="Avatar"

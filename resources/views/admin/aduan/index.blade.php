@@ -19,6 +19,7 @@
             <option value="Dibaca" {{ request('status') == 'Dibaca' ? 'selected' : '' }}>Dibaca</option>
             <option value="Direspon" {{ request('status') == 'Direspon' ? 'selected' : '' }}>Direspon</option>
             <option value="Selesai" {{ request('status') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+            <option value="Arsip" {{ request('status') == 'Arsip' ? 'selected' : '' }}>Arsip</option>
         </select>
     </form>
 </div>
@@ -47,6 +48,7 @@
                                                 @elseif($report->status == 'Dibaca') bg-blue-200 text-blue-800
                                                 @elseif($report->status == 'Direspon') bg-yellow-200 text-yellow-800
                                                 @elseif($report->status == 'Selesai') bg-green-200 text-green-800
+                                                @elseif($report->status == 'Arsip') bg-stone-700 text-white
                                                 @endif
                                                 rounded-full px-2 py-1 text-xs font-semibold">
                                     {{ $report->status }}
@@ -165,6 +167,7 @@
                                     <option value="Dibaca">Dibaca</option>
                                     <option value="Direspon">Direspon</option>
                                     <option value="Selesai">Selesai</option>
+                                     <option value="Arsip">Arsip</option>
                                 </select>
                             </div>
                         </div>

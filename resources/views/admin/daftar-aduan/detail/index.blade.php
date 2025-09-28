@@ -155,7 +155,7 @@
                 <p>
                     <span class="font-medium">Oleh</span>
                     <span class="text-gray-800 font-semibold">
-                        {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}
+                        {{ $report->is_anonim ? 'Anonim' : ($report->pelapor->name ?? '-') }}
                     </span>
                     <i class="fas fa-random ml-1 text-xs text-gray-500"></i>
                     <span class="ml-1 text-gray-500">Melalui Website Pengaduan</span>
@@ -171,6 +171,7 @@
                                                                         @if($report->status == 'Diajukan') bg-red-100 text-red-700
                                                                         @elseif($report->status == 'Dibaca') bg-blue-100 text-blue-700
                                                                         @elseif($report->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                                        @elseif($report->status == 'Arsip') bg-stone-700 text-white
                                                                         @elseif($report->status == 'Selesai') bg-green-100 text-green-700 @endif">
                             Aduan {{ strtolower($report->status) }}
                         </span>
@@ -198,6 +199,7 @@
                                     <option value="Dibaca" @selected($report->status == 'Dibaca')>Dibaca</option>
                                     <option value="Direspon" @selected($report->status == 'Direspon')>Direspon</option>
                                     <option value="Selesai" @selected($report->status == 'Selesai')>Selesai</option>
+                                    <option value="Arsip" @selected($report->status == 'Arsip')>Arsip</option>
                                 </select>
 
                                 <div class="flex justify-end gap-2">
@@ -508,7 +510,7 @@
 
                             @if ($item->file)
                                 @php
-                                    $filePath = asset('storage/' . $item->file);
+                                    $filePath = asset($item->file);
                                     $fileExtension = pathinfo($item->file, PATHINFO_EXTENSION);
                                 @endphp
 
@@ -608,7 +610,7 @@
 
                             @if ($item->file)
                                 @php
-                                    $filePath = asset('storage/' . $item->file);
+                                    $filePath = asset($item->file);
                                     $fileExtension = pathinfo($item->file, PATHINFO_EXTENSION);
                                 @endphp
 
@@ -741,7 +743,7 @@
                     <div class="flex flex-wrap gap-4 mt-2">
                         @foreach ($report->file as $index => $file)
                             @php
-                                $filePath = asset('storage/' . ltrim($file, '/'));
+                                $filePath = asset(ltrim($file, '/'));
                                 $fileExtension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
                             @endphp
 
@@ -806,7 +808,7 @@
                                             <button type="button" @click="openDeleteModal = false"
                                                 class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Batal</button>
 
-                                            <form action="{{ route('superadmin.reports.file.delete', [$report->id, $index]) }}"
+                                            <form action="{{ route('admin.reports.file.delete', [$report->id, $index]) }}"
                                                 method="POST">
                                                 @csrf
                                                 @method('DELETE')

@@ -32,6 +32,9 @@ class DaftarAduanController extends Controller
             $reportsQuery = Report::query();
         }
 
+        // **Filter Arsip supaya tidak tampil**
+        $reportsQuery->where('status', '!=', 'Arsip');
+
         // Filter tambahan dari request
         if ($request->filled('status')) {
             $reportsQuery->where('status', $request->status);

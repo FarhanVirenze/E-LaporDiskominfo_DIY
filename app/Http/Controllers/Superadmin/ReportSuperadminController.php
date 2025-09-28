@@ -13,7 +13,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ReportSuperadminController extends Controller
@@ -90,29 +89,34 @@ class ReportSuperadminController extends Controller
             'is_anonim' => 'nullable|boolean',
         ]);
 
-        // Simpan file
+        // Tangani file upload
+        $filePaths = [];
         if ($request->hasFile('file')) {
-            $filePaths = [];
             foreach ($request->file('file') as $uploadedFile) {
+                // Gunakan storage public supaya bisa diakses via asset()
                 $filePaths[] = $uploadedFile->store('report_files', 'public');
             }
-            $validated['file'] = $filePaths;
         }
+        $validated['file'] = $filePaths;
 
-        $validated['is_anonim'] = $request->boolean('is_anonim');
+        // Tangani anonim
+        $isAnonim = $request->boolean('is_anonim');
+        $validated['is_anonim'] = $isAnonim;
         $validated['status'] = Report::STATUS_DIAJUKAN;
 
-        if (!$validated['is_anonim']) {
+        if (!$isAnonim) {
             $user = auth()->user();
-            if (!$user)
+            if (!$user) {
                 return back()->with('error', 'Pengguna tidak terautentikasi.');
-
+            }
+            // Simpan data pengadu
             $validated['user_id'] = $user->id_user;
             $validated['nama_pengadu'] = $user->name;
             $validated['email_pengadu'] = $user->email;
             $validated['telepon_pengadu'] = $user->nomor_telepon ?? null;
             $validated['nik'] = $user->nik ?? null;
         } else {
+            // Data pengadu anonim
             $validated['user_id'] = null;
             $validated['nama_pengadu'] = 'Anonim';
             $validated['email_pengadu'] = 'anonim@domain.com';
@@ -120,7 +124,7 @@ class ReportSuperadminController extends Controller
             $validated['nik'] = null;
         }
 
-        // Ambil admin_id dari kategori_umum
+        // Ambil admin dari kategori
         $kategori = KategoriUmum::find($validated['kategori_id']);
         if ($kategori && $kategori->admin_id) {
             $validated['admin_id'] = $kategori->admin_id;
@@ -128,9 +132,11 @@ class ReportSuperadminController extends Controller
             return back()->with('error', 'Kategori belum memiliki admin yang ditugaskan.');
         }
 
+        // Simpan laporan
         try {
             Report::create($validated);
-            return redirect()->route('superadmin.aduan.riwayat')->with('success', 'Laporan berhasil dikirim.');
+            return redirect()->route('superadmin.aduan.riwayat')
+                ->with('success', 'Laporan berhasil dikirim.');
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal menyimpan laporan: ' . $e->getMessage());
         }
@@ -247,7 +253,7 @@ class ReportSuperadminController extends Controller
         $request->validate([
             'judul' => 'nullable|string|max:255',
             'isi' => 'nullable|string',
-            'status' => 'nullable|in:Diajukan,Dibaca,Direspon,Selesai',
+            'status' => 'nullable|in:Diajukan,Dibaca,Direspon,Selesai,Arsip',
             'kategori_id' => 'nullable|exists:kategori_umum,id',
             'wilayah_id' => 'nullable|exists:wilayah_umum,id',
             'admin_id' => 'nullable|exists:users,id_user',
@@ -272,10 +278,9 @@ class ReportSuperadminController extends Controller
             'tracking_id'
         ]);
 
-        // 🔹 Tambahkan updated_by (selalu isi siapa yg terakhir update)
         $data['updated_by'] = auth()->id();
 
-        // 🔹 Logika: Batalkan selesai → balik ke Dibaca/Direspon
+        // Logika: Batalkan selesai → balik ke Dibaca/Direspon
         if ($report->status === Report::STATUS_SELESAI && $request->status === Report::STATUS_DIBACA) {
             if ($report->followUps->isNotEmpty()) {
                 $data['status'] = Report::STATUS_DIRESPON;
@@ -284,7 +289,7 @@ class ReportSuperadminController extends Controller
             }
         }
 
-        // 🔹 Kalau admin dipilih tapi kategori kosong → isi kategori pertama admin
+        // Kalau admin dipilih tapi kategori kosong → isi kategori pertama admin
         if (!empty($request->admin_id) && empty($request->kategori_id)) {
             $admin = User::with('kategori')->where('id_user', $request->admin_id)->first();
             if ($admin && $admin->kategori->count() > 0) {
@@ -292,17 +297,25 @@ class ReportSuperadminController extends Controller
             }
         }
 
-        // 🔹 Handle Lampiran Baru
+        // Handle Lampiran Baru → simpan langsung ke public/report_files
         $files = (array) $report->file; // data lama (array JSON)
         if ($request->hasFile('file')) {
+            $destinationPath = public_path('report_files'); // folder publik
+
+            // buat folder jika belum ada
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
             foreach ($request->file('file') as $uploadedFile) {
-                $path = $uploadedFile->store('reports', 'public');
-                $files[] = $path;
+                $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+                $uploadedFile->move($destinationPath, $filename);
+                $files[] = 'report_files/' . $filename; // path relatif
             }
         }
         $data['file'] = $files;
 
-        // 🔹 Deteksi perubahan
+        // Deteksi perubahan
         $changes = [];
         foreach ($data as $key => $value) {
             if ($key === 'file') {
@@ -320,7 +333,7 @@ class ReportSuperadminController extends Controller
             }
         }
 
-        // 🔹 Update laporan
+        // Update laporan
         $report->update($data);
 
         // 🔹 Buat notifikasi
@@ -382,12 +395,13 @@ class ReportSuperadminController extends Controller
         if (isset($files[$index])) {
             $file = $files[$index];
 
-            // hapus dari storage
-            if (Storage::disk('public')->exists($file)) {
-                Storage::disk('public')->delete($file);
+            // Hapus langsung dari folder publik
+            $filePath = public_path($file);
+            if (file_exists($filePath)) {
+                unlink($filePath);
             }
 
-            // hapus dari array JSON
+            // Hapus dari array JSON
             unset($files[$index]);
             $report->file = array_values($files); // reindex array
             $report->save();
@@ -517,26 +531,25 @@ class ReportSuperadminController extends Controller
         $comment = Comment::with('user')->findOrFail($id);
         $user = Auth::user();
 
-        // Superadmin bisa hapus komentar siapa pun
+        // Hak akses
         if ($user->role === 'superadmin') {
             // lanjut
-        }
-        // Admin bisa hapus komentarnya sendiri dan komentar user (bukan superadmin)
-        elseif ($user->role === 'admin') {
+        } elseif ($user->role === 'admin') {
             if ($comment->user_id !== $user->id && (!$comment->user || $comment->user->role === 'superadmin')) {
                 abort(403, 'Anda tidak diizinkan menghapus komentar ini.');
             }
-        }
-        // User biasa hanya bisa hapus komentarnya sendiri
-        else {
+        } else {
             if ($comment->user_id !== $user->id) {
                 abort(403, 'Anda tidak diizinkan menghapus komentar ini.');
             }
         }
 
-        // Hapus file jika ada
-        if ($comment->file && \Storage::disk('public')->exists($comment->file)) {
-            \Storage::disk('public')->delete($comment->file);
+        // 🔹 Hapus file langsung dari public/comment_files jika ada
+        if ($comment->file) {
+            $filePath = public_path($comment->file);
+            if (file_exists($filePath)) {
+                @unlink($filePath); // @ supaya tidak error jika gagal
+            }
         }
 
         $comment->delete();
@@ -552,32 +565,36 @@ class ReportSuperadminController extends Controller
         $followUp = FollowUp::with('user')->findOrFail($followUpId);
         $user = Auth::user();
 
-        // Superadmin bisa hapus tindak lanjut dari admin maupun superadmin
+        // Cek role
         if ($user->role === 'superadmin') {
-            // boleh lanjut
-        }
-        // Admin hanya bisa hapus tindak lanjut dari admin (bukan superadmin)
-        elseif ($user->role === 'admin') {
+            // Superadmin boleh hapus semua
+        } elseif ($user->role === 'admin') {
+            // Admin hanya bisa hapus tindak lanjut dari admin
             if (!$followUp->user || $followUp->user->role !== 'admin') {
                 abort(403, 'Anda tidak diizinkan menghapus tindak lanjut ini.');
             }
-        }
-        // Role lain (user biasa) tidak boleh hapus
-        else {
+        } else {
             abort(403, 'Anda tidak diizinkan menghapus tindak lanjut ini.');
         }
 
-        // Hapus file jika ada
-        if ($followUp->file && \Storage::disk('public')->exists($followUp->file)) {
-            \Storage::disk('public')->delete($followUp->file);
+        // Hapus file terkait di public/followup_files
+        if ($followUp->file) {
+            $filePath = public_path('followup_files/' . $followUp->file);
+            if (file_exists($filePath)) {
+                try {
+                    unlink($filePath);
+                } catch (\Exception $e) {
+                    \Log::error("Gagal menghapus file followup: " . $filePath . " - " . $e->getMessage());
+                }
+            }
         }
 
-        // Hapus tindak lanjut
+        // Hapus record followup
         $followUp->delete();
 
-        // Jika tidak ada tindak lanjut lagi dan status sebelumnya adalah Direspon, ubah jadi Dibaca
+        // Update status laporan jika tidak ada tindak lanjut lagi
         $report = Report::findOrFail($reportId);
-        if ($report->followUps->isEmpty() && $report->status === Report::STATUS_DIRESPON) {
+        if ($report->followUps()->count() === 0 && $report->status === Report::STATUS_DIRESPON) {
             $report->status = Report::STATUS_DIBACA;
             $report->save();
 
@@ -614,7 +631,7 @@ class ReportSuperadminController extends Controller
         // Tidak peduli role-nya apa, ambil aduan berdasarkan siapa yang mengajukan (user_id)
         $aduan = Report::where('user_id', $user->id_user)
             ->latest()
-            ->get(['id', 'tracking_id', 'judul', 'status', 'created_at']);
+            ->get(['id', 'tracking_id', 'judul', 'status', 'created_at', 'is_anonim']);
 
         return view('superadmin.daftar-aduan.riwayat', compact('aduan'));
     }
@@ -625,7 +642,7 @@ class ReportSuperadminController extends Controller
         $aduan = Report::where('user_id', auth()->id()) // ganti kalau beda tabel
             ->where('kategori_id', 999) // contoh filter WBS
             ->latest()
-            ->get(['id', 'tracking_id', 'judul', 'status', 'created_at']);
+            ->get(['id', 'tracking_id', 'judul', 'status', 'created_at', "is_anonim"]);
 
         return view('superadmin.daftar-aduan.riwayat-wbs', compact('aduan'));
     }

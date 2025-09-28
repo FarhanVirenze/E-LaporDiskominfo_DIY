@@ -9,14 +9,13 @@ use App\Models\WbsFollowUp;
 use App\Models\WbsComment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class WbsAduanController extends Controller
 {
     // Menampilkan semua laporan
     public function index(Request $request)
     {
-        $wbsAdmin = Auth::user(); // WBS Admin login
+        $wbsAdmin = Auth::user();
 
         $query = WbsReport::with(['kategori', 'wilayah', 'pelapor']);
 
@@ -24,9 +23,15 @@ class WbsAduanController extends Controller
             $query->where('status', $request->status);
         }
 
-        $reports = $query->orderByDesc('created_at')
-            ->paginate(10)
-            ->appends($request->query());
+        $reports = $query->orderByDesc('created_at')->paginate(10)->appends($request->query());
+
+        // pastikan lampiran jadi array
+        $reports->getCollection()->transform(function ($report) {
+            if (is_string($report->lampiran)) {
+                $report->lampiran = json_decode($report->lampiran, true);
+            }
+            return $report;
+        });
 
         return view('wbs_admin.aduan.index', compact('reports'));
     }
@@ -42,47 +47,18 @@ class WbsAduanController extends Controller
             'comments.user',
         ])->findOrFail($id);
 
+        // decode jika masih string
+        if (is_string($report->lampiran)) {
+            $report->lampiran = json_decode($report->lampiran, true);
+        }
+
         if ($report->status === 'Diajukan') {
             $report->status = 'Dibaca';
             $report->save();
-
             session()->flash('success', 'Status laporan otomatis berubah menjadi Dibaca.');
         }
 
         return view('wbs_admin.detail.index', compact('report'));
-    }
-
-    // Simpan tindak lanjut (follow up)
-    public function storeFollowUp(Request $request, $reportId)
-    {
-        $request->validate([
-            'deskripsi' => 'required|string',
-            'lampiran' => 'nullable|file|max:2048',
-        ]);
-
-        $report = WbsReport::findOrFail($reportId);
-
-        // Upload lampiran jika ada
-        $lampiran = null;
-        if ($request->hasFile('lampiran')) {
-            $lampiran = $request->file('lampiran')->store('wbs_followups', 'public');
-        }
-
-        // Simpan follow-up
-        WbsFollowUp::create([
-            'report_id' => $report->id,
-            'user_id' => Auth::id(), // user admin yg follow up
-            'deskripsi' => $request->deskripsi,
-            'lampiran' => $lampiran,
-        ]);
-
-        // Ubah status laporan otomatis jika belum "Selesai"
-        if ($report->status !== 'Selesai') {
-            $report->status = 'Direspon';
-            $report->save();
-        }
-
-        return redirect()->back()->with('success', 'Tindak lanjut berhasil ditambahkan, Status berubah menjadi Direspon');
     }
 
     // Simpan komentar
@@ -97,12 +73,21 @@ class WbsAduanController extends Controller
 
         $file = null;
         if ($request->hasFile('file')) {
-            $file = $request->file('file')->store('wbs_comments', 'public');
+            $destinationPath = public_path('wbs_comments');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            $fileName = time() . '_' . $request->file('file')->getClientOriginalName();
+            $request->file('file')->move($destinationPath, $fileName);
+
+            // simpan path relatif agar bisa dipanggil dengan asset()
+            $file = 'wbs_comments/' . $fileName;
         }
 
         WbsComment::create([
             'report_id' => $report->id,
-            'user_id' => Auth::id(), // user yg komentar
+            'user_id' => Auth::id(),
             'pesan' => $request->pesan,
             'file' => $file,
         ]);
@@ -120,11 +105,31 @@ class WbsAduanController extends Controller
 
         $comment = WbsComment::findOrFail($id);
 
-        $file = $comment->file;
+        $file = $comment->file; // ambil file lama
+
         if ($request->hasFile('file')) {
-            $file = $request->file('file')->store('wbs_comments', 'public');
+            // hapus file lama kalau ada
+            if ($file && file_exists(public_path($file))) {
+                unlink(public_path($file));
+            }
+
+            // pastikan folder ada
+            $destinationPath = public_path('wbs_comments');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            // generate nama file baru
+            $fileName = time() . '_' . uniqid() . '_' . $request->file('file')->getClientOriginalName();
+
+            // pindahkan file
+            $request->file('file')->move($destinationPath, $fileName);
+
+            // simpan path relatif ke public
+            $file = 'wbs_comments/' . $fileName;
         }
 
+        // update data comment
         $comment->update([
             'pesan' => $request->pesan,
             'file' => $file,
@@ -137,10 +142,16 @@ class WbsAduanController extends Controller
     public function destroyComment($id)
     {
         $comment = WbsComment::findOrFail($id);
+
+        if ($comment->file && file_exists(public_path($comment->file))) {
+            unlink(public_path($comment->file));
+        }
+
         $comment->delete();
 
         return redirect()->back()->with('success', 'Komentar berhasil dihapus.');
     }
+
 
     // Update field tertentu
     public function update(Request $request, $id)
@@ -173,10 +184,10 @@ class WbsAduanController extends Controller
             $report->uraian = $request->uraian;
             $report->save();
 
-            return redirect()->back()->with('success', 'Lokasi & Uraian berhasil diperbarui.');
+            return back()->with('success', 'Lokasi & Uraian berhasil diperbarui.');
         }
 
-        // === Tambah lampiran ===
+        // Update lampiran
         if ($field === 'lampiran') {
             $request->validate([
                 'lampiran.*' => 'file|max:2048|mimes:jpg,jpeg,png,gif,pdf,doc,docx',
@@ -185,16 +196,20 @@ class WbsAduanController extends Controller
             if ($request->hasFile('lampiran')) {
                 $newFiles = [];
                 foreach ($request->file('lampiran') as $file) {
-                    $path = $file->store('lampiran', 'public');
-                    $newFiles[] = $path;
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    $file->move(public_path('lampiran'), $fileName);
+                    $newFiles[] = 'lampiran/' . $fileName;
                 }
 
-                // gabung dengan lampiran lama
-                $report->lampiran = array_merge($report->lampiran ?? [], $newFiles);
+                $oldFiles = is_string($report->lampiran)
+                    ? json_decode($report->lampiran, true)
+                    : ($report->lampiran ?? []);
+
+                $report->lampiran = array_merge($oldFiles, $newFiles);
                 $report->save();
             }
 
-            return redirect()->back()->with('success', 'Lampiran berhasil diperbarui.');
+            return back()->with('success', 'Lampiran berhasil diperbarui.');
         }
 
         // === Hapus lampiran tertentu ===
@@ -207,15 +222,18 @@ class WbsAduanController extends Controller
             $report->lampiran = array_values($lampiran);
             $report->save();
 
-            // hapus fisik file
-            \Storage::disk('public')->delete($file);
+            // hapus file fisik langsung di public
+            $filePath = public_path($file);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
 
-            return redirect()->back()->with('success', 'Lampiran berhasil dihapus.');
+            return back()->with('success', 'Lampiran berhasil dihapus.');
         }
 
         // === Field lain (default) ===
         if (!array_key_exists($field, $rules)) {
-            return redirect()->back()->with('error', 'Field tidak valid.');
+            return back()->with('error', 'Field tidak valid.');
         }
 
         $request->validate([
@@ -225,7 +243,48 @@ class WbsAduanController extends Controller
         $report->$field = $value;
         $report->save();
 
-        return redirect()->back()->with('success', 'Data berhasil diperbarui.');
+        return back()->with('success', 'Data berhasil diperbarui.');
+    }
+
+    // Simpan tindak lanjut (follow up)
+    public function storeFollowUp(Request $request, $reportId)
+    {
+        $request->validate([
+            'deskripsi' => 'required|string',
+            'lampiran' => 'nullable|file|max:2048',
+        ]);
+
+        $report = WbsReport::findOrFail($reportId);
+
+        // Upload lampiran jika ada
+        $lampiran = null;
+        if ($request->hasFile('lampiran')) {
+            $destinationPath = public_path('wbs_followups');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            $fileName = time() . '_' . $request->file('lampiran')->getClientOriginalName();
+            $request->file('lampiran')->move($destinationPath, $fileName);
+
+            $lampiran = 'wbs_followups/' . $fileName; // simpan path relatif
+        }
+
+        // Simpan follow-up
+        WbsFollowUp::create([
+            'report_id' => $report->id,
+            'user_id' => Auth::id(), // admin yg follow up
+            'deskripsi' => $request->deskripsi,
+            'lampiran' => $lampiran,
+        ]);
+
+        // Ubah status laporan otomatis jika belum "Selesai"
+        if ($report->status !== 'Selesai') {
+            $report->status = 'Direspon';
+            $report->save();
+        }
+
+        return redirect()->back()->with('success', 'Tindak lanjut berhasil ditambahkan, Status berubah menjadi Direspon');
     }
 
     // Update tindak lanjut
@@ -240,7 +299,20 @@ class WbsAduanController extends Controller
 
         $lampiran = $followUp->lampiran;
         if ($request->hasFile('lampiran')) {
-            $lampiran = $request->file('lampiran')->store('wbs_followups', 'public');
+            // Hapus file lama kalau ada
+            if ($lampiran && file_exists(public_path($lampiran))) {
+                unlink(public_path($lampiran));
+            }
+
+            $destinationPath = public_path('wbs_followups');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            $fileName = time() . '_' . $request->file('lampiran')->getClientOriginalName();
+            $request->file('lampiran')->move($destinationPath, $fileName);
+
+            $lampiran = 'wbs_followups/' . $fileName;
         }
 
         $followUp->update([
@@ -255,14 +327,18 @@ class WbsAduanController extends Controller
     public function destroyFollowUp($id)
     {
         $followUp = WbsFollowUp::findOrFail($id);
-        $report = $followUp->report; // relasi ke model Report/Aduan
+        $report = $followUp->report;
+
+        // Hapus file lampiran kalau ada
+        if ($followUp->lampiran && file_exists(public_path($followUp->lampiran))) {
+            unlink(public_path($followUp->lampiran));
+        }
 
         // Hapus tindak lanjut
         $followUp->delete();
 
-        // Ubah status report jika bukan "Selesai"
+        // Update status report kalau bukan "Selesai"
         if ($report && $report->status !== 'Selesai') {
-            // Kalau sebelumnya "Direspon", balikan jadi "Dibaca"
             if ($report->status === 'Direspon') {
                 $report->status = 'Dibaca';
                 $report->save();

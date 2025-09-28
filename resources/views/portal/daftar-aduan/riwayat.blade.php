@@ -15,9 +15,9 @@
         @if (session('success'))
             <div id="alert-success"
                 class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
-                                                                                                                                                                                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
-                                                                                                                                                                                                       bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
-                                                                                                                                                                                                       transition-all duration-500 opacity-100 animate-fade-in">
+                                                                                                                                                                                                               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
+                                                                                                                                                                                                               bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
+                                                                                                                                                                                                               transition-all duration-500 opacity-100 animate-fade-in">
 
                 <!-- Ikon -->
                 <div id="success-icon-wrapper" class="flex-shrink-0">
@@ -140,8 +140,8 @@
                     <div class="hidden md:flex items-center rounded-full border border-red-300 overflow-hidden">
                         {{-- Table View --}}
                         <button @click="view = 'table'" :class="view === 'table' 
-                                                        ? 'bg-red-600 text-white' 
-                                                        : 'bg-white text-gray-700 hover:bg-gray-50'"
+                                                            ? 'bg-red-600 text-white' 
+                                                            : 'bg-white text-gray-700 hover:bg-gray-50'"
                             class="px-4 py-2 flex items-center gap-1 transition">
                             <template x-if="view === 'table'">
                                 <i class="fas fa-check mr-1"></i>
@@ -151,8 +151,8 @@
 
                         {{-- Card View --}}
                         <button @click="view = 'card'" :class="view === 'card' 
-                                                        ? 'bg-red-600 text-white' 
-                                                        : 'bg-white text-gray-700 hover:bg-gray-50'"
+                                                            ? 'bg-red-600 text-white' 
+                                                            : 'bg-white text-gray-700 hover:bg-gray-50'"
                             class="px-4 py-2 flex items-center gap-1 transition border-l border-red-300">
                             <template x-if="view === 'card'">
                                 <i class="fas fa-check mr-1"></i>
@@ -188,11 +188,12 @@
                                     <td class="px-4 py-3">
                                         <span
                                             class="text-xs font-semibold px-3 py-1 rounded-full shadow-sm
-                                                                                                                                                    @if($item->status == 'Diajukan') bg-red-100 text-red-700
-                                                                                                                                                    @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
-                                                                                                                                                    @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                                                                                                    @elseif($item->status == 'Selesai') bg-green-100 text-green-700
-                                                                                                                                                    @else bg-gray-200 text-gray-800 @endif">
+                                                                                                                                                            @if($item->status == 'Diajukan') bg-red-100 text-red-700
+                                                                                                                                                            @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
+                                                                                                                                                            @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                                                                                                                            @elseif($item->status == 'Selesai') bg-green-100 text-green-700
+                                                                                                                                                            @elseif($item->status == 'Arsip') bg-stone-700 text-white
+                                                                                                                                                            @else bg-gray-200 text-gray-800 @endif">
                                             {{ $item->status }}
                                         </span>
                                     </td>
@@ -225,7 +226,7 @@
                                     foreach ($files as $f) {
                                         $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
                                         if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                                            $thumbnail = asset('storage/' . $f);
+                                            $thumbnail = asset($f);
                                             break;
                                         }
                                     }
@@ -251,11 +252,12 @@
                                     <span>{{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMM YYYY') }}</span>
                                 </div>
                                 <span class="text-[11px] font-semibold px-3 py-1 rounded-full shadow-sm
-                                                                            @if($item->status == 'Diajukan') bg-red-100 text-red-700
-                                                                            @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
-                                                                            @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                            @elseif($item->status == 'Selesai') bg-green-100 text-green-700
-                                                                            @else bg-gray-200 text-gray-800 @endif">
+                                                                                    @if($item->status == 'Diajukan') bg-red-100 text-red-700
+                                                                                    @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
+                                                                                    @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                                                    @elseif($item->status == 'Selesai') bg-green-100 text-green-700
+                                                                                      @elseif($item->status == 'Arsip') bg-stone-700 text-white
+                                                                                    @else bg-gray-200 text-gray-800 @endif">
                                     {{ $item->status }}
                                 </span>
                             </div>
@@ -284,8 +286,8 @@
                         <div class="flex items-center rounded-full border border-red-300 overflow-hidden">
                             {{-- List View --}}
                             <button @click="view = 'list'" :class="view === 'list' 
-                                    ? 'bg-red-600 text-white' 
-                                    : 'bg-white text-gray-700 hover:bg-gray-50'"
+                                        ? 'bg-red-600 text-white' 
+                                        : 'bg-white text-gray-700 hover:bg-gray-50'"
                                 class="px-3 py-1.5 flex items-center gap-1 text-sm transition">
                                 <template x-if="view === 'list'">
                                     <i class="fas fa-check mr-1"></i>
@@ -295,8 +297,8 @@
 
                             {{-- Card View --}}
                             <button @click="view = 'card'" :class="view === 'card' 
-                                    ? 'bg-red-600 text-white' 
-                                    : 'bg-white text-gray-700 hover:bg-gray-50'"
+                                        ? 'bg-red-600 text-white' 
+                                        : 'bg-white text-gray-700 hover:bg-gray-50'"
                                 class="px-3 py-1.5 flex items-center gap-1 text-sm transition border-l border-red-300">
                                 <template x-if="view === 'card'">
                                     <i class="fas fa-check mr-1"></i>
@@ -319,11 +321,12 @@
                                         <span>{{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMM YYYY') }}</span>
                                     </div>
                                     <span class="text-[11px] font-semibold px-3 py-1 rounded-full shadow-sm
-                                                                        @if($item->status == 'Diajukan') bg-red-100 text-red-700
-                                                                        @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
-                                                                        @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                        @elseif($item->status == 'Selesai') bg-green-100 text-green-700
-                                                                        @else bg-gray-200 text-gray-800 @endif">
+                                                                                @if($item->status == 'Diajukan') bg-red-100 text-red-700
+                                                                                @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
+                                                                                @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                                                @elseif($item->status == 'Selesai') bg-green-100 text-green-700
+                                                                                  @elseif($item->status == 'Arsip') bg-stone-700 text-white
+                                                                                @else bg-gray-200 text-gray-800 @endif">
                                         {{ $item->status }}
                                     </span>
                                 </div>
@@ -355,7 +358,7 @@
                                         foreach ($files as $f) {
                                             $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
                                             if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                                                $thumbnail = asset('storage/' . $f);
+                                                $thumbnail = asset($f);
                                                 break;
                                             }
                                         }
@@ -381,11 +384,12 @@
                                         <span>{{ $item->created_at->setTimezone('Asia/Jakarta')->locale('id')->isoFormat('D MMM YYYY') }}</span>
                                     </div>
                                     <span class="text-[11px] font-semibold px-2 py-1 rounded-full shadow-sm
-                                                                        @if($item->status == 'Diajukan') bg-red-100 text-red-700
-                                                                        @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
-                                                                        @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                        @elseif($item->status == 'Selesai') bg-green-100 text-green-700
-                                                                        @else bg-gray-200 text-gray-800 @endif">
+                                                                                @if($item->status == 'Diajukan') bg-red-100 text-red-700
+                                                                                @elseif($item->status == 'Dibaca') bg-blue-100 text-blue-700
+                                                                                @elseif($item->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                                                @elseif($item->status == 'Selesai') bg-green-100 text-green-700
+                                                                                  @elseif($item->status == 'Arsip') bg-stone-700 text-white
+                                                                                @else bg-gray-200 text-gray-800 @endif">
                                         {{ $item->status }}
                                     </span>
                                 </div>

@@ -12,9 +12,9 @@
         @if (session('success'))
             <div id="successMessage"
                 class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
-                                                                                                                                                                                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
-                                                                                                                                                                                                       bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
-                                                                                                                                                                                                       transition-all duration-500 opacity-100 animate-fade-in">
+                                                                                                                                                                                                               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
+                                                                                                                                                                                                               bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
+                                                                                                                                                                                                               transition-all duration-500 opacity-100 animate-fade-in">
 
                 <!-- Ikon -->
                 <div id="success-icon-wrapper" class="flex-shrink-0">
@@ -155,7 +155,7 @@
                 <p>
                     <span class="font-medium">Oleh</span>
                     <span class="text-gray-800 font-semibold">
-                        {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}
+                         {{ $report->is_anonim ? 'Anonim' : ($report->pelapor->name ?? '-') }}
                     </span>
                     <i class="fas fa-random ml-1 text-xs text-gray-500"></i>
                     <span class="ml-1 text-gray-500">Melalui Website Pengaduan</span>
@@ -206,10 +206,12 @@
                         <span class="font-medium">Status Aduan</span>
                         <span
                             class="ml-1 inline-block px-2 py-0.5 rounded-full text-xs font-semibold
-                                                                                            @if($report->status == 'Diajukan') bg-red-100 text-red-700
-                                                                                            @elseif($report->status == 'Dibaca') bg-blue-100 text-blue-700
-                                                                                            @elseif($report->status == 'Direspon') bg-yellow-100 text-yellow-800
-                                                                                            @elseif($report->status == 'Selesai') bg-green-100 text-green-700 @endif">
+                                                                                                @if($report->status == 'Diajukan') bg-red-100 text-red-700
+                                                                                                @elseif($report->status == 'Dibaca') bg-blue-100 text-blue-700
+                                                                                                @elseif($report->status == 'Direspon') bg-yellow-100 text-yellow-800
+                                                                                                @elseif($report->status == 'Arsip') bg-stone-700 text-white
+                                                                                                @elseif($report->status == 'Selesai') bg-green-100 text-green-700 @endif">
+                                                                                                
                             Aduan {{ strtolower($report->status) }}
                         </span>
 
@@ -236,6 +238,7 @@
                                     <option value="Dibaca" @selected($report->status == 'Dibaca')>Dibaca</option>
                                     <option value="Direspon" @selected($report->status == 'Direspon')>Direspon</option>
                                     <option value="Selesai" @selected($report->status == 'Selesai')>Selesai</option>
+                                    <option value="Arsip" @selected($report->status == 'Arsip')>Arsip</option>
                                 </select>
 
                                 <div class="flex justify-end gap-2">
@@ -292,83 +295,84 @@
                         </div>
                     </div>
 
-                {{-- Disposisi --}}
-                <div x-data="{
-                openDisposisiModal: false,
-                selectedAdmin: '{{ $report->admin_id }}',
-                selectedKategori: '{{ $report->kategori_id }}',
-                kategoriList: [
-                    @foreach($kategoriList as $kategori)
-                        { id: '{{ $kategori->id }}', nama: '{{ $kategori->nama }}', admin_id: '{{ $kategori->admin_id }}' },
-                    @endforeach
-                ],
-                get filteredKategori() {
-                    return this.kategoriList.filter(k => k.admin_id == this.selectedAdmin);
-                }
-            }">
-                    <p class="text-sm text-gray-700 flex items-center">
-                        <i class="fas fa-share-square text-gray-500 mr-1"></i>
-                        <span class="font-medium">Aduan ini didisposisikan ke</span>
-                        @if($report->admin)
-                            <span class="ml-1 px-1.5 py-0.5 rounded-full bg-gray-600 text-white text-[10px] font-medium">
-                                {{ $report->admin->name }} ({{ $report->kategori->nama }})
-                            </span>
-                        @else
-                            <span class="ml-1 italic text-gray-500">Belum didisposisikan</span>
-                        @endif
+                    {{-- Disposisi --}}
+                    <div x-data="{
+                    openDisposisiModal: false,
+                    selectedAdmin: '{{ $report->admin_id }}',
+                    selectedKategori: '{{ $report->kategori_id }}',
+                    kategoriList: [
+                        @foreach($kategoriList as $kategori)
+                            { id: '{{ $kategori->id }}', nama: '{{ $kategori->nama }}', admin_id: '{{ $kategori->admin_id }}' },
+                        @endforeach
+                    ],
+                    get filteredKategori() {
+                        return this.kategoriList.filter(k => k.admin_id == this.selectedAdmin);
+                    }
+                }">
+                        <p class="text-sm text-gray-700 flex items-center">
+                            <i class="fas fa-share-square text-gray-500 mr-1"></i>
+                            <span class="font-medium">Aduan ini didisposisikan ke</span>
+                            @if($report->admin)
+                                <span class="ml-1 px-1.5 py-0.5 rounded-full bg-gray-600 text-white text-[10px] font-medium">
+                                    {{ $report->admin->name }} ({{ $report->kategori->nama }})
+                                </span>
+                            @else
+                                <span class="ml-1 italic text-gray-500">Belum didisposisikan</span>
+                            @endif
 
-                        <button @click="openDisposisiModal = true" class="ml-2 text-blue-600 hover:text-blue-800">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                    </p>
+                            <button @click="openDisposisiModal = true" class="ml-2 text-blue-600 hover:text-blue-800">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </p>
 
-                    <!-- Modal -->
-                    <div x-show="openDisposisiModal" x-cloak
-                        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-                            <h3 class="text-lg font-bold mb-4">Edit Disposisi</h3>
+                        <!-- Modal -->
+                        <div x-show="openDisposisiModal" x-cloak
+                            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                            <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+                                <h3 class="text-lg font-bold mb-4">Edit Disposisi</h3>
 
-                            <form action="{{ route('superadmin.reports.update', $report->id) }}" method="POST">
-                                @csrf
-                                @method('PUT')
+                                <form action="{{ route('superadmin.reports.update', $report->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
 
-                                {{-- Pilih Admin --}}
-                                <label class="block font-medium mb-1">Pilih Admin</label>
-                                <select x-model="selectedAdmin" name="admin_id"
-                                    class="w-full border rounded-lg px-3 py-2 mb-4 focus:ring focus:ring-blue-300" @change="
-                                    // begitu admin dipilih, otomatis pilih kategori pertama
-                                    if (filteredKategori.length > 0) {
-                                        selectedKategori = filteredKategori[0].id;
-                                    } else {
-                                        selectedKategori = '';
-                                    }
-                                ">
-                                    <option value="">-- Pilih Admin --</option>
-                                    @foreach($admins as $admin)
-                                        <option value="{{ $admin->id_user }}">{{ $admin->name }}</option>
-                                    @endforeach
-                                </select>
+                                    {{-- Pilih Admin --}}
+                                    <label class="block font-medium mb-1">Pilih Admin</label>
+                                    <select x-model="selectedAdmin" name="admin_id"
+                                        class="w-full border rounded-lg px-3 py-2 mb-4 focus:ring focus:ring-blue-300"
+                                        @change="
+                                        // begitu admin dipilih, otomatis pilih kategori pertama
+                                        if (filteredKategori.length > 0) {
+                                            selectedKategori = filteredKategori[0].id;
+                                        } else {
+                                            selectedKategori = '';
+                                        }
+                                    ">
+                                        <option value="">-- Pilih Admin --</option>
+                                        @foreach($admins as $admin)
+                                            <option value="{{ $admin->id_user }}">{{ $admin->name }}</option>
+                                        @endforeach
+                                    </select>
 
-                                {{-- Pilih Kategori --}}
-                                <label class="block font-medium mb-1">Pilih Kategori</label>
-                                <select x-model="selectedKategori" name="kategori_id"
-                                    class="w-full border rounded-lg px-3 py-2 mb-4 focus:ring focus:ring-blue-300"
-                                    :disabled="!selectedAdmin">
-                                    <template x-for="kategori in filteredKategori" :key="kategori.id">
-                                        <option :value="kategori.id" x-text="kategori.nama"></option>
-                                    </template>
-                                </select>
+                                    {{-- Pilih Kategori --}}
+                                    <label class="block font-medium mb-1">Pilih Kategori</label>
+                                    <select x-model="selectedKategori" name="kategori_id"
+                                        class="w-full border rounded-lg px-3 py-2 mb-4 focus:ring focus:ring-blue-300"
+                                        :disabled="!selectedAdmin">
+                                        <template x-for="kategori in filteredKategori" :key="kategori.id">
+                                            <option :value="kategori.id" x-text="kategori.nama"></option>
+                                        </template>
+                                    </select>
 
-                                <div class="flex justify-end gap-2">
-                                    <button type="button" @click="openDisposisiModal = false"
-                                        class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Batal</button>
-                                    <button type="submit"
-                                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Simpan</button>
-                                </div>
-                            </form>
+                                    <div class="flex justify-end gap-2">
+                                        <button type="button" @click="openDisposisiModal = false"
+                                            class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400">Batal</button>
+                                        <button type="submit"
+                                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Simpan</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
 
@@ -399,7 +403,7 @@
                             @csrf
                             <button type="submit"
                                 class="flex items-center text-sm transition-all duration-200 
-                                                                                                                                                                                                                                            {{ session('vote_report_' . $report->id) === 'like' ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
+                                                                                                                                                                                                                                                    {{ session('vote_report_' . $report->id) === 'like' ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
                                 <i class="fas fa-thumbs-up mr-1"></i> {{ $report->likes }}
                             </button>
                         </form>
@@ -409,7 +413,7 @@
                             @csrf
                             <button type="submit"
                                 class="flex items-center text-sm transition-all duration-200 
-                                                                                                                                                                                                                                            {{ session('vote_report_' . $report->id) === 'dislike' ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
+                                                                                                                                                                                                                                                    {{ session('vote_report_' . $report->id) === 'dislike' ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
                                 <i class="fas fa-thumbs-down mr-1"></i> {{ $report->dislikes }}
                             </button>
                         </form>
@@ -563,7 +567,7 @@
 
                             @if ($item->file)
                                 @php
-                                    $filePath = asset('storage/' . $item->file);
+                                    $filePath = asset($item->file);
                                     $fileExtension = pathinfo($item->file, PATHINFO_EXTENSION);
                                 @endphp
 
@@ -663,7 +667,7 @@
 
                             @if ($item->file)
                                 @php
-                                    $filePath = asset('storage/' . $item->file);
+                                    $filePath = asset($item->file);
                                     $fileExtension = pathinfo($item->file, PATHINFO_EXTENSION);
                                 @endphp
 
@@ -796,7 +800,7 @@
                     <div class="flex flex-wrap gap-4 mt-2">
                         @foreach ($report->file as $index => $file)
                             @php
-                                $filePath = asset('storage/' . ltrim($file, '/'));
+                                $filePath = asset(ltrim($file, '/')); // langsung dari public
                                 $fileExtension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
                             @endphp
 
@@ -809,41 +813,30 @@
 
                                 {{-- Preview File --}}
                                 @if (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif']))
-                                    <!-- Gambar -->
                                     <img src="{{ $filePath }}"
                                         class="w-32 h-auto rounded shadow cursor-pointer hover:opacity-80 transition-opacity"
                                         onclick="openModal('{{ $filePath }}')" alt="Lampiran Gambar">
-
                                 @elseif ($fileExtension === 'pdf')
-                                    <!-- PDF -->
                                     <a href="{{ $filePath }}" target="_blank"
                                         class="flex items-center text-red-600 hover:bg-red-100 hover:text-red-700 p-2 rounded transition-all">
                                         <i class="fas fa-file-pdf mr-2"></i> PDF File
                                     </a>
-
                                 @elseif (in_array($fileExtension, ['doc', 'docx']))
-                                    <!-- Word -->
                                     <a href="{{ $filePath }}" target="_blank"
                                         class="flex items-center text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all">
                                         <i class="fas fa-file-word mr-2"></i> Word Document
                                     </a>
-
                                 @elseif ($fileExtension === 'zip')
-                                    <!-- ZIP -->
                                     <a href="{{ $filePath }}" target="_blank"
                                         class="flex items-center text-yellow-600 hover:bg-yellow-100 hover:text-yellow-700 p-2 rounded transition-all">
                                         <i class="fas fa-file-archive mr-2"></i> ZIP Archive
                                     </a>
-
                                 @elseif (in_array($fileExtension, ['xls', 'xlsx']))
-                                    <!-- Excel -->
                                     <a href="{{ $filePath }}" target="_blank"
                                         class="flex items-center text-green-600 hover:bg-green-100 hover:text-green-700 p-2 rounded transition-all">
                                         <i class="fas fa-file-excel mr-2"></i> Excel File
                                     </a>
-
                                 @else
-                                    <!-- File lainnya -->
                                     <a href="{{ $filePath }}" target="_blank"
                                         class="flex items-center text-blue-600 hover:bg-blue-100 hover:text-blue-700 p-2 rounded transition-all">
                                         <i class="fas fa-file mr-2"></i> Lihat Lampiran

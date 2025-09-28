@@ -128,7 +128,7 @@
                                     @endphp
                                     @if ($firstImage)
                                         <div class="relative">
-                                            <img src="{{ asset('storage/' . $firstImage) }}" alt="Lampiran"
+                                            <img src="{{ asset($firstImage) }}" alt="Lampiran"
                                                 class="w-full h-52 object-cover rounded-lg shadow-sm">
 
                                             {{-- Overlay Nama Pengadu / Anonim --}}
@@ -240,7 +240,7 @@
                                     </p>
                                     <p class="text-sm text-gray-700">{{ $fu->deskripsi }}</p>
                                     @if($fu->lampiran)
-                                        <img src="{{ asset('storage/' . $fu->lampiran) }}" alt="Lampiran"
+                                        <img src="{{ asset($fu->lampiran) }}" alt="Lampiran"
                                             class="mt-2 w-32 h-32 object-cover rounded shadow">
                                     @endif
                                 </div>
@@ -270,11 +270,11 @@
                                             @endphp
 
                                             @if($isImage)
-                                                <img src="{{ asset('storage/' . $c->file) }}" alt="Lampiran"
+                                                <img src="{{ asset($c->file) }}" alt="Lampiran"
                                                     class="mt-2 w-32 h-32 object-cover rounded cursor-pointer shadow border"
-                                                    @click="$dispatch('open-image-modal', { url: '{{ asset('storage/' . $c->file) }}' })">
+                                                    @click="$dispatch('open-image-modal', { url: '{{ asset($c->file) }}' })">
                                             @else
-                                                <a href="{{ asset('storage/' . $c->file) }}" target="_blank"
+                                                <a href="{{ asset($c->file) }}" target="_blank"
                                                     class="text-xs text-blue-600 hover:underline">
                                                     Lihat File
                                                 </a>

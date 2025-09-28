@@ -14,14 +14,14 @@
 
         <div x-data="{ show: true, progress: 100 }"
             x-init="
-                                                                                                                                                    let interval = setInterval(() => {
-                                                                                                                                                        if(progress > 0) progress -= 1;
-                                                                                                                                                        else {
-                                                                                                                                                            show = false;
-                                                                                                                                                            clearInterval(interval);
-                                                                                                                                                        }
-                                                                                                                                                    }, 30);
-                                                                                                                                                "
+                                                                                                                                                        let interval = setInterval(() => {
+                                                                                                                                                            if(progress > 0) progress -= 1;
+                                                                                                                                                            else {
+                                                                                                                                                                show = false;
+                                                                                                                                                                clearInterval(interval);
+                                                                                                                                                            }
+                                                                                                                                                        }, 30);
+                                                                                                                                                    "
             class="fixed top-5 right-5 z-50 space-y-2">
 
             {{-- Success Toast --}}
@@ -107,10 +107,10 @@
 
                             <button type="submit"
                                 class="flex items-center justify-center gap-2 px-3 py-2 sm:px-4 sm:py-2 
-                                                                                                                                                                                                   bg-green-600 text-white text-xs sm:text-sm font-semibold 
-                                                                                                                                                                                                   rounded-lg shadow hover:bg-green-700 
-                                                                                                                                                                                                   focus:ring-2 focus:ring-green-400 focus:outline-none 
-                                                                                                                                                                                                   transition-all duration-200 w-full sm:w-auto">
+                                                                                                                                                                                                           bg-green-600 text-white text-xs sm:text-sm font-semibold 
+                                                                                                                                                                                                           rounded-lg shadow hover:bg-green-700 
+                                                                                                                                                                                                           focus:ring-2 focus:ring-green-400 focus:outline-none 
+                                                                                                                                                                                                           transition-all duration-200 w-full sm:w-auto">
                                 <i class="fas fa-check-circle text-sm sm:text-base"></i>
                                 <span class="truncate">Selesaikan Aduan</span>
                             </button>
@@ -118,8 +118,8 @@
                     @else
                         <span
                             class="inline-flex items-center justify-center gap-2 px-3 py-2 sm:px-4 sm:py-2 
-                                                                                                                                                                                                   text-xs sm:text-sm font-semibold text-green-700 
-                                                                                                                                                                                                   bg-green-100 rounded-lg w-full sm:w-auto">
+                                                                                                                                                                                                           text-xs sm:text-sm font-semibold text-green-700 
+                                                                                                                                                                                                           bg-green-100 rounded-lg w-full sm:w-auto">
                             <i class="fas fa-check-circle text-sm sm:text-base"></i>
                             Aduan Selesai
                         </span>
@@ -155,33 +155,50 @@
                         {{-- Grid utama --}}
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
 
-                     {{-- Kolom kiri: Lampiran --}}
+                            {{-- Kolom kiri: Lampiran --}}
 <div class="w-full h-full relative">
-    @if ($report->lampiran && count($report->lampiran) > 0)
+    @php
+        $lampiran = is_string($report->lampiran)
+            ? json_decode($report->lampiran, true) ?? []
+            : ($report->lampiran ?? []);
+    @endphp
+
+    @if (count($lampiran) > 0)
         @php
-            $firstImage = collect($report->lampiran)->first(
+            $firstImage = collect($lampiran)->first(
                 fn($file) => preg_match('/\.(jpg|jpeg|png|gif)$/i', $file)
             );
         @endphp
 
         {{-- Preview gambar pertama --}}
-       @if ($firstImage)
-        <div class="relative">
-            {{-- Preview gambar pertama --}}
-            <img src="{{ asset('storage/' . $firstImage) }}" alt="Lampiran"
-                class="w-full h-52 object-cover rounded-lg shadow-sm">
+        @if ($firstImage)
+            <div class="relative">
+                <img src="{{ asset($firstImage) }}" alt="Lampiran"
+                    class="w-full h-52 object-cover rounded-lg shadow-sm">
 
-            {{-- Overlay Nama Pengadu / Anonim --}}
-            <span
-                class="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-red-800 text-white font-bold text-sm px-3 py-1 rounded">
-                {{ $report->is_anonim ? 'Anonim' : ($report->nama_pengadu ?? 'Tidak diketahui') }}
-            </span>
+                {{-- Overlay Nama Pengadu / Anonim --}}
+                <span
+                    class="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-red-800 text-white font-bold text-sm px-3 py-1 rounded">
+                    {{ $report->is_anonim ? 'Anonim' : ($report->nama_pengadu ?? 'Tidak diketahui') }}
+                </span>
+            </div>
+        @else
+            <div class="flex items-center justify-center h-64 text-gray-400 italic bg-gray-50 rounded-lg">
+                Tidak ada gambar (hanya file dokumen)
+            </div>
+        @endif
+
+        {{-- Lampiran lain (dokumen atau gambar tambahan) --}}
+        <div class="mt-2 flex flex-wrap gap-2">
+            @foreach ($lampiran as $file)
+                @if (!preg_match('/\.(jpg|jpeg|png|gif)$/i', $file))
+                    <a href="{{ asset($file) }}" target="_blank"
+                        class="text-blue-600 underline text-sm">
+                        {{ basename($file) }}
+                    </a>
+                @endif
+            @endforeach
         </div>
-    @else
-        <div class="flex items-center justify-center h-64 text-gray-400 italic bg-gray-50 rounded-lg">
-            Tidak ada gambar (hanya file dokumen)
-        </div>
-    @endif
 
         {{-- Tombol Edit Lampiran --}}
         <button @click="openModal = 'lampiran'"
@@ -273,7 +290,7 @@
                     </div>
 
                     {{-- === Tab Tindak Lanjut === --}}
-                  <div x-show="activeTab === 'followup'" x-cloak class="space-y-6">
+                    <div x-show="activeTab === 'followup'" x-cloak class="space-y-6">
 
                         <div class="space-y-4">
                             @forelse($report->followUps as $fu)
@@ -302,9 +319,9 @@
 
                                     {{-- Preview Gambar --}}
                                     @if($fu->lampiran)
-                                        <img src="{{ asset('storage/' . $fu->lampiran) }}" alt="Lampiran"
+                                        <img src="{{ asset($fu->lampiran) }}" alt="Lampiran"
                                             class="mt-2 w-32 h-32 object-cover rounded cursor-pointer"
-                                            @click="$dispatch('open-image-modal', {url: '{{ asset('storage/' . $fu->lampiran) }}' })">
+                                            @click="$dispatch('open-image-modal', {url: '{{ asset($fu->lampiran) }}' })">
                                     @endif
 
 
@@ -402,11 +419,11 @@
                                             @endphp
 
                                             @if($isImage)
-                                                <img src="{{ asset('storage/' . $c->file) }}" alt="Lampiran"
+                                                <img src="{{ asset($c->file) }}" alt="Lampiran"
                                                     class="mt-2 w-32 h-32 object-cover rounded cursor-pointer shadow border"
-                                                    @click="$dispatch('open-image-modal', { url: '{{ asset('storage/' . $c->file) }}' })">
+                                                    @click="$dispatch('open-image-modal', { url: '{{ asset($c->file) }}' })">
                                             @else
-                                                <a href="{{ asset('storage/' . $c->file) }}" target="_blank"
+                                                <a href="{{ asset($c->file) }}" target="_blank"
                                                     class="text-xs text-blue-600 hover:underline">
                                                     Lihat File
                                                 </a>
@@ -474,19 +491,22 @@
                             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                             <div class="bg-white rounded-lg p-6 w-96 space-y-4">
                                 <h3 class="text-lg font-semibold">Edit Komentar</h3>
-                                <form method="POST" :action="`/wbs_admin/kelola-aduan/comment/${commentId}`">
-                                    @csrf
-                                    @method('PUT')
-                                    <textarea x-model="pesan" name="pesan" class="w-full border rounded p-2"
-                                        rows="3"></textarea>
-                                    <input type="file" name="file" class="block text-sm mt-2">
-                                    <div class="flex justify-end gap-2 mt-4">
-                                        <button type="button" @click="open = false"
-                                            class="px-3 py-1 text-gray-600">Batal</button>
-                                        <button type="submit"
-                                            class="px-4 py-2 bg-blue-600 text-white rounded-lg">Update</button>
-                                    </div>
-                                </form>
+                               <form method="POST" 
+      :action="`/wbs_admin/kelola-aduan/comment/${commentId}`" 
+      enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
+    <textarea x-model="pesan" name="pesan" class="w-full border rounded p-2"
+        rows="3"></textarea>
+    <input type="file" name="file" class="block text-sm mt-2">
+    <div class="flex justify-end gap-2 mt-4">
+        <button type="button" @click="open = false"
+            class="px-3 py-1 text-gray-600">Batal</button>
+        <button type="submit"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg">Update</button>
+    </div>
+</form>
+
                             </div>
                         </div>
                     </div>
@@ -610,12 +630,13 @@
                                             </div>
                                         </div>
                                     </template>
-{{-- Modal Lampiran --}}
+                                   {{-- Modal Lampiran --}}
 <template x-if="openModal === 'lampiran'">
     <div class="space-y-4">
         {{-- Upload File Baru --}}
-        <form method="POST" action="{{ route('wbs_admin.kelola-aduan.update', $report->id) }}"
-              enctype="multipart/form-data" class="space-y-3">
+        <form method="POST"
+            action="{{ route('wbs_admin.kelola-aduan.update', $report->id) }}"
+            enctype="multipart/form-data" class="space-y-3">
             @csrf
             @method('PATCH')
             <input type="hidden" name="field" value="lampiran">
@@ -635,7 +656,7 @@
                 </button>
             </div>
         </form>
-    
+
         {{-- Daftar Lampiran Lama --}}
         @if ($report->lampiran && count($report->lampiran) > 0)
             <div>
@@ -645,14 +666,17 @@
                         <li class="flex items-center justify-between bg-gray-50 p-2 rounded">
                             {{-- Thumbnail gambar kalau file image --}}
                             @if (preg_match('/\.(jpg|jpeg|png|gif)$/i', $file))
-                                <img src="{{ asset('storage/' . $file) }}"
-                                     class="w-12 h-12 object-cover rounded mr-2">
+                                <img src="{{ asset($file) }}"
+                                    class="w-12 h-12 object-cover rounded mr-2">
+                            @else
+                                <i class="fas fa-file-alt text-gray-500 mr-2"></i>
                             @endif
 
                             <span class="text-sm truncate flex-1">{{ basename($file) }}</span>
 
                             {{-- Tombol hapus --}}
-                            <form method="POST" action="{{ route('wbs_admin.kelola-aduan.update', $report->id) }}">
+                            <form method="POST"
+                                action="{{ route('wbs_admin.kelola-aduan.update', $report->id) }}">
                                 @csrf
                                 @method('PATCH')
                                 <input type="hidden" name="field" value="hapus_lampiran">
@@ -670,27 +694,26 @@
     </div>
 </template>
 
-                                   {{-- Default input --}}
-<template
-    x-if="!['status','kategori_id','wilayah_id','waktu_kejadian','lokasi_uraian','tracking_id','nama_terlapor','lampiran'].includes(openModal)">
-    <input type="text" name="value" class="w-full border rounded-lg px-3 py-2"
-        :placeholder="`Masukkan ${openModal} baru`">
-</template>
+                                    {{-- Default input --}}
+                                    <template
+                                        x-if="!['status','kategori_id','wilayah_id','waktu_kejadian','lokasi_uraian','tracking_id','nama_terlapor','lampiran'].includes(openModal)">
+                                        <input type="text" name="value" class="w-full border rounded-lg px-3 py-2"
+                                            :placeholder="`Masukkan ${openModal} baru`">
+                                    </template>
 
                                 </div>
 
-                               {{-- Tombol aksi --}}
-<div class="flex justify-end gap-2 pt-2" 
-     x-show="openModal !== 'lampiran'">
-    <button type="button" @click="openModal=null"
-        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition">
-        Batal
-    </button>
-    <button type="submit"
-        class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">
-        Simpan
-    </button>
-</div>
+                                {{-- Tombol aksi --}}
+                                <div class="flex justify-end gap-2 pt-2" x-show="openModal !== 'lampiran'">
+                                    <button type="button" @click="openModal=null"
+                                        class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition">
+                                        Batal
+                                    </button>
+                                    <button type="submit"
+                                        class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">
+                                        Simpan
+                                    </button>
+                                </div>
 
                             </form>
                         </div>

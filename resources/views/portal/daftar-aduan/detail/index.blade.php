@@ -8,14 +8,15 @@
 
 @section('content')
     <div class="w-full max-w-full 
-                            md:max-w-3xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-screen-2xl 
-                            mx-auto px-4 sm:px-6 lg:px-8 py-6 mt-20 mb-5">
+                                                md:max-w-3xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-screen-2xl 
+                                                mx-auto px-4 sm:px-6 lg:px-8 py-6 mt-20 mb-5">
 
         @if (session('success'))
-            <div id="successMessage" class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
-                                               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
-                                               bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
-                                               transition-all duration-500 opacity-100 animate-fade-in">
+            <div id="successMessage"
+                class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
+                                                                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
+                                                                                       bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
+                                                                                       transition-all duration-500 opacity-100 animate-fade-in">
 
                 <!-- Ikon -->
                 <div id="success-icon-wrapper" class="flex-shrink-0">
@@ -128,8 +129,8 @@
                 <div x-data="{ openTimeline: window.innerWidth >= 768 }"
                     x-init="window.addEventListener('resize', () => { openTimeline = window.innerWidth >= 768; });">
                     <h2 class="flex items-center text-lg justify-between gap-2 px-6 py-2 rounded-full 
-                                           bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-700 hover:to-rose-600 text-white font-semibold 
-                                           shadow-lg hover:shadow-xl transition mb-5 mt-5 cursor-pointer md:cursor-default"
+                                                               bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-700 hover:to-rose-600 text-white font-semibold 
+                                                               shadow-lg hover:shadow-xl transition mb-5 mt-5 cursor-pointer md:cursor-default"
                         @click="if (window.innerWidth < 768) openTimeline = !openTimeline">
                         <span>Timeline Aduan</span>
                         <span class="md:hidden">
@@ -141,15 +142,16 @@
                         @foreach($timeline as $item)
                             <div class="mb-4 ml-6">
                                 {{-- Bulatan status --}}
-                                <div class="absolute -left-5 flex items-center justify-center w-8 h-8 rounded-full
-                                                                @if($item['type'] === 'created') bg-red-500 text-white
-                                                                @elseif($item['type'] === 'assigned') bg-orange-500 text-white
-                                                                @elseif($item['type'] === 'reassigned') bg-amber-500 text-white
-                                                                @elseif($item['type'] === 'read') bg-blue-500 text-white
-                                                                @elseif($item['type'] === 'followup') bg-purple-500 text-white
-                                                                @elseif($item['type'] === 'comment') bg-yellow-500 text-white
-                                                                @elseif($item['type'] === 'done') bg-green-500 text-white
-                                                                @else bg-gray-400 text-white @endif">
+                                <div
+                                    class="absolute -left-5 flex items-center justify-center w-8 h-8 rounded-full
+                                                                                                        @if($item['type'] === 'created') bg-red-500 text-white
+                                                                                                        @elseif($item['type'] === 'assigned') bg-orange-500 text-white
+                                                                                                        @elseif($item['type'] === 'reassigned') bg-amber-500 text-white
+                                                                                                        @elseif($item['type'] === 'read') bg-blue-500 text-white
+                                                                                                        @elseif($item['type'] === 'followup') bg-purple-500 text-white
+                                                                                                        @elseif($item['type'] === 'comment') bg-yellow-500 text-white
+                                                                                                        @elseif($item['type'] === 'done') bg-green-500 text-white
+                                                                                                        @else bg-gray-400 text-white @endif">
                                     @if($item['type'] === 'created')
                                         <i class="fas fa-edit"></i>
                                     @elseif($item['type'] === 'assigned')
@@ -192,8 +194,8 @@
                     {{-- Timeline Aduan (hanya muncul di mobile) --}}
                     <div x-data="{ openTimeline: false }" class="md:hidden">
                         <h2 class="flex items-center text-lg justify-between gap-2 px-6 py-2 rounded-full 
-                       bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-700 hover:to-rose-600 text-white font-semibold 
-                       shadow-lg hover:shadow-xl transition mb-5 mt-5 cursor-pointer"
+                                           bg-gradient-to-r from-red-500 to-rose-500 hover:from-red-700 hover:to-rose-600 text-white font-semibold 
+                                           shadow-lg hover:shadow-xl transition mb-5 mt-5 cursor-pointer"
                             @click="openTimeline = !openTimeline">
                             <span>Timeline Aduan</span>
                             <span><i :class="openTimeline ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i></span>
@@ -204,14 +206,14 @@
                             @foreach($timeline as $item)
                                 <div class="mb-4 ml-6">
                                     <div class="absolute -left-5 flex items-center justify-center w-8 h-8 rounded-full
-                                                @if($item['type'] === 'created') bg-red-500 text-white
-                                                @elseif($item['type'] === 'assigned') bg-orange-500 text-white
-                                                @elseif($item['type'] === 'reassigned') bg-amber-500 text-white
-                                                @elseif($item['type'] === 'read') bg-blue-500 text-white
-                                                @elseif($item['type'] === 'followup') bg-purple-500 text-white
-                                                @elseif($item['type'] === 'comment') bg-yellow-500 text-white
-                                                @elseif($item['type'] === 'done') bg-green-500 text-white
-                                                @else bg-gray-400 text-white @endif">
+                                                                                        @if($item['type'] === 'created') bg-red-500 text-white
+                                                                                        @elseif($item['type'] === 'assigned') bg-orange-500 text-white
+                                                                                        @elseif($item['type'] === 'reassigned') bg-amber-500 text-white
+                                                                                        @elseif($item['type'] === 'read') bg-blue-500 text-white
+                                                                                        @elseif($item['type'] === 'followup') bg-purple-500 text-white
+                                                                                        @elseif($item['type'] === 'comment') bg-yellow-500 text-white
+                                                                                        @elseif($item['type'] === 'done') bg-green-500 text-white
+                                                                                        @else bg-gray-400 text-white @endif">
                                         @if($item['type'] === 'created')
                                             <i class="fas fa-edit"></i>
                                         @elseif($item['type'] === 'assigned')
@@ -261,32 +263,32 @@
                         ];
                     @endphp
 
-                  <div class="border-b px-1 pt-1 md:pt-5 flex justify-between md:justify-start space-x-2 md:space-x-6 text-gray-600 overflow-x-auto no-scrollbar">
-    @foreach ($tabs as $key => $tab)
-        <button onclick="showTab('{{ $key }}')" id="tab-{{ $key }}"
-            class="tab-button flex flex-col md:flex-row items-center justify-center 
-                   min-w-[60px] md:min-w-0 px-2 md:px-3 py-1.5 md:py-2 
-                   border-b-2 {{ $key === 'detail' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600' }} 
-                   hover:text-blue-600 relative transition duration-300">
+                    <div
+                        class="border-b px-1 pt-1 md:pt-5 flex justify-between md:justify-start space-x-2 md:space-x-6 text-gray-600 overflow-x-auto no-scrollbar">
+                        @foreach ($tabs as $key => $tab)
+                            <button onclick="showTab('{{ $key }}')" id="tab-{{ $key }}" class="tab-button flex flex-col md:flex-row items-center justify-center 
+                                                               min-w-[60px] md:min-w-0 px-2 md:px-3 py-1.5 md:py-2 
+                                                               border-b-2 {{ $key === 'detail' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600' }} 
+                                                               hover:text-blue-600 relative transition duration-300">
 
-            <!-- Icon -->
-            <i class="fas {{ $tab['icon'] }} mb-0.5 md:mb-0 md:mr-1 text-[11px] md:text-sm"></i>
+                                <!-- Icon -->
+                                <i class="fas {{ $tab['icon'] }} mb-0.5 md:mb-0 md:mr-1 text-[11px] md:text-sm"></i>
 
-            <!-- Label -->
-            <span class="text-[11px] md:text-sm font-medium">{{ $tab['label'] }}</span>
+                                <!-- Label -->
+                                <span class="text-[11px] md:text-sm font-medium">{{ $tab['label'] }}</span>
 
-            <!-- Badge -->
-            @if (!empty($badges[$key]))
-                <span
-                    class="absolute -top-1 -right-2 md:-right-3 
-                           bg-blue-600 text-white text-[9px] md:text-xs 
-                           font-bold px-1.5 md:px-2 py-0.5 rounded-full shadow">
-                    {{ $badges[$key] }}
-                </span>
-            @endif
-        </button>
-    @endforeach
-</div>
+                                <!-- Badge -->
+                                @if (!empty($badges[$key]))
+                                    <span
+                                        class="absolute -top-1 -right-2 md:-right-3 
+                                                                                           bg-blue-600 text-white text-[9px] md:text-xs 
+                                                                                           font-bold px-1.5 md:px-2 py-0.5 rounded-full shadow">
+                                        {{ $badges[$key] }}
+                                    </span>
+                                @endif
+                            </button>
+                        @endforeach
+                    </div>
 
 
                     {{-- ====== TAB CONTENT ====== --}}
@@ -296,13 +298,16 @@
                         @php
                             $defaultImage = asset('images/image.jpg');
                             $thumbnail = $defaultImage;
+
                             if (!empty($report->file)) {
                                 $files = is_array($report->file) ? $report->file : json_decode($report->file, true);
+
                                 if (is_array($files)) {
                                     foreach ($files as $f) {
                                         $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
+
                                         if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                                            $thumbnail = asset('storage/' . $f);
+                                            $thumbnail = asset($f); // langsung dari public/report_files
                                             break;
                                         }
                                     }
@@ -335,7 +340,7 @@
                                                 @csrf
                                                 <button type="submit"
                                                     class="flex items-center text-sm transition-all duration-200
-                                                                                {{ $report->likedBy(auth()->id()) ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
+                                                                                                                        {{ $report->likedBy(auth()->id()) ? 'text-blue-600 font-bold' : 'text-gray-400 hover:text-blue-500' }}">
                                                     <i class="fas fa-thumbs-up mr-1"></i> {{ $report->likes }}
                                                 </button>
                                             </form>
@@ -345,7 +350,7 @@
                                                 @csrf
                                                 <button type="submit"
                                                     class="flex items-center text-sm transition-all duration-200
-                                                                                {{ $report->dislikedBy(auth()->id()) ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
+                                                                                                                        {{ $report->dislikedBy(auth()->id()) ? 'text-red-600 font-bold' : 'text-gray-400 hover:text-red-500' }}">
                                                     <i class="fas fa-thumbs-down mr-1"></i> {{ $report->dislikes }}
                                                 </button>
                                             </form>
@@ -400,31 +405,34 @@
                                     {{-- Pelapor --}}
                                     <div class="flex items-start gap-3 mb-3">
                                         <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-gray-100">
+                                            {{-- Foto Pelapor --}}
                                             @if ($report->is_anonim)
                                                 <img src="{{ asset('images/avatar.jpg') }}" alt="Anonim"
                                                     class="h-8 w-8 rounded-full object-cover bg-white shadow" />
                                             @else
                                                                                 <img src="{{ $report->pelapor && $report->pelapor->foto
-                                                ? asset('storage/' . $report->pelapor->foto)
+                                                ? asset($report->pelapor->foto)
                                                 : ($report->pelapor && $report->pelapor->avatar
                                                     ? $report->pelapor->avatar
-                                                    : asset('images/avatar.jpg')) }}"
-                                                                                    alt="Avatar {{ $report->nama_pengadu }}"
+                                                    : asset('images/avatar.jpg')) }}" alt="Avatar {{ $report->pelapor->name ?? 'User' }}"
                                                                                     class="h-8 w-8 rounded-full object-cover bg-white shadow" />
                                             @endif
                                         </div>
                                         <div>
                                             <div class="text-gray-600 text-sm font-semibold">Pelapor</div>
                                             <div class="flex items-center flex-wrap gap-2">
+                                                {{-- Nama Pelapor --}}
                                                 <span class="text-gray-600 text-sm">
-                                                    {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}
+                                                    {{ $report->is_anonim ? 'Anonim' : ($report->pelapor->name ?? '-') }}
                                                 </span>
-                                                <span class="px-2 py-0.5 rounded-full text-xs font-medium
-                                                                    @if($report->status === 'Diajukan') border border-red-500 text-red-500
-                                                                    @elseif($report->status === 'Dibaca') border border-blue-500 text-blue-500
-                                                                    @elseif($report->status === 'Direspon') border border-yellow-500 text-yellow-600
-                                                                    @elseif($report->status === 'Selesai') border border-green-500 text-green-500
-                                                                    @else border border-gray-400 text-gray-600 @endif">
+                                                <span
+                                                    class="px-2 py-0.5 rounded-full text-xs font-medium
+                                                                                        @if($report->status === 'Diajukan') border border-red-500 text-red-500
+                                                                                        @elseif($report->status === 'Dibaca') border border-blue-500 text-blue-500
+                                                                                        @elseif($report->status === 'Direspon') border border-yellow-500 text-yellow-600
+                                                                                        @elseif($report->status === 'Selesai') border border-green-500 text-green-500
+                                                                                        @elseif($report->status === 'Arsip') border border-stone-700 text-stone-700
+                                                                                        @else border border-gray-400 text-gray-600 @endif">
                                                     {{ $report->status }}
                                                 </span>
                                                 <span
@@ -469,9 +477,10 @@
                                             <div class="text-gray-600 mb-1 text-sm font-semibold">Disposisi</div>
                                             <div>
                                                 @if($report->admin)
-                                                    <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold 
-                                                                                         border border-transparent bg-gradient-to-r from-red-500 to-rose-500 
-                                                                                         text-white shadow-md hover:shadow-lg">
+                                                    <span
+                                                        class="inline-block px-3 py-1 rounded-full text-xs font-semibold 
+                                                                                                                                 border border-transparent bg-gradient-to-r from-red-500 to-rose-500 
+                                                                                                                                 text-white shadow-md hover:shadow-lg">
                                                         {{ $report->admin->name }}
                                                     </span>
                                                 @else
@@ -512,7 +521,7 @@
                                                         class="h-10 w-10 rounded-full object-cover bg-white shadow" />
                                                 @else
                                                                                 <img src="{{ $item->user && $item->user->foto
-                                                    ? asset('storage/' . $item->user->foto)
+                                                    ? asset($item->user->foto)
                                                     : ($item->user && $item->user->avatar
                                                         ? $item->user->avatar
                                                         : asset('images/avatar.jpg')) }}"
@@ -629,9 +638,10 @@
                                                 {{-- Lampiran --}}
                                                 @if ($item->file)
                                                     @php
-                                                        $filePath = asset('storage/' . $item->file);
+                                                        $filePath = asset($item->file); // langsung dari public/report_files atau folder publik
                                                         $ext = strtolower(pathinfo($item->file, PATHINFO_EXTENSION));
                                                     @endphp
+
                                                     @if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif']))
                                                         <img src="{{ $filePath }}"
                                                             class="w-32 h-auto rounded shadow mt-2 cursor-pointer hover:opacity-80"
@@ -663,6 +673,7 @@
                                                         </a>
                                                     @endif
                                                 @endif
+
                                             </div>
 
                                             {{-- Tombol hapus tindak lanjut --}}
@@ -684,10 +695,10 @@
                                                 {{-- Konten Modal --}}
                                                 <div
                                                     class="bg-white rounded-lg shadow-lg 
-                                                                                                                                                                                                                   p-3 sm:p-4 md:p-5 
-                                                                                                                                                                                                                   w-[80%] sm:w-[80%] md:w-[80%] lg:w-[75%] xl:w-[65%] 
-                                                                                                                                                                                                                   max-w-xl md:max-w-2xl 
-                                                                                                                                                                                                                   mx-auto my-4 sm:my-6 relative">
+                                                                                                                                                                                                                                                           p-3 sm:p-4 md:p-5 
+                                                                                                                                                                                                                                                           w-[80%] sm:w-[80%] md:w-[80%] lg:w-[75%] xl:w-[65%] 
+                                                                                                                                                                                                                                                           max-w-xl md:max-w-2xl 
+                                                                                                                                                                                                                                                           mx-auto my-4 sm:my-6 relative">
 
                                                     {{-- Header --}}
                                                     <div class="flex justify-between items-center mb-4">
@@ -1009,13 +1020,13 @@
                                                     <img src="{{ asset('images/avatar.jpg') }}" alt="Anonim"
                                                         class="h-8 w-8 rounded-full object-cover bg-white shadow" />
                                                 @else
-                                                                                <img src="{{ $item->user && $item->user->foto
-                                                    ? asset('storage/' . $item->user->foto)
-                                                    : ($item->user && $item->user->avatar
-                                                        ? $item->user->avatar
-                                                        : asset('images/avatar.jpg')) }}"
-                                                                                    alt="Avatar {{ $item->user->name ?? $item->nama_pengadu }}"
-                                                                                    class="h-8 w-8 rounded-full object-cover bg-white shadow" />
+                                                    <img src="{{ $item->user && $item->user->foto
+                                                                                        ? asset($item->user->foto)   {{-- langsung asset() --}}
+                                                                                        : ($item->user && $item->user->avatar
+                                                                                            ? $item->user->avatar
+                                                                                            : asset('images/avatar.jpg')) }}"
+                                                        alt="Avatar {{ $item->user->name ?? $item->nama_pengadu }}"
+                                                        class="h-8 w-8 rounded-full object-cover bg-white shadow" />
                                                 @endif
                                             </div>
 
@@ -1033,7 +1044,7 @@
                                                 {{-- Lampiran File --}}
                                                 @if ($item->file)
                                                     @php
-                                                        $filePath = asset('storage/' . $item->file);
+                                                        $filePath = asset($item->file); // langsung ambil dari public/comment_files
                                                         $fileExtension = pathinfo($item->file, PATHINFO_EXTENSION);
                                                     @endphp
 
@@ -1151,7 +1162,7 @@
                                     <div class="flex flex-wrap gap-4 mt-4">
                                         @foreach ($report->file as $file)
                                             @php
-                                                $filePath = asset('storage/' . ltrim($file, '/'));
+                                                $filePath = asset($file); // langsung ambil dari public/report_files
                                                 $fileExtension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
                                             @endphp
 
@@ -1208,6 +1219,7 @@
                                     <p class="mt-4 text-gray-500">Tidak ada lampiran.</p>
                                 @endif
                             </div>
+
 
                             {{-- Modal Gambar (UNIVERSAL untuk semua gambar) --}}
                             <div id="imageModal"

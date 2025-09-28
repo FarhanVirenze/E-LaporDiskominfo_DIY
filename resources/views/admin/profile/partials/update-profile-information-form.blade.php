@@ -23,7 +23,7 @@
 
         <!-- Foto Profil -->
         <div class="flex flex-col items-center">
-            <img src="{{ $user->foto ? asset('storage/' . $user->foto) : asset('images/avatar.jpg') }}" 
+            <img src="{{ $user->foto ? asset($user->foto) : asset('images/avatar.jpg') }}" 
                  alt="Foto Profil"
                  class="w-28 h-28 rounded-full object-cover mb-3 ring-4 ring-red-200 shadow">
 

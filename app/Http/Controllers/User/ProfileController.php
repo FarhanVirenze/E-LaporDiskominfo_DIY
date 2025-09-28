@@ -7,7 +7,6 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
@@ -32,10 +31,21 @@ class ProfileController extends Controller
         $validated = $request->validated();
         $user = $request->user();
 
-        // Upload foto
+        // Upload foto langsung ke public/foto-profil
         if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('foto-profil', 'public');
-            $user->foto = $fotoPath;
+            $file = $request->file('foto');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $destinationPath = public_path('foto-profil'); // folder public/foto-profil
+
+            // buat folder jika belum ada
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            $file->move($destinationPath, $filename);
+
+            // simpan path relatif agar bisa dipanggil dengan asset()
+            $user->foto = 'foto-profil/' . $filename;
         }
 
         $user->update([
@@ -51,7 +61,6 @@ class ProfileController extends Controller
 
         $user->save();
 
-        // Redirect back with a success message
         return Redirect::route('user.profile.edit')->with('status', 'profile-updated');
     }
 
@@ -59,8 +68,8 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->foto && Storage::disk('public')->exists($user->foto)) {
-            Storage::disk('public')->delete($user->foto);
+        if ($user->foto && file_exists(public_path($user->foto))) {
+            unlink(public_path($user->foto)); // hapus file langsung dari public
         }
 
         $user->foto = null;

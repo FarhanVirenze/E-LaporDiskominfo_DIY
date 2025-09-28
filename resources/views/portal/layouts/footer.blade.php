@@ -39,19 +39,24 @@
 
             <!-- Sosial Media -->
             <div class="flex justify-start md:justify-center space-x-4 text-white text-xl">
-                <a href="#" class="hover:scale-110 hover:text-white/80 transition transform duration-200">
+                <a href="https://www.facebook.com/share/17JP1MsFxp/" target="_blank"
+                    class="hover:scale-110 hover:text-white/80 transition transform duration-200">
                     <i class="fab fa-facebook-f"></i>
                 </a>
-                <a href="#" class="hover:scale-110 hover:text-white/80 transition transform duration-200">
+                <a href="https://www.instagram.com/kominfodiy?igsh=Mnc2MTQ1amlkN3Qw" target="_blank"
+                    class="hover:scale-110 hover:text-white/80 transition transform duration-200">
                     <i class="fab fa-instagram"></i>
                 </a>
-                <a href="#" class="hover:scale-110 hover:text-white/80 transition transform duration-200">
+                <a href="https://youtube.com/@kominfodiy?si=DtrGuOmvkZQ1lBgI" target="_blank"
+                    class="hover:scale-110 hover:text-white/80 transition transform duration-200">
                     <i class="fab fa-youtube"></i>
                 </a>
-                <a href="#" class="hover:scale-110 hover:text-white/80 transition transform duration-200">
+                <a href="https://x.com/kominfodiy?lang=en" target="_blank"
+                    class="hover:scale-110 hover:text-white/80 transition transform duration-200">
                     <i class="fab fa-x-twitter"></i>
                 </a>
-                <a href="#" class="hover:scale-110 hover:text-white/80 transition transform duration-200">
+                <a href="https://www.tiktok.com/@kominfodiy?_t=ZS-8znB2lhwxk0&_r=1" target="_blank"
+                    class="hover:scale-110 hover:text-white/80 transition transform duration-200">
                     <i class="fab fa-tiktok"></i>
                 </a>
             </div>
@@ -65,8 +70,7 @@
                     <a href="{{ route('ketentuan.layanan') }}" class="hover:underline hover:text-white/80 transition">
                         Ketentuan Layanan
                     </a>
-                    <a href="{{ route('kebijakan.privasi') }}"
-                        class="hover:underline hover:text-white/80 transition">
+                    <a href="{{ route('kebijakan.privasi') }}" class="hover:underline hover:text-white/80 transition">
                         Kebijakan Privasi
                     </a>
 

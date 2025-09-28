@@ -95,7 +95,7 @@ class WbsController extends Controller
             $validated['tanggal_kejadian'] . ' ' . $validated['waktu_kejadian']
         );
 
-        // Handle upload lampiran
+        // Handle upload lampiran langsung ke public/lampiran
         $lampiranPaths = [];
         if ($request->hasFile('lampiran')) {
             $totalSize = collect($request->file('lampiran'))->sum->getSize();
@@ -106,8 +106,17 @@ class WbsController extends Controller
                     ->withInput();
             }
 
+            $destinationPath = public_path('lampiran');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
             foreach ($request->file('lampiran') as $file) {
-                $lampiranPaths[] = $file->store('lampiran', 'public');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move($destinationPath, $filename);
+
+                // simpan path relatif agar bisa dipanggil dengan asset()
+                $lampiranPaths[] = 'lampiran/' . $filename;
             }
         }
 

@@ -13,9 +13,9 @@
     @if (session('success'))
         <div id="alert-success"
             class="fixed top-5 right-5 z-50 flex items-center justify-between gap-4 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       transition-all duration-500 opacity-100 animate-fade-in">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               w-[420px] max-w-[90vw] px-6 py-4 rounded-2xl shadow-2xl border border-red-400 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               bg-gradient-to-r from-red-600 to-red-500/90 backdrop-blur-md text-white 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               transition-all duration-500 opacity-100 animate-fade-in">
 
             <!-- Ikon -->
             <div id="success-icon-wrapper" class="flex-shrink-0">
@@ -245,8 +245,8 @@
                 <div class="w-full flex justify-center px-4 mb-8" data-aos="fade-down" data-aos-delay="400">
                     <div
                         class="inline-flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-2 sm:py-2 rounded-xl
-                                                                                                                                                                                            border border-yellow-400 bg-gradient-to-r from-yellow-200 to-yellow-300
-                                                                                                                                                                                            shadow-md">
+                                                                                                                                                                                                                border border-yellow-400 bg-gradient-to-r from-yellow-200 to-yellow-300
+                                                                                                                                                                                                                shadow-md">
 
                         <!-- Icon -->
                         <div class="flex-shrink-0">
@@ -380,8 +380,8 @@
                 <div class="w-full flex justify-center px-4 mb-8">
                     <div
                         class="inline-flex items-center gap-4 px-6 py-2 rounded-xl
-                                                                                                                                                                                                border border-yellow-400 bg-gradient-to-r from-yellow-200 to-yellow-300
-                                                                                                                                                                                                shadow-md">
+                                                                                                                                                                                                                    border border-yellow-400 bg-gradient-to-r from-yellow-200 to-yellow-300
+                                                                                                                                                                                                                    shadow-md">
 
                         <!-- Icon -->
                         <div class="flex-shrink-0">
@@ -491,10 +491,10 @@
                         <svg class="w-full h-full" fill="none" stroke="#dc2626" stroke-width="4">
                             <path
                                 d="M50,40 
-                                                                                                                                                               C130,10 220,80 300,50
-                                                                                                                                                               S460,0 540,40
-                                                                                                                                                               S650,80 780,40
-                                                                                                                                                               Q810,20 825,40"
+                                                                                                                                                                                   C130,10 220,80 300,50
+                                                                                                                                                                                   S460,0 540,40
+                                                                                                                                                                                   S650,80 780,40
+                                                                                                                                                                                   Q810,20 825,40"
                                 stroke-linecap="round" />
                         </svg>
                     </div>
@@ -504,11 +504,12 @@
                 <div class="absolute top-1/2 left-0 w-full h-32 hidden lg:block 2xl:hidden -translate-y-1/2 z-0">
                     <div>
                         <svg class="w-full h-full" fill="none" stroke="#dc2626" stroke-width="5">
-                            <path d="M100,60 
-                                                                                                 C200,0 300,120 400,60 
-                                                                                                 S600,0 700,60
-                                                                                                 S900,120 1000,60
-                                                                                                 Q1050,30 1100,60"
+                            <path
+                                d="M100,60 
+                                                                                                                     C200,0 300,120 400,60 
+                                                                                                                     S600,0 700,60
+                                                                                                                     S900,120 1000,60
+                                                                                                                     Q1050,30 1100,60"
                                 stroke-linecap="round" />
                         </svg>
                     </div>
@@ -518,11 +519,12 @@
                 <div class="absolute top-1/2 left-0 w-full h-32 hidden 2xl:block -translate-y-1/2 z-0">
                     <div>
                         <svg class="w-full h-full" fill="none" stroke="#dc2626" stroke-width="5">
-                            <path d="M100,60 
-                                                                                                 C200,0 300,120 400,60 
-                                                                                                 S600,0 700,60
-                                                                                                 S900,120 1000,60
-                                                                                                 S1200,0 1300,60"
+                            <path
+                                d="M100,60 
+                                                                                                                     C200,0 300,120 400,60 
+                                                                                                                     S600,0 700,60
+                                                                                                                     S900,120 1000,60
+                                                                                                                     S1200,0 1300,60"
                                 stroke-linecap="round" />
                         </svg>
                     </div>
@@ -532,26 +534,26 @@
                 <div class="relative flex justify-between items-center px-4 md:px-5 lg:px-10">
                     @foreach ($steps as $index => $step)
                         <div class="w-1/6 flex flex-col 
-                                                                                                                                                                                                                                                                                                                                        {{ $index % 2 == 0 ? '-mt-14 md:-mt-20 lg:-mt-28' : 'mt-14 md:mt-20 lg:mt-28' }} 
-                                                                                                                                                                                                                                                                                                                                        items-center text-center relative group"
+                                                                                                                                                                                                                                                                                                                                                                                {{ $index % 2 == 0 ? '-mt-14 md:-mt-20 lg:-mt-28' : 'mt-14 md:mt-20 lg:mt-28' }} 
+                                                                                                                                                                                                                                                                                                                                                                                items-center text-center relative group"
                             data-aos="{{ $index % 2 == 0 ? 'fade-up-right' : 'fade-up-left' }}"
                             data-aos-delay="{{ 100 + ($index * 100) }}">
 
                             <!-- Lingkaran Icon + Nomor -->
                             <div
                                 class="relative flex items-center justify-center 
-                                                                                                                                                                                                                                                                                                                                            w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 
-                                                                                                                                                                                                                                                                                                                                            {{ $step['bg'] }} text-white rounded-full 
-                                                                                                                                                                                                                                                                                                                                            shadow-md md:shadow-lg shadow-red-200 
-                                                                                                                                                                                                                                                                                                                                            text-lg md:text-xl lg:text-2xl">
+                                                                                                                                                                                                                                                                                                                                                                                    w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 
+                                                                                                                                                                                                                                                                                                                                                                                    {{ $step['bg'] }} text-white rounded-full 
+                                                                                                                                                                                                                                                                                                                                                                                    shadow-md md:shadow-lg shadow-red-200 
+                                                                                                                                                                                                                                                                                                                                                                                    text-lg md:text-xl lg:text-2xl">
                                 <i class="{{ $step['icon'] }}"></i>
                                 <!-- Nomor Urut -->
                                 <span
                                     class="absolute -bottom-2 -right-2 
-                                                                                                                                                                                                                                                                                                                                                bg-red-600 text-white font-bold rounded-full shadow
-                                                                                                                                                                                                                                                                                                                                                w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6
-                                                                                                                                                                                                                                                                                                                                                text-[9px] md:text-[10px] lg:text-xs 
-                                                                                                                                                                                                                                                                                                                                                flex items-center justify-center">
+                                                                                                                                                                                                                                                                                                                                                                                        bg-red-600 text-white font-bold rounded-full shadow
+                                                                                                                                                                                                                                                                                                                                                                                        w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6
+                                                                                                                                                                                                                                                                                                                                                                                        text-[9px] md:text-[10px] lg:text-xs 
+                                                                                                                                                                                                                                                                                                                                                                                        flex items-center justify-center">
                                     {{ $index + 1 }}
                                 </span>
                             </div>
@@ -559,10 +561,10 @@
                             <!-- Card Ringkas -->
                             <div
                                 class="mt-2 md:mt-3 bg-gradient-to-br from-red-50 to-red-100  rounded-lg shadow-xl md:shadow-xl 
-                                                                                                                                                                                                                                                                                                                                            px-2 py-2 md:px-3 md:py-2 lg:px-4 lg:py-3 
-                                                                                                                                                                                                                                                                                                                                            w-32 md:w-36 lg:w-44 
-                                                                                                                                                                                                                                                                                                                                            hover:-translate-y-1 transition-all duration-300 
-                                                                                                                                                                                                                                                                                                                                            hover:shadow-red-200 z-10">
+                                                                                                                                                                                                                                                                                                                                                                                    px-2 py-2 md:px-3 md:py-2 lg:px-4 lg:py-3 
+                                                                                                                                                                                                                                                                                                                                                                                    w-32 md:w-36 lg:w-44 
+                                                                                                                                                                                                                                                                                                                                                                                    hover:-translate-y-1 transition-all duration-300 
+                                                                                                                                                                                                                                                                                                                                                                                    hover:shadow-red-200 z-10">
                                 <h3 class="text-[11px] md:text-xs lg:text-sm font-semibold mb-1 text-gray-800">
                                     {{ $step['title'] }}
                                 </h3>
@@ -582,16 +584,17 @@
                 <div class="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-16 h-full z-0">
                     <svg class="w-full h-full" fill="none" stroke="#dc2626" stroke-width="4" preserveAspectRatio="none"
                         viewBox="0 0 100 1000">
-                        <path d="M50,50
-                                                                                                                 Q65,50 50,100
-                                                                                                                 T50,200
-                                                                                                                 T50,300
-                                                                                                                 T50,400
-                                                                                                                 T50,500
-                                                                                                                 T50,600
-                                                                                                                 T50,700
-                                                                                                                 T50,800
-                                                                                                                 T50,930"
+                        <path
+                            d="M50,50
+                                                                                                                                     Q65,50 50,100
+                                                                                                                                     T50,200
+                                                                                                                                     T50,300
+                                                                                                                                     T50,400
+                                                                                                                                     T50,500
+                                                                                                                                     T50,600
+                                                                                                                                     T50,700
+                                                                                                                                     T50,800
+                                                                                                                                     T50,930"
                             stroke-linecap="round" />
                     </svg>
                 </div>
@@ -604,8 +607,8 @@
                         <div class="w-1/2 {{ $index % 2 == 0 ? 'pr-5 flex justify-end' : 'pl-5 flex justify-start order-2' }}">
                             <div
                                 class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl shadow-lg
-                                                                                                                                                                                                                   px-5 py-4 w-44 sm:w-48
-                                                                                                                                                                                                                   hover:-translate-y-1 transition-all duration-300 hover:shadow-red-200">
+                                                                                                                                                                                                                                                           px-5 py-4 w-44 sm:w-48
+                                                                                                                                                                                                                                                           hover:-translate-y-1 transition-all duration-300 hover:shadow-red-200">
                                 <h3 class="text-sm font-semibold mb-1 text-gray-800">
                                     {{ $step['title'] }}
                                 </h3>
@@ -618,13 +621,13 @@
                         <!-- Icon + Nomor -->
                         <div
                             class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 
-                                                                                                                                                                                        flex items-center justify-center 
-                                                                                                                                                                                        w-14 h-14 {{ $step['bg'] }} text-white rounded-full 
-                                                                                                                                                                                        shadow-md shadow-red-200 text-xl z-10">
+                                                                                                                                                                                                                                flex items-center justify-center 
+                                                                                                                                                                                                                                w-14 h-14 {{ $step['bg'] }} text-white rounded-full 
+                                                                                                                                                                                                                                shadow-md shadow-red-200 text-xl z-10">
                             <i class="{{ $step['icon'] }}"></i>
                             <span
                                 class="absolute -bottom-2.5 -right-2.5 bg-red-600 text-white font-bold rounded-full shadow
-                                                                                                                                                                                           w-6 h-6 text-[11px] flex items-center justify-center">
+                                                                                                                                                                                                                                   w-6 h-6 text-[11px] flex items-center justify-center">
                                 {{ $index + 1 }}
                             </span>
                         </div>
@@ -650,9 +653,9 @@
         <!-- Aduan Cepat -->
         <div id="aduanCepatBox"
             class="scroll-mt-44 sm:scroll-mt-40 md:scroll-mt-40 
-                                                                                                                                                                                                                    group relative bg-gradient-to-br from-[#1e3a8a]/95 to-[#2563eb]/90 shadow-lg backdrop-blur-md 
-                                                                                                                                                                                                                    px-5 py-6 mt-20 sm:mt-22 md:mt-20
-                                                                                                                                                                                                                    w-full md:max-w-[67rem] 2xl:max-w-[90rem] mx-auto rounded-none md:rounded-2xl overflow-hidden z-30"
+                                                                                                                                                                                                                                        group relative bg-gradient-to-br from-[#1e3a8a]/95 to-[#2563eb]/90 shadow-lg backdrop-blur-md 
+                                                                                                                                                                                                                                        px-5 py-6 mt-20 sm:mt-22 md:mt-20
+                                                                                                                                                                                                                                        w-full md:max-w-[67rem] 2xl:max-w-[90rem] mx-auto rounded-none md:rounded-2xl overflow-hidden z-30"
             data-aos="fade-up">
 
             <!-- Background -->
@@ -669,8 +672,8 @@
                 @guest
                     <div id="form-overlay"
                         class="absolute inset-0 z-10 bg-white bg-opacity-80  backdrop-blur-sm flex items-center justify-center rounded-2xl
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               opacity-0 scale-95 pointer-events-none transition-all duration-500 ease-out
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       opacity-0 scale-95 pointer-events-none transition-all duration-500 ease-out
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto">
                         <div
                             class="text-red-700 text-center font-semibold px-4 transform transition duration-500 ease-out translate-y-4 group-hover:translate-y-0">
                             <i class="fas fa-exclamation-triangle text-3xl mb-2 animate-pulse"></i><br>
@@ -690,9 +693,12 @@
                     <div class="space-y-4">
                         <!-- Input Judul -->
                         <div class="flex flex-col leading-none">
-                            <input type="text" name="judul" maxlength="150" placeholder="Judul Aduan"
+                            <input type="text" name="judul" maxlength="150" placeholder="Judul Aduan Singkat Minimal (20 Kata)"
+                                value="{{ old('judul') }}"
                                 class="w-full border rounded-lg px-4 py-3 md:py-4 bg-white text-gray-900" required>
-                            <span id="judulCounter" class="text-sm text-white/90 mt-2 block">0/150</span>
+                            <span id="judulCounter" class="text-sm text-white/90 mt-2 block">
+                                {{ strlen(old('judul')) }}/150
+                            </span>
                         </div>
                         @error('judul')
                             <div class="text-white text-sm mt-0">{{ $message }}</div>
@@ -700,10 +706,12 @@
 
                         <!-- Textarea Isi -->
                         <div class="flex flex-col leading-none">
-                            <textarea name="isi" placeholder="Aduan Anda" rows="1" maxlength="1000"
+                            <textarea name="isi" placeholder="Kronologi Lengkap Aduan Minimal (40 Kata)" rows="2" maxlength="1000"
                                 class="w-full border rounded-lg px-4 py-3 md:py-4 bg-white text-gray-900"
-                                required></textarea>
-                            <span id="isiCounter" class="text-sm text-white/90 mt-2 block">0/1000</span>
+                                required>{{ old('isi') }}</textarea>
+                            <span id="isiCounter" class="text-sm text-white/90 mt-2 block">
+                                {{ strlen(old('isi')) }}/1000
+                            </span>
                         </div>
                         @error('isi')
                             <div class="text-white text-sm mt-0">{{ $message }}</div>
@@ -714,7 +722,9 @@
                             class="flex-1 border rounded-lg px-4 py-3 bg-white text-gray-900 relative" required>
                             <option value="">- Pilih Kategori -</option>
                             @forelse(App\Models\KategoriUmum::where('tipe', 'non_wbs_admin')->get() as $kategori)
-                                <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
+                                <option value="{{ $kategori->id }}" {{ old('kategori_id') == $kategori->id ? 'selected' : '' }}>
+                                    {{ $kategori->nama }}
+                                </option>
                             @empty
                                 <option value="" disabled>Tidak ada kategori tersedia</option>
                             @endforelse
@@ -724,13 +734,14 @@
                         @enderror
 
                         <div class="flex gap-2 relative overflow-visible">
-
                             <!-- Dropdown Wilayah -->
                             <select name="wilayah_id" class="w-full border rounded-lg px-4 py-3 bg-white text-gray-900"
                                 required>
                                 <option value="">- Pilih Wilayah -</option>
                                 @forelse(App\Models\WilayahUmum::all() as $wilayah)
-                                    <option value="{{ $wilayah->id }}">{{ $wilayah->nama }}</option>
+                                    <option value="{{ $wilayah->id }}" {{ old('wilayah_id') == $wilayah->id ? 'selected' : '' }}>
+                                        {{ $wilayah->nama }}
+                                    </option>
                                 @empty
                                     <option value="" disabled>Tidak ada wilayah tersedia</option>
                                 @endforelse
@@ -758,8 +769,7 @@
                                         Jenis file yang dapat dilampirkan: <strong>.jpg</strong>,
                                         <strong>.jpeg</strong>,
                                         <strong>.png</strong>,
-                                        <strong>.pdf</strong>, <strong>.doc</strong>, <strong>.docx</strong>,
-                                        <strong>.xls</strong>, <strong>.xlsx</strong>, <strong>.zip</strong>.<br>
+                                        <strong>.pdf</strong>, <strong>.doc</strong>, <strong>.docx</strong>.<br>
                                         Maksimal <strong>3 file</strong>, masing-masing <strong>tidak melebihi 10MB
                                             (10.240KB)</strong>.
                                     </p>
@@ -774,7 +784,7 @@
                                     <!-- Tombol Tambah -->
                                     <button type="button" id="addFileBtn"
                                         class="bg-gradient-to-r from-red-600 to-rose-500 text-white px-4 py-2 rounded-full w-full mb-6 text-md font-semibold transition shadow-lg
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    hover:from-red-700 hover:to-rose-600">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hover:from-red-700 hover:to-rose-600">
                                         + Tambah file
                                     </button>
 
@@ -824,7 +834,7 @@
 
                                 <!-- Konten modal -->
                                 <div class="relative z-30 w-full max-w-2xl max-h-[100vh] overflow-y-auto p-6 rounded-2xl border border-white/30 shadow-lg 
-                                                                                                                                                            bg-cover bg-center"
+                                                                                                                                                                                bg-cover bg-center"
                                     style="background-image: url('/images/red.jpg');">
 
                                     <!-- Overlay gelap dalam modal -->
@@ -922,10 +932,18 @@
 
                     <!-- Kolom Kanan -->
                     <div class="space-y-4">
-                        <label class="flex items-center space-x-2 text-white">
-                            <input type="checkbox" name="is_anonim" id="anonimCheckbox" class="form-checkbox" value="1">
-                            <span class="text-sm">Anonim</span>
-                        </label>
+                        <!-- Baris checkbox Anonim + Arsip -->
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center space-x-2 text-white">
+                                <input type="checkbox" name="is_anonim" id="anonimCheckbox" class="form-checkbox" value="1">
+                                <span class="text-sm">Anonim</span>
+                            </label>
+
+                            <label class="flex items-center space-x-2 text-white">
+                                <input type="checkbox" name="is_arsip" id="arsipCheckbox" class="form-checkbox" value="1">
+                                <span class="text-sm">Rahasia</span>
+                            </label>
+                        </div>
 
                         <div class="identitas-group space-y-4">
                             <input type="text" name="nama_pengadu" placeholder="Nama Anda" value="{{ $user?->name }}"
@@ -993,8 +1011,8 @@
                     @csrf
                     <input type="text" name="tracking_id" placeholder="Nomor Tiket Aduan"
                         class="flex-1 border rounded-full px-6 py-3 bg-white text-gray-900 placeholder-gray-500
-                                                                                                                                                                                                                                                                                                                                   text-base font-semibold tracking-wide shadow text-center
-                                                                                                                                                                                                                                                                                                                                   focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition duration-300"
+                                                                                                                                                                                                                                                                                                                                                       text-base font-semibold tracking-wide shadow text-center
+                                                                                                                                                                                                                                                                                                                                                       focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition duration-300"
                         required>
                     <button type="submit"
                         class="whitespace-nowrap bg-transparent border border-white hover:bg-white/10 text-white px-6 py-3 rounded-full font-bold shadow-lg transition cursor-pointer flex items-center">
@@ -1011,13 +1029,20 @@
             if ($user && $user->role === 'admin') {
                 $kategoriIds = $user->kategori ? $user->kategori->pluck('id')->toArray() : [];
                 $reports = \App\Models\Report::whereIn('kategori_id', $kategoriIds)
+                    ->where('status', '!=', 'Arsip') // exclude Arsip
                     ->latest()
                     ->take(9)
                     ->get();
             } elseif ($user && $user->role === 'superadmin') {
-                $reports = \App\Models\Report::latest()->take(9)->get();
+                $reports = \App\Models\Report::where('status', '!=', 'Arsip')
+                    ->latest()
+                    ->take(9)
+                    ->get();
             } else {
-                $reports = \App\Models\Report::latest()->take(9)->get();
+                $reports = \App\Models\Report::where('status', '!=', 'Arsip')
+                    ->latest()
+                    ->take(9)
+                    ->get();
             }
         @endphp
 
@@ -1054,12 +1079,14 @@
                                 $thumbnail = $defaultImage;
 
                                 if (!empty($report->file)) {
+                                    // Pastikan $report->file berupa array
                                     $files = is_array($report->file) ? $report->file : json_decode($report->file, true);
-                                    if (is_array($files)) {
+
+                                    if (is_array($files) && count($files) > 0) {
                                         foreach ($files as $f) {
                                             $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
                                             if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                                                $thumbnail = asset('storage/' . $f);
+                                                $thumbnail = asset($f);
                                                 break;
                                             }
                                         }
@@ -1073,22 +1100,21 @@
                                     <img src="{{ $thumbnail }}" alt="Thumbnail Aduan"
                                         class="w-full h-40 object-cover rounded-t-xl">
 
-                                    <span
-                                        class="absolute top-2 left-2 px-3 py-1 rounded-full text-xs font-semibold shadow-lg
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @if($report->status === 'Diajukan') bg-red-200 text-red-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @elseif($report->status === 'Selesai') bg-green-200 text-green-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @else bg-gray-200 text-gray-700
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @endif">
+                                    {{-- Status Badge --}}
+                                    <span class="absolute top-2 left-2 px-3 py-1 rounded-full text-xs font-semibold shadow-lg
+                                                        @if($report->status === 'Diajukan') bg-red-200 text-red-800
+                                                        @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
+                                                        @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
+                                                        @elseif($report->status === 'Selesai') bg-green-200 text-green-800
+                                                        @else bg-gray-200 text-gray-700 @endif">
                                         {{ $report->status }}
                                     </span>
 
-                                    <span
-                                        class="absolute bottom-2 left-1/2 transform -translate-x-1/2 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            bg-zinc-900/60 text-white text-[8.5px] px-2 py-[1px] 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            rounded-full backdrop-blur-sm tracking-wider italic 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
+                                    {{-- Nama Pelapor --}}
+                                    <span class="absolute bottom-2 left-1/2 transform -translate-x-1/2 
+                                                        bg-zinc-900/60 text-white text-[8.5px] px-2 py-[1px] 
+                                                        rounded-full backdrop-blur-sm tracking-wider italic 
+                                                        font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
                                         {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}
                                     </span>
                                 </a>
@@ -1136,12 +1162,13 @@
                         $thumbnail = $defaultImage;
 
                         if (!empty($report->file)) {
+                            // pastikan data file berupa array
                             $files = is_array($report->file) ? $report->file : json_decode($report->file, true);
-                            if (is_array($files)) {
+                            if (is_array($files) && count($files) > 0) {
                                 foreach ($files as $f) {
                                     $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
                                     if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                                        $thumbnail = asset('storage/' . $f);
+                                        $thumbnail = asset($f);
                                         break;
                                     }
                                 }
@@ -1156,23 +1183,20 @@
                             <img src="{{ $thumbnail }}" alt="Thumbnail Aduan" class="w-full h-64 object-cover">
 
                             <!-- Status -->
-                            <span
-                                class="absolute top-2 left-2 px-4 py-1.5 rounded-full text-base font-semibold shadow-lg
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @if($report->status === 'Diajukan') bg-red-200 text-red-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @elseif($report->status === 'Selesai') bg-green-200 text-green-800
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @else bg-gray-200 text-gray-700
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @endif">
+                            <span class="absolute top-2 left-2 px-4 py-1.5 rounded-full text-base font-semibold shadow-lg
+                                            @if($report->status === 'Diajukan') bg-red-200 text-red-800
+                                            @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
+                                            @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
+                                            @elseif($report->status === 'Selesai') bg-green-200 text-green-800
+                                            @else bg-gray-200 text-gray-700 @endif">
                                 {{ $report->status }}
                             </span>
 
                             <!-- Nama pengadu -->
-                            <span
-                                class="absolute bottom-2 left-1/2 transform -translate-x-1/2 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            bg-zinc-900/60 text-white text-[12px] px-3 py-[3px] 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            rounded-full backdrop-blur-sm tracking-wider italic 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
+                            <span class="absolute bottom-2 left-1/2 transform -translate-x-1/2 
+                                            bg-zinc-900/60 text-white text-[12px] px-3 py-[3px] 
+                                            rounded-full backdrop-blur-sm tracking-wider italic 
+                                            font-semibold shadow-md shadow-black/30 ring-1 ring-white/10">
                                 {{ $report->is_anonim ? 'Anonim' : $report->nama_pengadu }}
                             </span>
                         </a>
@@ -1200,7 +1224,6 @@
                             </p>
                         </div>
                     </div>
-
                 @endforeach
             </div>
         </div>
@@ -1758,11 +1781,11 @@
             const div = document.createElement('div');
             div.className = 'flex items-center gap-3 mb-2';
             div.innerHTML = `
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <input type="file" name="file[]" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    class="file-input flex-1 border px-2 py-1 rounded text-sm">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="fas fa-trash-alt"></i>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </button>`;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <input type="file" name="file[]" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.zip"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        class="file-input flex-1 border px-2 py-1 rounded text-sm">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <button type="button" class="deleteFileBtn text-red-600 hover:text-red-800 text-lg">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="fas fa-trash-alt"></i>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </button>`;
             fileInputsContainer.appendChild(div);
             updateAddFileButtonVisibility();
         });

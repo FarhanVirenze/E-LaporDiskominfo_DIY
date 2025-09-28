@@ -147,6 +147,7 @@ Route::middleware(['auth', '\App\Http\Middleware\RoleMiddleware:admin'])->prefix
     Route::patch('profile', [ProfileAdminController::class, 'update'])->name('profile.update');
     Route::delete('profile', [ProfileAdminController::class, 'destroy'])->name('profile.destroy');
     Route::put('password', [ProfileAdminController::class, 'updatePassword'])->name('password.update');
+    Route::patch('/profile/reset-foto', [ProfileAdminController::class, 'resetFoto'])->name('profile.resetFoto');
     // Kelola Aduan
     Route::resource('kelola-aduan', \App\Http\Controllers\Admin\AduanController::class);
 

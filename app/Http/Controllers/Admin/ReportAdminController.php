@@ -13,7 +13,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ReportAdminController extends Controller
@@ -213,7 +212,7 @@ class ReportAdminController extends Controller
         $request->validate([
             'judul' => 'nullable|string|max:255',
             'isi' => 'nullable|string',
-            'status' => 'nullable|in:Diajukan,Dibaca,Direspon,Selesai',
+            'status' => 'nullable|in:Diajukan,Dibaca,Direspon,Selesai,Arsip',
             'kategori_id' => 'nullable|exists:kategori_umum,id',
             'wilayah_id' => 'nullable|exists:wilayah_umum,id',
             'admin_id' => 'nullable|exists:users,id_user',
@@ -258,12 +257,20 @@ class ReportAdminController extends Controller
             }
         }
 
-        // === Handle Lampiran Baru ===
-        $files = (array) $report->file; // data lama
+        // Handle Lampiran Baru → simpan langsung ke public/report_files
+        $files = (array) $report->file; // data lama (array JSON)
         if ($request->hasFile('file')) {
+            $destinationPath = public_path('report_files'); // folder publik
+
+            // buat folder jika belum ada
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
             foreach ($request->file('file') as $uploadedFile) {
-                $path = $uploadedFile->store('reports', 'public');
-                $files[] = $path;
+                $filename = time() . '_' . $uploadedFile->getClientOriginalName();
+                $uploadedFile->move($destinationPath, $filename);
+                $files[] = 'report_files/' . $filename; // path relatif
             }
         }
         $data['file'] = $files;
@@ -347,13 +354,14 @@ class ReportAdminController extends Controller
 
         if (isset($files[$index])) {
             $file = $files[$index];
+            $filePath = public_path($file); // path ke public/reports_file
 
-            // hapus dari storage
-            if (Storage::disk('public')->exists($file)) {
-                Storage::disk('public')->delete($file);
+            // Hapus file fisik
+            if (file_exists($filePath)) {
+                @unlink($filePath); // @ supaya tidak error jika gagal
             }
 
-            // hapus dari array JSON
+            // Hapus dari array JSON
             unset($files[$index]);
             $report->file = array_values($files); // reindex array
             $report->save();
@@ -500,9 +508,12 @@ class ReportAdminController extends Controller
             }
         }
 
-        // Hapus file jika ada
-        if ($comment->file && \Storage::disk('public')->exists($comment->file)) {
-            \Storage::disk('public')->delete($comment->file);
+        // Hapus file jika ada (langsung di public/)
+        if ($comment->file) {
+            $filePath = public_path($comment->file);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
         }
 
         $comment->delete();
@@ -533,15 +544,18 @@ class ReportAdminController extends Controller
             abort(403, 'Anda tidak diizinkan menghapus tindak lanjut ini.');
         }
 
-        // Hapus file jika ada
-        if ($followUp->file && \Storage::disk('public')->exists($followUp->file)) {
-            \Storage::disk('public')->delete($followUp->file);
+        // Hapus file jika ada (langsung dari public/)
+        if ($followUp->file) {
+            $filePath = public_path($followUp->file);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
         }
 
         // Hapus tindak lanjut
         $followUp->delete();
 
-        // Jika tidak ada tindak lanjut lagi dan status sebelumnya adalah Direspon, ubah jadi Dibaca
+        // Jika tidak ada tindak lanjut lagi dan status sebelumnya adalah DIRESPON, ubah jadi DIBACA
         $report = Report::findOrFail($reportId);
         if ($report->followUps->isEmpty() && $report->status === Report::STATUS_DIRESPON) {
             $report->status = Report::STATUS_DIBACA;

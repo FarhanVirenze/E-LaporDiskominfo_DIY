@@ -466,7 +466,7 @@
                     <div class="space-y-4">
                         <!-- Input Judul -->
                         <div class="flex flex-col leading-none">
-                            <input type="text" name="judul" maxlength="150" placeholder="Judul Aduan"
+                            <input type="text" name="judul" maxlength="150" placeholder="Judul Aduan Singkat Minimal (20 Kata)"
                                 class="w-full border rounded-lg px-4 py-3 md:py-4 bg-white text-gray-900" required>
                             <span class="text-sm text-white/90 mt-2 block">0/150</span>
                         </div>
@@ -475,7 +475,7 @@
                         @enderror
                         <!-- Textarea Isi -->
                         <div class="flex flex-col leading-none">
-                            <textarea name="isi" placeholder="Aduan Anda" rows="1" maxlength="1000"
+                            <textarea name="isi" placeholder="Kronologi Lengkap Aduan Minimal (40 Kata)" rows="2" maxlength="1000"
                                 class="w-full border rounded-lg px-4 py-3 md:py-4 bg-white text-gray-900"
                                 required></textarea>
                             <span class="text-sm text-white/90 mt-2 block">0/1000</span>
@@ -805,17 +805,19 @@
                 <div id="carouselContainer" class="overflow-x-auto overflow-y-hidden scroll-smooth scrollbar-hide mt-6">
                     <div id="carouselItems" class="flex">
                         @foreach ($reports as $report)
-                            @php
+                              @php
                                 $defaultImage = asset('images/image.jpg');
                                 $thumbnail = $defaultImage;
 
                                 if (!empty($report->file)) {
+                                    // Pastikan $report->file berupa array
                                     $files = is_array($report->file) ? $report->file : json_decode($report->file, true);
-                                    if (is_array($files)) {
+
+                                    if (is_array($files) && count($files) > 0) {
                                         foreach ($files as $f) {
                                             $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
                                             if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                                                $thumbnail = asset('storage/' . $f);
+                                                $thumbnail = asset($f);
                                                 break;
                                             }
                                         }
@@ -835,6 +837,7 @@
                                                                                                                                                                                                             @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
                                                                                                                                                                                                             @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
                                                                                                                                                                                                             @elseif($report->status === 'Selesai') bg-green-200 text-green-800
+                                                                                                                                                                                                             @elseif($report->status === 'Arsip') bg-stone-200 text-stone-800
                                                                                                                                                                                                             @else bg-gray-200 text-gray-700
                                                                                                                                                                                                             @endif">
                                         {{ $report->status }}
@@ -887,23 +890,25 @@
             {{-- Desktop: Grid --}}
             <div class="hidden md:grid grid-cols-3 gap-8">
                 @foreach ($reports as $report)
-                    @php
-                        $defaultImage = asset('images/image.jpg');
-                        $thumbnail = $defaultImage;
+                      @php
+                                $defaultImage = asset('images/image.jpg');
+                                $thumbnail = $defaultImage;
 
-                        if (!empty($report->file)) {
-                            $files = is_array($report->file) ? $report->file : json_decode($report->file, true);
-                            if (is_array($files)) {
-                                foreach ($files as $f) {
-                                    $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
-                                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                                        $thumbnail = asset('storage/' . $f);
-                                        break;
+                                if (!empty($report->file)) {
+                                    // Pastikan $report->file berupa array
+                                    $files = is_array($report->file) ? $report->file : json_decode($report->file, true);
+
+                                    if (is_array($files) && count($files) > 0) {
+                                        foreach ($files as $f) {
+                                            $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
+                                            if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                                                $thumbnail = asset($f);
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                        }
-                    @endphp
+                            @endphp
 
                     <div class="bg-white rounded-2xl shadow hover:shadow-lg hover:scale-[1.02] transition-transform duration-300 ease-in-out overflow-hidden"
                         data-aos="fade-up">
@@ -918,6 +923,7 @@
                                                                                                                                                                                             @elseif($report->status === 'Dibaca') bg-blue-200 text-blue-800
                                                                                                                                                                                             @elseif($report->status === 'Direspon') bg-yellow-200 text-yellow-800
                                                                                                                                                                                             @elseif($report->status === 'Selesai') bg-green-200 text-green-800
+                                                                                                                                                                                             @elseif($report->status === 'Arsip') bg-stone-200 text-stone-800
                                                                                                                                                                                             @else bg-gray-200 text-gray-700
                                                                                                                                                                                             @endif">
                                 {{ $report->status }}

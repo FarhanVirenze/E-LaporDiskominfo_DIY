@@ -46,7 +46,7 @@
         <!-- Foto Profil -->
         <div class="flex flex-col items-center">
             <img src="{{ $user->foto
-    ? asset('storage/' . $user->foto)
+    ? asset($user->foto)
     : ($user->avatar
         ? $user->avatar
         : asset('images/avatar.jpg')) }}" alt="Foto Profil"

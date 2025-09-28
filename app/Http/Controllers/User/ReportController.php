@@ -12,12 +12,9 @@ use App\Models\WbsComment;
 use App\Models\FollowupRating;
 use App\Models\Comment;
 use App\Models\KategoriUmum;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 
 class ReportController extends Controller
 {
@@ -76,66 +73,80 @@ class ReportController extends Controller
     {
         $validated = $request->validate([
             'judul' => 'required|string|min:20|max:150',
-            'isi' => 'required|string|min:120|max:1000',
+            'isi' => 'required|string|min:40|max:1000',
             'kategori_id' => 'required|exists:kategori_umum,id',
             'wilayah_id' => 'required|exists:wilayah_umum,id',
             'file' => 'required|array|max:3',
-            'file.*' => 'file|mimes:jpg,jpeg,png|max:10240', // hanya gambar
+            'file.*' => 'file|mimes:jpg,jpeg,png|max:10240',
             'lokasi' => 'required|string|max:255',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
             'is_anonim' => 'nullable|boolean',
-            'g-recaptcha-response' => 'required|captcha',
+            'is_arsip' => 'nullable|boolean', // tambahkan validasi checkbox arsip
+            'g-recaptcha-response' => 'required',
         ]);
 
+        // Verifikasi Google reCAPTCHA
+        $verify = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret' => config('captcha.secret'),
+            'response' => $request->input('g-recaptcha-response'),
+            'remoteip' => $request->ip(),
+        ]);
+
+        $captcha_success = $verify->json();
+        if (!($captcha_success['success'] ?? false)) {
+            return back()->withErrors(['g-recaptcha-response' => 'Verifikasi reCAPTCHA gagal, coba lagi.'])->withInput();
+        }
+
+        // Upload file → public/report_files
         $filePaths = [];
         if ($request->hasFile('file')) {
             foreach ($request->file('file') as $uploadedFile) {
-                // Simpan file ke storage
-                $path = $uploadedFile->store('report_files', 'public');
-                $filePaths[] = $path;
+                $fileName = uniqid() . '_' . time() . '.' . $uploadedFile->getClientOriginalExtension();
+                $uploadedFile->move(public_path('report_files'), $fileName);
+                $filePaths[] = 'report_files/' . $fileName;
             }
         }
-
         $validated['file'] = $filePaths;
         $validated['is_anonim'] = $request->boolean('is_anonim');
-        $validated['status'] = Report::STATUS_DIAJUKAN;
+        $validated['is_arsip'] = $request->boolean('is_arsip');
 
-        // 🔹 Isi data pelapor
-        if (!$validated['is_anonim']) {
-            $user = auth()->user();
-            if (!$user) {
-                return back()->with('error', 'Pengguna tidak terautentikasi.');
-            }
+        // Jika is_arsip true → status jadi Arsip
+        $validated['status'] = $validated['is_arsip'] ? 'Arsip' : Report::STATUS_DIAJUKAN;
 
-            $validated['user_id'] = $user->id_user;
-            $validated['nama_pengadu'] = $user->name;
-            $validated['email_pengadu'] = $user->email;
-            $validated['telepon_pengadu'] = $user->nomor_telepon ?? null;
-            $validated['nik'] = $user->nik ?? null;
-        } else {
-            $validated['user_id'] = null;
+        $user = auth()->user();
+        if (!$user) {
+            return back()->with('error', 'Pengguna tidak terautentikasi.');
+        }
+
+        $validated['user_id'] = $user->id_user;
+
+        if ($validated['is_anonim']) {
             $validated['nama_pengadu'] = 'Anonim';
             $validated['email_pengadu'] = 'anonim@domain.com';
             $validated['telepon_pengadu'] = null;
             $validated['nik'] = null;
+        } else {
+            $validated['nama_pengadu'] = $user->name;
+            $validated['email_pengadu'] = $user->email;
+            $validated['telepon_pengadu'] = $user->nomor_telepon ?? null;
+            $validated['nik'] = $user->nik ?? null;
         }
 
-        // 🔹 Tentukan admin_id dari kategori
+        // Admin dari kategori
         $kategori = KategoriUmum::find($validated['kategori_id']);
         if ($kategori && $kategori->admin_id) {
             $validated['admin_id'] = $kategori->admin_id;
         } else {
-            return back()->with('error', 'Kategori belum memiliki admin yang ditugaskan.');
+            return back()->with('error', 'Kategori belum memiliki admin yang ditugaskan.')->withInput();
         }
 
-        // 🔹 Simpan laporan
         try {
             Report::create($validated);
             return redirect()->route('user.aduan.riwayat')
                 ->with('success', 'Laporan berhasil dikirim.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal menyimpan laporan: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menyimpan laporan: ' . $e->getMessage())->withInput();
         }
     }
 
@@ -188,7 +199,7 @@ class ReportController extends Controller
         $comments = $report->comments;
 
         // 🔹 --- HITUNG RATING ---
-        $ratings = \App\Models\FollowupRating::whereIn('followup_id', $report->followUps->pluck('id'))->get();
+        $ratings = FollowupRating::whereIn('followup_id', $report->followUps->pluck('id'))->get();
 
         $totalReviews = $ratings->count();
         $averageRating = $totalReviews > 0 ? round($ratings->avg('rating'), 1) : 0;
@@ -207,7 +218,9 @@ class ReportController extends Controller
             'time' => $report->created_at,
             'type' => 'created',
             'title' => 'Aduan dengan Nomor ' . $report->tracking_id . ' dibuat oleh '
-                . ($report->is_anonim ? 'Anonim' : $report->nama_pengadu),
+                . ($report->is_anonim ? 'Anonim' : $report->nama_pengadu)
+                // Jika arsip, langsung tambahkan keterangan Arsip
+                . ($report->is_arsip ? ' (Status: Arsip)' : ''),
         ];
 
         // Disposisikan ke admin kategori (jika ada)
@@ -393,7 +406,7 @@ class ReportController extends Controller
     {
         $request->validate([
             'pesan' => 'required|string',
-            'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip|max:10240',
+            'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:10240',
         ]);
 
         if (!in_array(Auth::user()->role, ['admin', 'superadmin'])) {
@@ -407,12 +420,18 @@ class ReportController extends Controller
         ]);
 
         if ($request->hasFile('file')) {
-            $followUp->file = $request->file('file')->store('followup_files', 'public');
+            $file = $request->file('file');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $destinationPath = public_path('followup_files'); // folder public/followup_files
+            $file->move($destinationPath, $filename);
+
+            // simpan path relatif untuk akses via asset()
+            $followUp->file = 'followup_files/' . $filename;
         }
 
         $followUp->save();
 
-        // Update status laporan menjadi 'Direspon' hanya jika status sebelumnya 'Dibaca'
+        // Update status laporan menjadi 'Direspon' hanya jika status sebelumnya 'Dibaca' atau 'Diajukan'
         $report = Report::findOrFail($reportId);
 
         if (in_array($report->status, [Report::STATUS_DIAJUKAN, Report::STATUS_DIBACA])) {
@@ -507,13 +526,19 @@ class ReportController extends Controller
         ]);
 
         $comment = new WbsComment([
-            'report_id' => $wbsId,  // <- sesuaikan dengan nama kolom di DB
+            'report_id' => $wbsId,
             'user_id' => Auth::user()->id_user,
             'pesan' => $request->pesan,
         ]);
 
         if ($request->hasFile('file')) {
-            $comment->file = $request->file('file')->store('wbs_comment_files', 'public');
+            $file = $request->file('file');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+            // simpan langsung ke public/wbs_comment_files
+            $file->move(public_path('wbs_comment_files'), $filename);
+
+            $comment->file = 'wbs_comment_files/' . $filename;
         }
 
         $comment->save();
@@ -523,23 +548,25 @@ class ReportController extends Controller
 
     public function updateWbsComment(Request $request, WbsComment $comment)
     {
-        // Validasi hak akses: hanya pemilik komentar atau admin/superadmin
         if ($comment->user_id !== Auth::user()->id_user && !in_array(Auth::user()->role, ['admin', 'superadmin'])) {
             abort(403, 'Anda tidak memiliki akses untuk mengubah komentar ini.');
         }
 
-        // Validasi input
         $request->validate([
             'pesan' => 'required|string',
             'file' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,xls,xlsx,zip|max:10240',
         ]);
 
-        // Update pesan
         $comment->pesan = $request->pesan;
 
-        // Jika ada file baru, simpan
         if ($request->hasFile('file')) {
-            $comment->file = $request->file('file')->store('wbs_comment_files', 'public');
+            $file = $request->file('file');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+            // simpan langsung ke public/wbs_comment_files
+            $file->move(public_path('wbs_comment_files'), $filename);
+
+            $comment->file = 'wbs_comment_files/' . $filename;
         }
 
         $comment->save();
@@ -568,7 +595,14 @@ class ReportController extends Controller
         ]);
 
         if ($request->hasFile('file')) {
-            $comment->file = $request->file('file')->store('comment_files', 'public');
+            $file = $request->file('file');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+            // simpan langsung ke public/comment_files
+            $file->move(public_path('comment_files'), $filename);
+
+            // simpan path relatif biar bisa dipanggil dengan asset()
+            $comment->file = 'comment_files/' . $filename;
         }
 
         $comment->save();
@@ -592,12 +626,20 @@ class ReportController extends Controller
         // Update pesan
         $comment->pesan = $request->pesan;
 
-        // Jika ada file baru, simpan dan hapus file lama jika ada
+        // Jika ada file baru, hapus lama lalu upload baru
         if ($request->hasFile('file')) {
-            if ($comment->file && \Storage::disk('public')->exists($comment->file)) {
-                \Storage::disk('public')->delete($comment->file);
+            // hapus file lama kalau ada
+            if ($comment->file && file_exists(public_path($comment->file))) {
+                unlink(public_path($comment->file));
             }
-            $comment->file = $request->file('file')->store('comment_files', 'public');
+
+            $file = $request->file('file');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+            // simpan ke public/comment_files
+            $file->move(public_path('comment_files'), $filename);
+
+            $comment->file = 'comment_files/' . $filename;
         }
 
         $comment->save();
@@ -621,19 +663,23 @@ class ReportController extends Controller
         $comment = WbsComment::findOrFail($id);
 
         // Cek apakah user adalah pemilik komentar, admin, atau superadmin
-        if (Auth::id() !== $comment->user_id && !in_array(Auth::user()->role, ['admin', 'superadmin'])) {
+        if (Auth::user()->id_user !== $comment->user_id && !in_array(Auth::user()->role, ['admin', 'superadmin'])) {
             abort(403, 'Anda tidak diizinkan menghapus komentar WBS ini.');
         }
 
         // Hapus file jika ada
-        if ($comment->file && \Storage::disk('public')->exists($comment->file)) {
-            \Storage::disk('public')->delete($comment->file);
+        if ($comment->file) {
+            $filePath = public_path($comment->file);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
         }
 
         $comment->delete();
 
         return back()->with('success', 'Komentar WBS berhasil dihapus.');
     }
+
     /**
      * Hapus komentar.
      */
@@ -642,13 +688,16 @@ class ReportController extends Controller
         $comment = Comment::findOrFail($id);
 
         // Cek apakah user adalah pemilik komentar, admin, atau superadmin
-        if (Auth::id() !== $comment->user_id && !in_array(Auth::user()->role, ['admin', 'superadmin'])) {
+        if (Auth::user()->id_user !== $comment->user_id && !in_array(Auth::user()->role, ['admin', 'superadmin'])) {
             abort(403, 'Anda tidak diizinkan menghapus komentar ini.');
         }
 
         // Hapus file jika ada
-        if ($comment->file && \Storage::disk('public')->exists($comment->file)) {
-            \Storage::disk('public')->delete($comment->file);
+        if ($comment->file) {
+            $filePath = public_path($comment->file);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
         }
 
         $comment->delete();
@@ -671,8 +720,11 @@ class ReportController extends Controller
         $userRole = Auth::user()->role;
 
         // Hapus file jika ada
-        if ($followUp->file && \Storage::disk('public')->exists($followUp->file)) {
-            \Storage::disk('public')->delete($followUp->file);
+        if ($followUp->file) {
+            $filePath = public_path($followUp->file);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
         }
 
         // Hapus tindak lanjut
@@ -684,18 +736,19 @@ class ReportController extends Controller
 
         // Jika tidak ada tindak lanjut lagi dan statusnya DIRESPON, atur ulang status sesuai role
         if (!$hasFollowUps && $report->status === Report::STATUS_DIRESPON) {
-            // Cek apakah status selesai (misal kamu punya constant STATUS_SELESAI)
-            $statusSelesai = Report::STATUS_SELESAI; // contoh
+            $statusSelesai = Report::STATUS_SELESAI; // contoh constant
 
             if ($report->status !== $statusSelesai) {
                 if ($userRole === 'superadmin') {
-                    $report->status = Report::STATUS_DIAJUKAN; // ubah ke diajukan jika dihapus oleh superadmin
+                    $report->status = Report::STATUS_DIAJUKAN;
                 } else {
-                    $report->status = Report::STATUS_DIBACA; // kalau admin tetap ke dibaca
+                    $report->status = Report::STATUS_DIBACA;
                 }
                 $report->save();
 
-                $pesanStatus = $userRole === 'superadmin' ? 'Status Aduan menjadi Diajukan' : 'Status Aduan menjadi Dibaca';
+                $pesanStatus = $userRole === 'superadmin'
+                    ? 'Status Aduan menjadi Diajukan'
+                    : 'Status Aduan menjadi Dibaca';
 
                 return back()->with('success', 'Tindak lanjut berhasil dihapus, ' . $pesanStatus);
             }
@@ -730,7 +783,7 @@ class ReportController extends Controller
 
         $aduan = Report::where('user_id', $user->id_user)
             ->latest()
-            ->paginate(6, ['id', 'tracking_id', 'judul', 'status', 'created_at', 'file']);
+            ->paginate(6, ['id', 'tracking_id', 'judul', 'status', 'created_at', 'file', 'is_anonim']);
 
         return view('portal.daftar-aduan.riwayat', compact('aduan'));
     }
@@ -743,10 +796,13 @@ class ReportController extends Controller
 
         $user = auth()->user();
 
-        // Ambil semua kolom
-        $aduan = \App\Models\WbsReport::where('user_id', $user->id_user)
+        // Ambil semua aduan user, termasuk yang anonim
+        $aduan = WbsReport::where(function ($query) use ($user) {
+            $query->where('user_id', $user->id_user)
+                ->orWhere('is_anonim', true);
+        })
             ->latest()
-            ->paginate(6); // default ambil semua field
+            ->paginate(6);
 
         return view('portal.daftar-aduan.riwayatwbs', compact('aduan'));
     }
